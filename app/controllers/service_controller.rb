@@ -1,11 +1,14 @@
 require 'sdl'
 
 class ServiceController < ApplicationController
+  respond_to :html, :xml, :json, :rdf
+
   def list
     @services = compendium.services
   end
 
   def show
+    @service = compendium.services[params[:id]]
   end
 
   private

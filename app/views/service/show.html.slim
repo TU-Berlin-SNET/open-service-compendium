@@ -1,0 +1,9 @@
+h1= @service.name
+
+= t('known_facts')
+
+ul
+  - @service.facts.each do |fact|
+    li= fact.class.documentation
+    - fact.property_values.each do |property, value|
+      p= render :partial => 'properties', :locals => {:property => property, :value => value}

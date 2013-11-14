@@ -1,4 +1,5 @@
 h1 List of all services in the TRESOR broker
 
-- @services.each do |name, service|
-  h2= service.name
+- @services.each do |symbolic_name, service|
+  h2
+    = link_to service.name, service_path(symbolic_name)

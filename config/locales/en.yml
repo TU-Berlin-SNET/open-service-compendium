@@ -21,3 +21,4 @@
 
 en:
   hello: "Hello world"
+  known_facts: "These are the known facts about the service:"
