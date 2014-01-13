@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-TresorBroker::Application.load_tasks
+OpenServiceBroker::Application.load_tasks

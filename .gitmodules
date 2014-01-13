@@ -1,3 +1,3 @@
-[submodule "vendor/sdl-ng"]
-	path = vendor/sdl-ng
+[submodule "lib/sdl-ng"]
+	path = lib/sdl-ng
 	url = git@git.snet.tu-berlin.de:tresor/sdl-ng.git

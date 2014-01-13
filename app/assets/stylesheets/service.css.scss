@@ -1,3 +1,31 @@
 // Place all the styles related to the service controller here.
-// They will automatically be included in application.css.
+// They will automatically be included in application.css.scss.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+table, tr, td {
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  tr {
+    td {
+      vertical-align: top;
+
+      table:only-child {
+        margin-bottom: -1em;
+      }
+    }
+
+    td:first-child {
+      width: auto;
+      padding-right: 1em;
+    }
+
+    td:last-child {
+      width: 100%;
+      padding-bottom: 1em;
+    }
+  }
+}

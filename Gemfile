@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.1'
+gem 'rails', '4.0.2'
 
 # Use sqlite3 as the database for Active Record
 #gem 'sqlite3'
@@ -46,4 +46,12 @@ end
 
 gem 'slim'
 
-gem 'sdl-ng', :path => 'vendor/sdl-ng'
+gem 'thin'
+
+#gem 'sdl-ng', :path => 'lib/sdl-ng', require: false
+
+# SDL-NG is included as a 'library' to support development class reloading
+# That means, that we need to require its gems for the broker
+gem 'nokogiri'
+gem 'verbs'
+gem 'linkeddata'

@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-TresorBroker::Application.config.secret_key_base = 'e0597b9df4eaf2407605084ec1f2bab8a60c9088423c1a2d48937c891787905889f7d80706a40efbf168136e0fa471c3ce69dac1325f466dd096fb23073eb170'
+OpenServiceBroker::Application.config.secret_key_base = 'e0597b9df4eaf2407605084ec1f2bab8a60c9088423c1a2d48937c891787905889f7d80706a40efbf168136e0fa471c3ce69dac1325f466dd096fb23073eb170'

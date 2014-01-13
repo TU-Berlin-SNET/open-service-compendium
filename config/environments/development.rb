@@ -1,4 +1,4 @@
-TresorBroker::Application.configure do
+OpenServiceBroker::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -27,3 +27,5 @@ TresorBroker::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 end
+
+Slim::Engine.default_options[:pretty] = true
