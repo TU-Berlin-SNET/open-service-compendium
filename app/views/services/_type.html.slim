@@ -1,0 +1,30 @@
+/ Give out identifier of predefined types
+- if type.identifier && !type.class.propertyless?
+  tr
+    td[colspan="2" style="white-space: nowrap;"]
+      = type.documentation
+
+/ Propertyless types convey meaning through their existence.
+- if type.class.propertyless?
+  tr
+    td[colspan="2" style="white-space: nowrap;"]
+      - if type.identifier
+        = type.documentation
+      - else
+        = type.class.documentation
+- elsif type.class.single_property?
+  / Single property types convey meaning through their only property.
+  - type.property_values(false).each do |property, value|
+    tr
+      td[style="white-space: nowrap;"]= property.documentation
+      td== render_value(value)
+- else
+  tr
+    - unless type.class.list_item?
+      td[style="white-space: nowrap;"]= type.class.documentation
+    td
+      table[width="100%"]
+        - type.property_values(false).each do |property, value|
+          tr
+            td[style="white-space: nowrap;"]= property.documentation
+            td== render_value(value)
