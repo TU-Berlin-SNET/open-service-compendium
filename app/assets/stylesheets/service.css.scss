@@ -2,6 +2,20 @@
 // They will automatically be included in application.css.scss.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.services {
+  h2 {
+    margin-bottom: 0;
+  }
+
+  h3 {
+    margin: 0;
+
+    a {
+      padding: 0 1em;
+    }
+  }
+}
+
 table, tr, td {
   border-collapse: collapse;
   margin: 0;

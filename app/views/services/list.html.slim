@@ -1,5 +1,12 @@
 h1 List of all services in the Open Service Broker
 
-- @services.each do |symbolic_name, service|
-  h2
-    = link_to service.name, service_path(symbolic_name)
+.services
+  - @services.each do |symbolic_name, service|
+    h2
+      = service.name
+
+    h3
+      = link_to 'HTML', service_path(symbolic_name)
+      = link_to 'XML', service_path(symbolic_name, :format => :xml)
+      = link_to 'RDF', service_path(symbolic_name, :format => :rdf)
+      = link_to 'JSON', service_path(symbolic_name, :format => :json)
