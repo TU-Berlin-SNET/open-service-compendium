@@ -1,0 +1,11 @@
+- if flash[:message]
+  .span12
+    - if flash[:error]
+      .alert.alert-danger.fade.in
+        button[type='button' data-dismiss='alert' aria-hidden='true' class='close'] &times;
+        h4= flash[:message]
+        p== flash[:error]
+    - else
+      .alert.alert-success.fade.in
+        button[type='button' data-dismiss='alert' aria-hidden='true' class='close'] &times;
+        p= flash[:message]

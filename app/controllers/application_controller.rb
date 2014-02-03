@@ -6,6 +6,9 @@ class ApplicationController < ActionController::Base
   before_filter :store_current_request
 
   protected
+    ##
+    # Retrieves the compendium
+    # @return [SDL::Base::ServiceCompendium] The compendium
     def compendium
       Rails.application.compendium
     end

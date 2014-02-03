@@ -1,0 +1,6 @@
+- if fact_class.propertyless?
+  pre
+    = fact_class.keywords[1]
+- else
+  pre
+    = render 'properties_example', :keyword => fact_class.keywords[1], :properties => fact_class.properties(true), :indent => 0

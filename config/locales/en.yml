@@ -22,3 +22,54 @@
 en:
   hello: "Hello world"
   known_facts: "These are the known facts about the service:"
+  services:
+    new:
+      header: "Create new service"
+      submit: "Create service"
+      service_description_placeholder: "A newly created service."
+    edit:
+      header: "Edit service '%{service_name}'"
+      save: "Save"
+      preview: "Preview"
+      help: "Syntax"
+    list:
+      source: "Source"
+      edit: "Edit"
+      list: "Services"
+    update:
+      failed: "Error while parsing service description"
+      successful: "Successfully updated service"
+  service:
+    id: "Service identifier"
+    description: "Service description"
+    id_placeholder: "Please use a short, alphanumeric identifier without spaces"
+    show:
+      service_not_found: "Cannot find service"
+      service_not_found_detail: "The URL or the service description are invalid."
+  cheat_sheet:
+    fact_classes: "Fact classes"
+    first_form: "First form"
+    second_form: "Second form"
+    third_form: "Third form"
+    fact_class: "Fact class"
+    properties: "Properties"
+    documentation: "Documentation"
+    keywords: "Keywords"
+    keyword: "keyword"
+    inherited: "inherited"
+    type_class: "Type class"
+    type_classes: "Type classes"
+    instances: "Predefined instances"
+    service_definition_syntax: "Service definition syntax"
+    service_definition_syntax_link: "For details on how to add facts to services, please see <a href='https://github.com/TU-Berlin-SNET/sdl-ng#service-definition-syntax' target='_new'>https://github.com/TU-Berlin-SNET/sdl-ng#service-definition-syntax</a>."
+    simple_types: "Simple types"
+    simple_type:
+      sdl_string: "A regular String, enclosed by single or double quotation marks."
+      sdl_number: "A number."
+      sdl_url: "An URL, enclosed in single or double quotation marks."
+      sdl_description: "An description. Can be a regular String or an XMLNode."
+      sdl_description_example: "An example description"
+    examples: "Examples"
+    ancestors: "Supertype"
+    descendants: "Subtypes"
+    not_yet_defined: "not_yet_defined"

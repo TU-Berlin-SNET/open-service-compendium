@@ -1,0 +1,15 @@
+dl.dl-horizontal
+  - properties.each do |property|
+    dt
+      code
+        = property.name
+        - if property.multi?
+          | []
+    dd
+      = property.documentation
+      | &nbsp;(
+      == "<a href='##{cheat_sheet_link(property.type)}'>#{property.type.name.demodulize}</a>"
+      - if property.inherited?
+        == ", #{t('cheat_sheet.inherited')})"
+      - else
+        | )

@@ -1,0 +1,9 @@
+- unless klass.subtypes.empty?
+  h4= t('cheat_sheet.descendants')
+  ul
+    - klass.subtypes.each do |subtype|
+      li
+        a[href="##{cheat_sheet_link(subtype)}"]
+          = subtype.local_name
+          | &nbsp;-&nbsp;
+          = subtype.documentation

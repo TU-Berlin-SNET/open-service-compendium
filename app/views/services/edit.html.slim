@@ -1,0 +1,61 @@
+- content_for :head
+  = javascript_include_tag 'ace/ace.js', type: 'text/javascript', charset: 'utf-8'
+  = javascript_include_tag 'ace/ext-language_tools', type: 'text/javascript', charset: 'utf-8'
+
+h1
+  = link_to t('services.list.list'), services_path
+  | &nbsp;>&nbsp;
+  = t('services.edit.header', service_name: params[:id])
+
+= render 'flash'
+
+row
+  fieldset
+    = form_tag service_path(params[:id]), :method => :put, :role => 'form' do |f|
+      .form-group
+        label[for='symbolic_name']= t('service.id')
+        input[type='text' class='form-control' name='symbolic_name' id='symbolic_name'placeholder=t('service.id_placeholder') value=params[:id]]
+      .form-group
+        label[for='service_description']
+          = t('service.description')
+          = link_to " (#{t('services.edit.help')})", cheat_sheet_path, :target => '_blank'
+        textarea[name='service_description']
+          =@service_description
+        #service_description
+      - if @error_row
+        input[type='hidden' id='error_row' value=@error_row]
+      button[type='submit' class="btn btn-default"]= t('services.edit.save')
+
+- if @service
+  h1= t('services.edit.preview')
+
+  table
+    - @service.facts.each do |fact|
+      = render :partial => 'type', :locals => {:type => fact, :value => nil}
+
+javascript:
+  $(document).ready(function() {
+    ace.require("ace/ext/language_tools");
+    var editor = ace.edit('service_description')
+    var textarea = $('textarea[name="service_description"]').hide();
+    editor.setTheme('ace/theme/github')
+    editor.getSession().setMode('ace/mode/ruby')
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true
+    });
+    editor.getSession().setValue(textarea.val());
+    editor.getSession().on('change', function(){
+      textarea.val(editor.getSession().getValue());
+    });
+
+    if($('#error_row')[0] !== undefined) {
+      var error_row = $('#error_row')[0].value
+
+      editor.getSession().setAnnotations([{
+        row: error_row,
+        text: "#{flash[:error]}",
+        type: "error" // also warning and information
+      }]);
+    }
+  });

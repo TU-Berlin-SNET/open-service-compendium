@@ -10,4 +10,12 @@ module ServicesHelper
       "I don't know, how to render #{value.class}."
     end
   end
+
+  def form_path
+    if @service then
+      service_path(@service.symbolic_name)
+    else
+      services_path
+    end
+  end
 end

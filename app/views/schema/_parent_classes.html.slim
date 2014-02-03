@@ -1,0 +1,7 @@
+- if klass.is_sub?
+  h3= t('cheat_sheet.ancestors')
+
+  ul
+    - klass.sdl_ancestors.each do |ancestor|
+      li
+        a[href="##{cheat_sheet_link(ancestor)}"]= ancestor.local_name

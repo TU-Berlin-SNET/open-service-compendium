@@ -1,0 +1,14 @@
+- if properties.count == 1 && properties[0].single?
+  == "#{"\t"*indent}#{keyword} #{example_value(properties[0])}"
+- else
+  == "#{"\t"*indent}#{keyword} do\r\n"
+  - properties.each do |property|
+    - if property.single?
+      == "#{"\t"*(indent + 1)}#{property.name} #{example_value(property)}\r\n"
+    - else
+      - unless property.type < SDL::Types::SDLSimpleType
+        = render 'properties_example', :keyword => property.name.singularize, :properties => property.type.properties(true), :indent => indent + 1
+      - else
+        | Simple type list
+  == "#{"\t"*indent}end\r\n\r\n"
+

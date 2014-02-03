@@ -55,3 +55,11 @@ gem 'thin'
 gem 'nokogiri'
 gem 'verbs'
 gem 'linkeddata'
+
+# Twitter bootstrap
+gem 'bootstrap-sass', '~> 3.0.3.0'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
+
+# Rails config
+gem 'rails_config'

@@ -43,3 +43,14 @@ table {
     }
   }
 }
+
+form {
+  table {
+    width: 35em;
+  }
+
+  #service_description {
+    position: relative;
+    height: 20em;
+  }
+}

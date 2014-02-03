@@ -1,0 +1,1 @@
+File.read(@service.loaded_from)

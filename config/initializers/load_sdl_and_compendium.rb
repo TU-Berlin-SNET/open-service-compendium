@@ -31,21 +31,13 @@ class OpenServiceBroker::Application
     def build_compendium
       compendium = SDL::Base::ServiceCompendium.new
 
-      sdl_lib_dir = Rails.root.join('lib', 'sdl-ng').to_s
+      sdl_example_dir = Rails.root.join('lib', 'sdl-ng', 'examples').to_s
 
       # Load SDL
-      Dir.glob(File.join(sdl_lib_dir, 'examples', '**', '*.sdl.rb')) do |filename|
-        compendium.facts_definition do
-          eval(File.read(filename), binding, filename)
-        end
-      end
+      compendium.load_vocabulary_from_path sdl_example_dir
 
       # Load Service Definitions
-      Dir.glob(File.join(sdl_lib_dir, 'examples', '**', '*.service.rb')) do |filename|
-        compendium.service filename.match(%r[.+/(.+).service.rb])[1] do
-          eval(File.read(filename), binding, filename)
-        end
-      end
+      compendium.load_service_from_path sdl_example_dir, ignore_errors: true
 
       Rails.logger.info "Loaded compendium with #{compendium.services.count} services."
 
