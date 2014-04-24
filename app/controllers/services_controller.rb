@@ -25,9 +25,9 @@ class ServicesController < ApplicationController
   end
 
   def edit
-    @service_description = File.read(File.join(Settings.services_path, "#{params[:id]}.service.rb"))
-
     @service = compendium.services[params[:id]]
+
+    @service_description = @service.sdl_parts['main']
   end
 
   def create

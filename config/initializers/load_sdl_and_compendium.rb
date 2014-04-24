@@ -1,3 +1,5 @@
+Rails.application.eager_load!
+
 register_uri_mapper = lambda do
   require_dependency File.join(Rails.root, 'app', 'models', 'OSBURIMapper.rb')
 
@@ -37,7 +39,9 @@ class OpenServiceBroker::Application
       compendium.load_vocabulary_from_path sdl_example_dir
 
       # Load Service Definitions
-      compendium.load_service_from_path sdl_example_dir, ignore_errors: true
+      ServiceRecord.each do |record|
+        record.load_into compendium
+      end
 
       Rails.logger.info "Loaded compendium with #{compendium.services.count} services."
 

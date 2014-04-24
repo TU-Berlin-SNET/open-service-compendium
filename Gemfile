@@ -55,6 +55,7 @@ gem 'thin'
 gem 'nokogiri'
 gem 'verbs'
 gem 'linkeddata'
+gem 'uuid'
 
 # Twitter bootstrap
 gem 'bootstrap-sass', '~> 3.0.3.0'
@@ -63,3 +64,12 @@ gem 'jquery-ui-rails'
 
 # Rails config
 gem 'rails_config'
+
+gem 'radix'
+
+gem 'mongoid', github: 'mongoid/mongoid'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0.0.beta'
+  gem 'spork-rails'
+end
