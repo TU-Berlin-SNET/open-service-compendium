@@ -4,17 +4,27 @@ class ServicesController < ApplicationController
   before_filter :disable_pretty_printing, :only => [:new, :edit, :create]
 
   def list
-    @services = compendium.services
+    if params[:status]
+      @services = compendium.services.select do |name, service|
+        [params[:status]].flatten.include? service.status.status.identifier.to_s
+      end
+    else
+      @services = compendium.approved_services
+    end
   end
 
   def show
-    @service = compendium.services[params[:id]]
+    slug = params[:id].split('-')[0]
+
+    @service = compendium.mongo_id_service_map[slug]
 
     if @service.nil?
       flash[:message] = t('service.show.service_not_found')
       flash[:error] = t('service.show.service_not_found_detail')
 
-      redirect_to :action => :index
+      head :not_found
+
+      #redirect_to :action => :index
     end
   end
 
@@ -31,56 +41,87 @@ class ServicesController < ApplicationController
   end
 
   def create
-    service_path = File.join(Settings.services_path, "#{params[:symbolic_name].gsub('/', '')}.service.rb")
+    record = ServiceRecord.new ( {
+        :name => params[:name],
+        :sdl_parts => params[:sdl_parts] || {
+            'meta' => 'status draft',
+            'main' => "has_name '#{t('services.new.service_description_placeholder')}'"
+        }
+    })
 
-    File.open(service_path, 'w') do |f|
-      f.write("has_name '#{t('services.new.service_description_placeholder')}'")
-    end
-
-    compendium.load_service_from_path service_path
-
-    redirect_to :action => :edit, :id => params[:symbolic_name]
-  end
-
-  ##
-  # Updates a service description.
-  #
-  #
-  #
-  # @param [String] symbolic_name The symbolic name of the service, e.g. salesforce_sales_cloud
-  # @param [String] service_description The service description
-  def update
-    original_service_path = File.join(Settings.services_path, "#{params[:id]}.service.rb")
-    updated_service_path = File.join(Settings.services_path, "#{params[:symbolic_name]}.service.rb")
-
-    compendium.unload original_service_path
+    record.save
 
     begin
-      compendium.load_service_from_string params[:service_description], params[:symbolic_name], updated_service_path
+      record.load_into(compendium)
 
-      File.open(updated_service_path, 'w') do |f|
-        f.write params[:service_description]
-      end
+      head :created, location: record.uri
+    rescue Exception => e
+      record.delete
 
-      unless original_service_path.eql? updated_service_path
+      render text: e.message, status: 422
+    end
+
+    #redirect_to :action => :edit, :id => record.slug
+  end
+
+  def update
+    slug = params[:id].split('-')[0]
+
+    service = compendium.mongo_id_service_map[slug]
+
+    if service.nil?
+      flash[:message] = t('service.show.service_not_found')
+      flash[:error] = t('service.show.service_not_found_detail')
+
+      head :not_found
+    else
+      if params[:name]
+        old_name = compendium.services.key(service)
+
+        compendium.services.delete(old_name)
+        compendium.services[params[:name]] = service
+
+        record = ServiceRecord.find(slug)
+        record.name = params[:name]
+        record.save!
+      elsif params[:sdl_part]
+        name = compendium.services.key(service.__getobj__)
+
+        current_service = compendium.services.delete(name)
+
         begin
-          File.unlink original_service_path
-        rescue
+          new_sdl_parts = current_service.sdl_parts.clone
+          new_sdl_parts[params[:sdl_part]] = request.body.read
+          new_sdl = ServiceRecord.combine_service_sdl_parts(new_sdl_parts)
 
+          compendium.load_service_from_string(new_sdl, name, current_service.loaded_from)
+
+          record = ServiceRecord.find(slug)
+          record.versions << current_service.sdl_parts
+          record.sdl_parts = new_sdl_parts
+          record.save
+        rescue Exception => e
+          compendium.services[name] = current_service
+
+          render text: e.message, status: 422
+
+          return
         end
       end
-
-      flash[:message] = t('services.update.successful')
-      redirect_to :action => :edit, :id => params[:symbolic_name]
-    rescue Exception => e
-      relevant_backtrace = e.backtrace.select do |entry| entry.include? '.service.rb' end
-
-      flash.now[:error] = "#{e.message}<br/><pre>#{relevant_backtrace.join("\r\n")}</pre>"
-      flash.now[:message] = t('services.update.failed')
-      @error_row = relevant_backtrace[0].match(/.service.rb:(\d+):/)[1].to_i - 1 unless relevant_backtrace.empty?
-      @service_description = params[:service_description]
-      render 'edit', :status => 422
     end
+
+    flash[:message] = t('services.update.successful')
+    redirect_to :action => :edit, :id => params[:name] ? "#{params[:id]}-#{params[:name]}" : params[:id]
+
+    #rescue Exception => e
+    #  relevant_backtrace = e.backtrace.select do |entry| entry.include? '.service.rb' end
+    #
+    #  flash.now[:error] = "#{e.message}<br/><pre>#{relevant_backtrace.join("\r\n")}</pre>"
+    #  flash.now[:message] = t('services.update.failed')
+    #  @error_row = relevant_backtrace[0].match(/.service.rb:(\d+):/)[1].to_i - 1 unless relevant_backtrace.empty?
+    #  @service_description = params[:service_description]
+    #  render 'edit', :status => 422
+    #end
   end
 
   private

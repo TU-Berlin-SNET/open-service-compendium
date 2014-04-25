@@ -9,5 +9,7 @@ OpenServiceBroker::Application.routes.draw do
 
   resources :services do
     get '', on: :collection, action: 'list'
+    get ':sdl_part', on: :member, action: 'show'
+    put ':sdl_part', on: :member, action: 'update'
   end
 end

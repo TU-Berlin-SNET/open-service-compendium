@@ -35,8 +35,11 @@ class OpenServiceBroker::Application
 
       sdl_example_dir = Rails.root.join('lib', 'sdl-ng', 'examples').to_s
 
-      # Load SDL
+      # Load example SDL
       compendium.load_vocabulary_from_path sdl_example_dir
+
+      # Load broker vocabulary
+      compendium.load_vocabulary_from_path Rails.root.join('lib', 'vocabulary').to_s
 
       # Load Service Definitions
       ServiceRecord.each do |record|

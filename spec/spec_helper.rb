@@ -74,23 +74,26 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
 
+  config.include FactoryGirl::Syntax::Methods
+
   config.before(:suite) do
-    record = ServiceRecord.new ( {
-      :name => 'google-drive-for-business',
-      :sdl_parts => {
-          'main' => File.read(File.join(__dir__, '../lib/sdl-ng/examples/services/google_drive_for_business.service.rb'))
-      }
-    })
+    begin
+      DatabaseCleaner[:mongoid].strategy = :truncation
+      DatabaseCleaner[:mongoid].clean_with(:truncation)
 
-    record.save
+      DatabaseCleaner.start
+      FactoryGirl.lint
+    ensure
+      DatabaseCleaner.clean
+    end
+  end
 
-    record = ServiceRecord.new ( {
-        :name => 'salesforce-sales-cloud',
-        :sdl_parts => {
-            'main' => File.read(File.join(__dir__, '../lib/sdl-ng/examples/services/salesforce_sales_cloud.service.rb'))
-        }
-    })
-    record.save
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 
   # Run specs in random order to surface order dependencies. If you find an
@@ -98,4 +101,10 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
+end
+
+module SDL::Util::NokogiriUtils
+  def fetch_from_url(url, *search)
+    []
+  end
 end
