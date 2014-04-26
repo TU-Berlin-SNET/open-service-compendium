@@ -83,7 +83,7 @@ class ServicesController < ApplicationController
 
         record = ServiceRecord.find(slug)
         record.name = params[:name]
-        record.save!
+        record.archive_and_save!
       elsif params[:sdl_part]
         name = compendium.services.key(service.__getobj__)
 
@@ -97,9 +97,8 @@ class ServicesController < ApplicationController
           compendium.load_service_from_string(new_sdl, name, current_service.loaded_from)
 
           record = ServiceRecord.find(slug)
-          record.versions << current_service.sdl_parts
           record.sdl_parts = new_sdl_parts
-          record.save
+          record.archive_and_save!
         rescue Exception => e
           compendium.services[name] = current_service
 
@@ -108,11 +107,10 @@ class ServicesController < ApplicationController
           return
         end
       end
+
+      flash[:message] = t('services.update.successful')
+      redirect_to :action => :edit, :id => params[:name] ? "#{params[:id]}-#{params[:name]}" : params[:id]
     end
-
-    flash[:message] = t('services.update.successful')
-    redirect_to :action => :edit, :id => params[:name] ? "#{params[:id]}-#{params[:name]}" : params[:id]
-
     #rescue Exception => e
     #  relevant_backtrace = e.backtrace.select do |entry| entry.include? '.service.rb' end
     #

@@ -134,6 +134,24 @@ describe ServicesController do
       expect(response.status).to eq(200)
       expect(response.body).to eq random_record.to_service_sdl
     end
+
+    context 'for a historical version' do
+      it 'retrieves a historical version of a service' do
+        fail pending
+      end
+
+      it 'errors if it does not find an historical version' do
+        fail pending
+      end
+
+      it 'returns parts of historical service descriptions' do
+        fail pending
+      end
+
+      it 'returns all parts of historical service descriptions' do
+        fail pending
+      end
+    end
   end
 
   describe 'PUT #update' do
@@ -152,26 +170,57 @@ describe ServicesController do
       compendium.services.clear
     end
 
-    it 'updates the service description' do
+    it 'updates one sdl part of the service description' do
       record = create(:approved_record)
       record.load_into compendium
 
       @request.env['RAW_POST_DATA'] = 'has_name "My Service"'
       put :update, {:id => record.slug, :sdl_part => 'main'}
 
-      changed_record = ServiceRecord.find(record._id)
+      record.reload
 
-      expect(changed_record.sdl_parts['main']).to eql 'has_name "My Service"'
+      expect(record.sdl_parts['main']).to eql 'has_name "My Service"'
       expect(compendium.services[record.name].name.name.value).to eql 'My Service'
 
-      changed_record.delete
+      record.delete
       compendium.services.clear
+    end
+
+    it 'increments the version and archives the service as historical record' do
+      record = create(:approved_record)
+      record.load_into compendium
+      record_name = record.name
+      record_sdl_main = record.sdl_parts['main']
+
+      @request.env['RAW_POST_DATA'] = 'has_name "My updated service"'
+      put :update, {:id => record.slug, :sdl_part => 'main'}
+
+      record.reload
+
+      expect(record._version).to eq 2
+
+      historical_record = HistoricalServiceRecord.find(record._id)
+
+      expect(historical_record._version).to eq 1
+      expect(historical_record.sdl_parts['main']).to eq record_sdl_main
+
+      record.delete
+      historical_record.delete
+      compendium.services.clear
+    end
+
+    it 'does not update with erroneous information' do
+      fail pending
+    end
+
+    it 'gives a hint, what caused an update to fail' do
+      fail pending
     end
   end
 
   describe 'GET #versions' do
     it 'lists all versions' do
-
+      fail pending
     end
   end
 end
