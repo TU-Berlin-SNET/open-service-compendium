@@ -141,15 +141,27 @@ describe ServicesController do
       end
 
       it 'errors if it does not find an historical version' do
-        fail pending
+        get :show, {:id => 'unknown', :version => 1}
+
+        expect(response.status).to eq(404)
       end
 
       it 'returns parts of historical service descriptions' do
-        fail pending
+        historical_record = create(:service_record_with_history).historical_records[1]
+
+        get :show, {:id => historical_record._id['_id'], :sdl_part => 'main', :format => 'sdl', :version => historical_record._version}
+
+        expect(response.status).to eq(200)
+        expect(response.body).to eq historical_record.sdl_parts['main']
       end
 
       it 'returns all parts of historical service descriptions' do
-        fail pending
+        historical_record = create(:service_record_with_history).historical_records[1]
+
+        get :show, {:id => historical_record._id['_id'], :format => 'sdl', :version => historical_record._version}
+
+        expect(response.status).to eq(200)
+        expect(response.body).to eq historical_record.to_service_sdl
       end
     end
   end
@@ -186,6 +198,24 @@ describe ServicesController do
       compendium.services.clear
     end
 
+    it 'updates all sdl parts of the service description' do
+      record = create(:submitted_record)
+      record.load_into compendium
+
+      put :update, {:id => record.slug, :sdl_parts => {'main' => 'has_name "My Name"', 'meta' => 'status approved'}}
+
+      record.reload
+
+      expect(record.sdl_parts['main']).to eql 'has_name "My Name"'
+      expect(record.sdl_parts['meta']).to eql 'status approved'
+
+      expect(compendium.services[record.name].name.name.value).to eql 'My Name'
+      expect(compendium.services[record.name].status.status.identifier).to eql :approved
+
+      record.delete
+      compendium.services.clear
+    end
+
     it 'increments the version and archives the service as historical record' do
       record = create(:approved_record)
       record.load_into compendium
@@ -199,7 +229,7 @@ describe ServicesController do
 
       expect(record._version).to eq 2
 
-      historical_record = HistoricalServiceRecord.find(record._id)
+      historical_record = record.historical_records[0]
 
       expect(historical_record._version).to eq 1
       expect(historical_record.sdl_parts['main']).to eq record_sdl_main
@@ -209,18 +239,47 @@ describe ServicesController do
       compendium.services.clear
     end
 
-    it 'does not update with erroneous information' do
-      fail pending
-    end
+    it 'does not update with erroneous information and gives an error hint' do
+      record = create(:approved_record)
+      record.load_into compendium
 
-    it 'gives a hint, what caused an update to fail' do
-      fail pending
+      old_main_sdl_part = record.sdl_parts['main']
+      old_name = compendium.services[record.name].name.name.value
+
+      @request.env['RAW_POST_DATA'] = 'unknown'
+      put :update, {:id => record.slug, :sdl_part => 'main'}
+
+      record.reload
+
+      expect(response.status).to eq 422
+      expect(record.sdl_parts['main']).to eq old_main_sdl_part
+      expect(compendium.services[record.name].name.name.value).to eql old_name
+      expect(response.body).to match /'unknown' in/
+
+      record.delete
+      compendium.services.clear
     end
   end
 
-  describe 'GET #versions' do
+  describe 'GET #list_versions' do
+    render_views
+
     it 'lists all versions' do
-      fail pending
+      record = create(:service_record_with_history)
+
+      request.accept = 'application/json'
+      get :list_versions, {:id => record.id}
+
+      expect(response.success?).to be true
+      expect(assigns(:versions).length).to be 3
+
+      json_response = JSON[response.body]
+      expect(json_response).to be_an Array
+      json_response.each do |hash|
+        expect{URI.parse(hash['url'])}.not_to raise_exception
+        expect{Time.parse(hash['valid_from'])}.not_to raise_exception
+        expect(hash['deleted']).to be false
+      end
     end
   end
 end

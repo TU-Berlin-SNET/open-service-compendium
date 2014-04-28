@@ -77,4 +77,7 @@ group :test do
   gem 'database_cleaner', :github => 'bmabey/database_cleaner'
   gem 'factory_girl'
   gem 'humanize'
+  gem 'zeus'
 end
+
+gem 'active_model_serializers'

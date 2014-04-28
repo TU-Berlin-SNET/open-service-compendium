@@ -12,8 +12,17 @@ FactoryGirl.define do
     %w(draft submitted approved).each do |status|
       factory "#{status}_record" do
         after(:build) do |record|
-          record.sdl_parts['meta'] = "status #{status}"
+          record.sdl_parts['meta'] = "status #{status}\nprovider_id 123"
         end
+      end
+    end
+  end
+
+  factory :service_record_with_history, parent: :service_record do
+    after(:create) do |service_record|
+      3.times do
+        service_record.name = generate(:service_name)
+        service_record.archive_and_save!
       end
     end
   end

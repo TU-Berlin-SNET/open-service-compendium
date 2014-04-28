@@ -13,11 +13,35 @@ class ServicesController < ApplicationController
     end
   end
 
+  def list_versions
+    slug = params[:id].split('-')[0]
+
+    @versions = HistoricalServiceRecord.where('_id._id' => slug).only(:_version, :valid_from, :valid_until, :deleted)
+
+    #@versions = {}
+    #db_versions.each do |db_version|
+    #  @versions[db_version._version] = {
+    #      'valid_from' => db_version.valid_from,
+    #      'valid_until' => db_version.valid_until,
+    #      'deleted' => db_version.deleted
+    #  }
+    #end
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @versions, root: false }
+    end
+  end
+
   def show
     slug = params[:id].split('-')[0]
 
-    @service = compendium.mongo_id_service_map[slug]
-
+    if params[:version]
+      @service = HistoricalServiceRecord.where('_id._id' => slug, '_version' => params[:version]).first
+    else
+      @service = compendium.mongo_id_service_map[slug]
+    end
+    
     if @service.nil?
       flash[:message] = t('service.show.service_not_found')
       flash[:error] = t('service.show.service_not_found_detail')
@@ -84,14 +108,19 @@ class ServicesController < ApplicationController
         record = ServiceRecord.find(slug)
         record.name = params[:name]
         record.archive_and_save!
-      elsif params[:sdl_part]
+      elsif params[:sdl_part] || params[:sdl_parts]
         name = compendium.services.key(service.__getobj__)
 
         current_service = compendium.services.delete(name)
 
         begin
-          new_sdl_parts = current_service.sdl_parts.clone
-          new_sdl_parts[params[:sdl_part]] = request.body.read
+          if params[:sdl_part]
+            new_sdl_parts = current_service.sdl_parts.clone
+            new_sdl_parts[params[:sdl_part]] = request.body.read
+          else
+            new_sdl_parts = params[:sdl_parts]
+          end
+
           new_sdl = ServiceRecord.combine_service_sdl_parts(new_sdl_parts)
 
           compendium.load_service_from_string(new_sdl, name, current_service.loaded_from)
@@ -102,7 +131,10 @@ class ServicesController < ApplicationController
         rescue Exception => e
           compendium.services[name] = current_service
 
-          render text: e.message, status: 422
+          relevant_backtrace = e.backtrace.select do |entry| entry.include? 'mongodb://' end
+          relevant_line = relevant_backtrace[0].match(/:(\d+):/)[1] unless relevant_backtrace.empty?
+
+          render text: "#{e.message}#{relevant_line ? " in line #{relevant_line}" : ''}", status: 422
 
           return
         end

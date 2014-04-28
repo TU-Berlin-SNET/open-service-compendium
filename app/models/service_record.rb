@@ -2,7 +2,6 @@ class ServiceRecord
   module FieldDefinitions
     def self.included(clazz)
       clazz.instance_eval do
-        field :_id, type: String, default: -> { new_id }
         field :_version, type: Integer, default: 1
         field :name, type: String, default: 'untitled'
         field :sdl_parts, type: Hash, default: {}
@@ -10,7 +9,7 @@ class ServiceRecord
     end
 
     def to_service_sdl
-      self.class.combine_service_sdl_parts sdl_parts
+      ServiceRecord.combine_service_sdl_parts sdl_parts
     end
 
     def load_into(compendium)
@@ -36,6 +35,8 @@ class ServiceRecord
 
   include FieldDefinitions
 
+  field :_id, type: String, default: -> { new_id }
+
   ID_BASE = Radix::Base.new(Radix::BASE::B62 + ['_'])
 
   validates_presence_of [:name]
@@ -59,6 +60,10 @@ class ServiceRecord
     sdl.string
   end
 
+  def historical_records
+    HistoricalServiceRecord.where('_id._id' => _id)
+  end
+
   def uri
     "mongodb://service_records/#{_id}"
   end
@@ -70,7 +75,10 @@ class ServiceRecord
   def archive_and_save!
     if changed?
       HistoricalServiceRecord.create(
-          _id: _id,
+          _id: {
+              '_id' => _id,
+              '_version' => _version
+          },
           _version: _version,
           name: name_was,
           sdl_parts: sdl_parts_was,
