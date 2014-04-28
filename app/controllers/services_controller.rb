@@ -6,7 +6,7 @@ class ServicesController < ApplicationController
   def list
     if params[:status]
       @services = compendium.services.select do |name, service|
-        [params[:status]].flatten.include? service.status.status.identifier.to_s
+        service.status && [params[:status]].flatten.include?(service.status.status.identifier.to_s)
       end
     else
       @services = compendium.approved_services

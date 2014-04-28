@@ -5,7 +5,7 @@ class SDL::Base::ServiceCompendium
 
   def approved_services
     services.select do |name, service|
-      service.status.status.identifier == :approved
+      service.status && (service.status.status.identifier == :approved)
     end
   end
 end

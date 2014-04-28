@@ -5,6 +5,7 @@ shared_context 'demo services' do
     4.times do create(:draft_record).load_into compendium end
     3.times do create(:submitted_record).load_into compendium end
     2.times do create(:approved_record).load_into compendium end
+    create(:service_record).load_into compendium
   end
 
   after :each do
@@ -120,10 +121,10 @@ describe ServicesController do
     it 'returns parts of service descriptions' do
       random_record = ServiceRecord.all[rand(ServiceRecord.count)]
 
-      get :show, {:id => random_record.slug, :sdl_part => 'meta', :format => 'sdl'}
+      get :show, {:id => random_record.slug, :sdl_part => 'main', :format => 'sdl'}
 
       expect(response.status).to eq(200)
-      expect(response.body).to eq random_record.sdl_parts['meta']
+      expect(response.body).to eq random_record.sdl_parts['main']
     end
 
     it 'returns all parts of service descriptions' do
