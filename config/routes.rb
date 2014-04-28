@@ -9,11 +9,13 @@ OpenServiceBroker::Application.routes.draw do
 
   resources :services do
     get '', on: :collection, action: 'list'
+    get 'edit', on: :member, action: 'edit'
 
-    get ':sdl_part', on: :member, action: 'show'
+    get 'versions', on: :member, action: 'list_versions'
     get 'versions/:version', on: :member, action: 'show', as: :historical
     get 'versions/:version/:sdl_part', on: :member, action: 'show'
+
+    get ':sdl_part', on: :member, action: 'show'
     put ':sdl_part', on: :member, action: 'update'
-    get 'versions', on: :member, action: 'list_versions'
   end
 end

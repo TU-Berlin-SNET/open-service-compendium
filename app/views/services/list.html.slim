@@ -6,11 +6,11 @@ h1 List of all services in the Open Service Broker
       = service.name
 
     h3
-      = link_to 'HTML', service_path(symbolic_name)
-      = link_to 'XML', service_path(symbolic_name, :format => :xml)
-      = link_to 'RDF', service_path(symbolic_name, :format => :rdf)
-      = link_to t('services.list.source'), service_path(symbolic_name, :format => :sdl)
-      = link_to t('services.list.edit'), edit_service_path(symbolic_name)
+      = link_to 'HTML', service_path(service._id)
+      = link_to 'XML', service_path(service._id, :format => :xml)
+      = link_to 'RDF', service_path(service._id, :format => :rdf)
+      = link_to t('services.list.source'), service_path(service._id, :format => :sdl)
+      = link_to t('services.list.edit'), edit_service_path(service._id)
 
 h1=t('services.new.header')
 
@@ -19,5 +19,5 @@ row
     = form_tag services_path, :method => :post, :role => 'form' do |f|
       .form-group
         label[for='name']= t('service.id')
-        input[type='text' class='form-control' name='name' id='name'placeholder=t('service.id_placeholder') value=@name]
+        input[type='text' class='form-control' name='name' id='name' placeholder=t('service.id_placeholder') value=@name]
       button[type='submit' class="btn btn-default"]= t('services.new.submit')
