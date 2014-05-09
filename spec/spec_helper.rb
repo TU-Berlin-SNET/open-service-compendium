@@ -31,9 +31,6 @@ require 'rubygems'
 # These instructions should self-destruct in 10 seconds.  If they don't, feel
 # free to delete them.
 
-
-
-
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
@@ -64,23 +61,7 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
   config.before(:suite) do
-    begin
-      DatabaseCleaner[:mongoid].strategy = :truncation
-      DatabaseCleaner[:mongoid].clean_with(:truncation)
-
-      DatabaseCleaner.start
-      FactoryGirl.lint
-    ensure
-      DatabaseCleaner.clean
-    end
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    DatabaseCleaner.clean
+    FactoryGirl.lint
   end
 
   # Run specs in random order to surface order dependencies. If you find an

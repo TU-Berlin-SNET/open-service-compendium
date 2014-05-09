@@ -1,7 +1,7 @@
 class HistoricalServiceRecord
   include Mongoid::Document
 
-  include ServiceRecord::FieldDefinitions
+  include ServiceFieldDefinitions
 
   field :_id, type: Hash
   field :valid_from, type: Time

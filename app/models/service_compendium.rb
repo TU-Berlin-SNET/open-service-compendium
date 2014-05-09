@@ -1,6 +1,6 @@
 class SDL::Base::ServiceCompendium
-  def mongo_id_service_map
-    @mongo_id_service_map ||= {}
+  def post_process_service(sym, receiver)
+    receiver.service
   end
 
   def approved_services

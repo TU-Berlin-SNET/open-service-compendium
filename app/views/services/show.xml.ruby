@@ -1,4 +1,4 @@
-exporter = SDL::Exporters::XMLServiceExporter.new(@service.compendium)
+exporter = SDL::Exporters::XMLServiceExporter.new
 
 builder = Nokogiri::XML::Builder.new do |xml|
   exporter.build_service(@service, xml)

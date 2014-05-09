@@ -4,28 +4,15 @@ class ServicesController < ApplicationController
   before_filter :disable_pretty_printing, :only => [:new, :edit, :create]
 
   def list
-    if params[:status]
-      @services = compendium.services.select do |name, service|
-        [params[:status]].flatten.include?(service.try(:status).try(:status).try(:identifier).to_s)
-      end
-    else
-      @services = compendium.approved_services
-    end
+    status = params[:status] || :approved
+
+    @services = Service.with_status(status)
   end
 
   def list_versions
     slug = params[:id].split('-')[0]
 
     @versions = HistoricalServiceRecord.where('_id._id' => slug).only(:_version, :valid_from, :valid_until, :deleted)
-
-    #@versions = {}
-    #db_versions.each do |db_version|
-    #  @versions[db_version._version] = {
-    #      'valid_from' => db_version.valid_from,
-    #      'valid_until' => db_version.valid_until,
-    #      'deleted' => db_version.deleted
-    #  }
-    #end
 
     respond_to do |format|
       format.html
@@ -39,7 +26,7 @@ class ServicesController < ApplicationController
     if params[:version]
       @service = HistoricalServiceRecord.where('_id._id' => slug, '_version' => params[:version]).first
     else
-      @service = compendium.mongo_id_service_map[slug]
+      @service = Service.where('_id' => slug).first
     end
     
     if @service.nil?
@@ -59,28 +46,30 @@ class ServicesController < ApplicationController
   end
 
   def edit
-    @service = compendium.services[params[:id]]
+    slug = params[:id].split('-')[0]
+
+    @service = Service.find(slug)
 
     @service_description = @service.sdl_parts['main']
   end
 
   def create
-    record = ServiceRecord.new ( {
+    service = Service.new ( {
         :name => params[:name],
         :sdl_parts => params[:sdl_parts] || {
             'meta' => 'status draft',
-            'main' => "has_name '#{t('services.new.service_description_placeholder')}'"
+            'main' => "service_name '#{t('services.new.service_description_placeholder')}'"
         }
     })
 
-    record.save
-
     begin
-      record.load_into(compendium)
+      service.load_service_from_sdl
 
-      head :created, location: record.uri
+      service.save
+
+      head :created, location: service.uri
     rescue Exception => e
-      record.delete
+      service.delete
 
       render text: e.message, status: 422
     end
@@ -91,7 +80,7 @@ class ServicesController < ApplicationController
   def update
     slug = params[:id].split('-')[0]
 
-    service = compendium.mongo_id_service_map[slug]
+    service = Service.find(slug)
 
     if service.nil?
       flash[:message] = t('service.show.service_not_found')
@@ -100,37 +89,20 @@ class ServicesController < ApplicationController
       head :not_found
     else
       if params[:name]
-        old_name = compendium.services.key(service)
-
-        compendium.services.delete(old_name)
-        compendium.services[params[:name]] = service
-
-        record = ServiceRecord.find(slug)
-        record.name = params[:name]
-        record.archive_and_save!
+        service.name = params[:name]
+        service.archive_and_save!
       elsif params[:sdl_part] || params[:sdl_parts]
-        name = compendium.services.key(service.__getobj__)
-
-        current_service = compendium.services.delete(name)
-
         begin
           if params[:sdl_part]
-            new_sdl_parts = current_service.sdl_parts.clone
-            new_sdl_parts[params[:sdl_part]] = request.body.read
+            service.sdl_parts[params[:sdl_part]] = request.body.read
           else
-            new_sdl_parts = params[:sdl_parts]
+            service.sdl_parts = params[:sdl_parts]
           end
 
-          new_sdl = ServiceRecord.combine_service_sdl_parts(new_sdl_parts)
+          service.load_service_from_sdl
 
-          compendium.load_service_from_string(new_sdl, name, current_service.loaded_from)
-
-          record = ServiceRecord.find(slug)
-          record.sdl_parts = new_sdl_parts
-          record.archive_and_save!
+          service.archive_and_save!
         rescue Exception => e
-          compendium.services[name] = current_service
-
           relevant_backtrace = e.backtrace.select do |entry| entry.include? 'mongodb://' end
           relevant_line = relevant_backtrace[0].match(/:(\d+):/)[1] unless relevant_backtrace.empty?
 
@@ -143,15 +115,6 @@ class ServicesController < ApplicationController
       flash[:message] = t('services.update.successful')
       redirect_to :action => :edit, :id => params[:name] ? "#{params[:id]}-#{params[:name]}" : params[:id]
     end
-    #rescue Exception => e
-    #  relevant_backtrace = e.backtrace.select do |entry| entry.include? '.service.rb' end
-    #
-    #  flash.now[:error] = "#{e.message}<br/><pre>#{relevant_backtrace.join("\r\n")}</pre>"
-    #  flash.now[:message] = t('services.update.failed')
-    #  @error_row = relevant_backtrace[0].match(/.service.rb:(\d+):/)[1].to_i - 1 unless relevant_backtrace.empty?
-    #  @service_description = params[:service_description]
-    #  render 'edit', :status => 422
-    #end
   end
 
   private
