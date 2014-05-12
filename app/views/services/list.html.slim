@@ -1,9 +1,9 @@
 h1 List of all services in the Open Service Broker
 
 .services
-  - @services.each do |symbolic_name, service|
+  - @services.each do |service|
     h2
-      = service.name
+      = service.service_name
 
     h3
       = link_to 'HTML', service_path(service._id)

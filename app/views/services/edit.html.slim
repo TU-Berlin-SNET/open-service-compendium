@@ -31,7 +31,7 @@ row
 
   table
     - @service.facts.each do |fact|
-      = render :partial => 'type', :locals => {:type => fact, :value => nil}
+      = render :partial => 'properties', :locals => {:type => fact, :value => nil}
 
 javascript:
   $(document).ready(function() {

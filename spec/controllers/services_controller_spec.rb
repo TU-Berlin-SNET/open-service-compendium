@@ -130,7 +130,16 @@ describe ServicesController do
 
     context 'for a historical version' do
       it 'retrieves a historical version of a service' do
-        fail pending
+        service = create(:draft_service)
+        old_version = service._version
+        service.status = SDL::Base::Type::Status[:approved]
+        service.archive_and_save!
+
+        get :show, {:id => service._id, :version => old_version}
+        expect(assigns(:service).status.identifier).to eq :draft
+
+        get :show, {:id => service._id}
+        expect(assigns(:service).status.identifier).to eq :approved
       end
 
       it 'errors if it does not find an historical version' do
@@ -259,7 +268,12 @@ describe ServicesController do
 
   describe 'DELETE #delete' do
     it 'deletes a service by moving it to the historical service record collection' do
-      fail pending
+      service = create(:approved_service)
+      service_id = service._id
+
+      delete :delete, {:id => service_id}
+
+      expect{Service.find(service_id)}.to raise_exception
     end
   end
 

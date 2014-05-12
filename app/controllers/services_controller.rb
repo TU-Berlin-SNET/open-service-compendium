@@ -80,7 +80,7 @@ class ServicesController < ApplicationController
   def update
     slug = params[:id].split('-')[0]
 
-    service = Service.find(slug)
+    service = Service.where(:_id => slug).first
 
     if service.nil?
       flash[:message] = t('service.show.service_not_found')
@@ -114,6 +114,23 @@ class ServicesController < ApplicationController
 
       flash[:message] = t('services.update.successful')
       redirect_to :action => :edit, :id => params[:name] ? "#{params[:id]}-#{params[:name]}" : params[:id]
+    end
+  end
+
+  def delete
+    slug = params[:id].split('-')[0]
+
+    service = Service.find(slug)
+
+    if service.nil?
+      flash[:message] = t('service.show.service_not_found')
+      flash[:error] = t('service.show.service_not_found_detail')
+
+      head :not_found
+    else
+      service.delete_and_archive!
+
+      head :success
     end
   end
 

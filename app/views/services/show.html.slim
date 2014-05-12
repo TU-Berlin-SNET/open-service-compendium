@@ -1,5 +1,4 @@
-h1= @service.name
+h1= @service.service_name
 
 table
-  /- @service.property_values.each do |property, value|
-    /= render :partial => 'type', :locals => {:type => property.type, :value => value}
+  = render 'properties', {:holder => @service}

@@ -1,10 +1,23 @@
 module ServiceFieldDefinitions
   def self.included(clazz)
     clazz.instance_eval do
+      include Mongoid::Document
+      include Mongoid::Timestamps
+
       field :_version, type: Integer, default: 1
       field :name, type: String, default: 'untitled'
       field :sdl_parts, type: Hash, default: {}
     end
+
+    field_definitions.each do |block|
+      clazz.instance_eval &block
+    end
+
+    clazz.additional_field_definitions
+  end
+
+  def self.field_definitions
+    @field_definitions ||= []
   end
 
   def to_service_sdl

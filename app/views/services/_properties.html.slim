@@ -1,0 +1,9 @@
+- local_assigns[:holder].property_values.each do |property, value|
+  tr[id="#{property.name}"]
+    td= property.documentation
+    td
+      - if property.multi?
+        - [value].flatten.each do |v|
+          li== render_value(v)
+      - else
+        == render_value(value)

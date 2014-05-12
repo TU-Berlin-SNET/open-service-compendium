@@ -51,3 +51,6 @@ Rails.logger.info "Loaded compendium."
 Rails.application.compendium = compendium
 
 Service = SDL::Base::Type::Service
+
+Service.include ServiceFieldDefinitions
+HistoricalServiceRecord.include ServiceFieldDefinitions
