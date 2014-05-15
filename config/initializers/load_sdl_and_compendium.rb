@@ -57,19 +57,25 @@ Rails.application.compendium = compendium
 
 Service = SDL::Base::Type::Service
 
+to_prepare = Proc.new do
+  Service = SDL::Base::Type::Service
+
+  Service.instance_eval do
+    include ServiceFieldDefinitions
+  end
+
+  HistoricalServiceRecord.instance_eval do
+    include ServiceFieldDefinitions
+
+    @local_name = "HistoricalServiceRecord"
+    @properties = Service.properties.dup
+  end
+end
+
 unless Rails.configuration.cache_classes
   ActionDispatch::Reloader.to_prepare do
-    Service = SDL::Base::Type::Service
-
-    Service.instance_eval do
-      include ServiceFieldDefinitions
-    end
-
-    HistoricalServiceRecord.instance_eval do
-      include ServiceFieldDefinitions
-
-      @local_name = "HistoricalServiceRecord"
-      @properties = Service.properties.dup
-    end
+    to_prepare.call
   end
+else
+  to_prepare.call
 end
