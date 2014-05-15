@@ -1,0 +1,9 @@
+xml.versions :count => @versions.count do
+  @versions.each do |version|
+    xml.version :url => historical_service_url(version._id['_id'], version._version) do
+      xml.valid_from version.valid_from
+      xml.valid_until version.valid_until
+      xml.deleted version.deleted
+    end
+  end
+end

@@ -5,11 +5,9 @@ FactoryGirl.define do
 
   factory :service do
     identifier { generate (:service_name) }
-    sdl_parts {
-      {'main' => "service_name '#{identifier}'"}
-    }
+    sdl_parts { {'main' => "service_name '#{identifier}'\r\nservice_tag 'new-tag'"} }
 
-    %w(draft submitted approved).each do |status|
+    %w(draft approved).each do |status|
       factory "#{status}_service" do
         after(:build) do |service|
           service.sdl_parts['meta'] = "status #{status}\nprovider_id 123"
@@ -31,8 +29,9 @@ FactoryGirl.define do
     factory :service_with_history do
       after(:create) do |service|
         3.times do
+          original_attributes = service.attributes.deep_dup
           service.identifier = generate(:service_name)
-          service.archive_and_save!
+          service.archive_and_save!(original_attributes)
         end
       end
     end

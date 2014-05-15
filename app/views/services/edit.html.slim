@@ -11,7 +11,7 @@ h1
 
 row
   fieldset
-    = form_tag service_path(params[:id]), :method => :put, :role => 'form' do |f|
+    = form_tag sdl_part_of_service_path(params[:id], 'main'), :method => :put, :role => 'form' do |f|
       .form-group
         label[for='symbolic_name']= t('service.id')
         input[type='text' class='form-control' name='symbolic_name' id='symbolic_name'placeholder=t('service.id_placeholder') value=params[:id]]
@@ -30,8 +30,7 @@ row
   h1= t('services.edit.preview')
 
   table
-    - @service.facts.each do |fact|
-      = render :partial => 'properties', :locals => {:type => fact, :value => nil}
+    = render 'properties', {:holder => @service}
 
 javascript:
   $(document).ready(function() {

@@ -11,6 +11,10 @@ test:
       database: broker
       hosts:
         - localhost:27017
+      options:
+        write:
+          w: 1
+
 
 production:
   sessions:

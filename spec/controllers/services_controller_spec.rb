@@ -3,13 +3,12 @@ require 'spec_helper'
 shared_context 'demo services' do
   before :each do
     4.times do create(:draft_service) end
-    3.times do create(:submitted_service) end
     2.times do create(:approved_service) end
     create(:service)
   end
 
   after :each do
-    Service.with(safe: true).delete_all
+    Service.delete_all
   end
 end
 
@@ -31,7 +30,7 @@ describe ServicesController do
     end
 
     it 'lists services with a given status' do
-      {'draft' => 4, 'submitted' => 3, 'approved' => 2, 'unknown' => 0}.each do |status, count|
+      {'draft' => 4, 'approved' => 2, 'unknown' => 0}.each do |status, count|
         get :list, {:status => status}
 
         expect(assigns(:services).length).to eq count
@@ -61,19 +60,31 @@ describe ServicesController do
 
     it 'creates a new service with the given areas and loads it to the db and compendium' do
       post :create, {:name => 'service_with_sdl_parts', :sdl_parts => {
-          'main' => 'can_export csv',
+          'main' => 'exportable_data_format csv',
           'meta' => 'status approved'
       }}
 
       service = Service.where(name: 'service_with_sdl_parts').first
 
-      expect(service.sdl_parts['main']).to eq 'can_export csv'
+      expect(service.sdl_parts['main']).to eq 'exportable_data_format csv'
       expect(service.sdl_parts['meta']).to eq 'status approved'
 
-      expect(service.can_export[0].data_format.identifier).to eq :csv
+      expect(service.exportable_data_formats[0].identifier).to eq :csv
 
       expect(response.status).to eq 201
       expect(response['Location']).to eq service.uri
+    end
+
+    it 'sends the relevant URI as HTTP location header' do
+      post :create, {:name => 'service_with_name', :sdl_parts => {
+          'main' => 'service_name "ABC"',
+          'meta' => 'status approved'
+      }}
+
+      service = Service.where(name: 'service_with_name').first
+
+      service_uri = response['Location']
+      assert_generates(service_uri, {:controller => 'services', :action => 'show', :id => service._id})
     end
 
     it 'returns an error, if the service definition is not correct' do
@@ -119,21 +130,23 @@ describe ServicesController do
       expect(response.body).to eq random_service.sdl_parts['main']
     end
 
-    it 'returns all parts of service descriptions' do
+    it 'returns all parts of service descriptions CRLF encoded' do
       random_service = Service.all.drop(rand(Service.count)).first
 
       get :show, {:id => random_service.slug, :format => 'sdl'}
 
       expect(response.status).to eq(200)
       expect(response.body).to eq random_service.to_service_sdl
+      expect(response.body.count("\r\n")).to eql 19
     end
 
     context 'for a historical version' do
       it 'retrieves a historical version of a service' do
         service = create(:draft_service)
         old_version = service._version
-        service.status = SDL::Base::Type::Status[:approved]
-        service.archive_and_save!
+
+        @request.env['RAW_POST_DATA'] = 'status approved'
+        put :update, {:id => service._id, :sdl_part => 'meta'}
 
         get :show, {:id => service._id, :version => old_version}
         expect(assigns(:service).status.identifier).to eq :draft
@@ -149,7 +162,7 @@ describe ServicesController do
       end
 
       it 'returns parts of historical service descriptions' do
-        historical_service = create(:service_with_history).historical_records[1]
+        historical_service = create(:service_with_history).historical_records.to_a[1]
 
         get :show, {:id => historical_service._id['_id'], :sdl_part => 'main', :format => 'sdl', :version => historical_service._version}
 
@@ -158,7 +171,7 @@ describe ServicesController do
       end
 
       it 'returns all parts of historical service descriptions' do
-        historical_service = create(:service_with_history).historical_records[1]
+        historical_service = create(:service_with_history).historical_records.to_a[1]
 
         get :show, {:id => historical_service._id['_id'], :format => 'sdl', :version => historical_service._version}
 
@@ -196,17 +209,18 @@ describe ServicesController do
     end
 
     it 'updates all sdl parts of the service description' do
-      service = create(:submitted_service)
+      service = create(:draft_service)
 
-      put :update, {:id => service.slug, :sdl_parts => {'main' => 'service_name "My Name"', 'meta' => 'status approved'}}
+      put :update, {:id => service.slug, :sdl_parts => {'main' => "service_name 'My Name'\r\nservice_tag 'other-tag'", 'meta' => 'status approved'}}
 
       service.reload
 
-      expect(service.sdl_parts['main']).to eql 'service_name "My Name"'
+      expect(service.sdl_parts['main']).to eql "service_name 'My Name'\r\nservice_tag 'other-tag'"
       expect(service.sdl_parts['meta']).to eql 'status approved'
 
       expect(service.service_name.value).to eql 'My Name'
       expect(service.status.identifier).to eql :approved
+      expect(service.service_tags.count).to eql 1
     end
 
     it 'increments the version and archives the service as historical record' do
@@ -220,7 +234,7 @@ describe ServicesController do
 
       expect(service._version).to eq 2
 
-      historical_record = service.historical_records[0]
+      historical_record = service.historical_records.first
 
       expect(historical_record._version).to eq 1
       expect(historical_record.sdl_parts['main']).to eq record_sdl_main
@@ -247,7 +261,7 @@ describe ServicesController do
   describe 'GET #list_versions' do
     render_views
 
-    it 'lists all versions' do
+    it 'lists all versions as JSON' do
       service = create(:service_with_history)
 
       request.accept = 'application/json'
@@ -264,6 +278,10 @@ describe ServicesController do
         expect(hash['deleted']).to be false
       end
     end
+
+    it 'lists all versions as XML' do
+      fail pending
+    end
   end
 
   describe 'DELETE #delete' do
@@ -274,6 +292,9 @@ describe ServicesController do
       delete :delete, {:id => service_id}
 
       expect{Service.find(service_id)}.to raise_exception
+
+      deleted_record = HistoricalServiceRecord.find({:_id => service_id, :_version => 1})
+      expect(deleted_record.deleted).to be true
     end
   end
 

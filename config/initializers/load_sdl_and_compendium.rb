@@ -14,6 +14,10 @@ end
 
 register_uri_mapper.call
 
+SDL::Types.eager_load!
+
+register_uri_mapper.call
+
 class OpenServiceBroker::Application
   attr_accessor :compendium
 end
@@ -24,14 +28,15 @@ SDL::Types::SDLSimpleType.descendants.each do |type|
 
     embedded_in name.demodulize.underscore.to_sym, polymorphic: true
 
-    field :raw_value, type: Object
+    field :serialized_value, type: BSON::Binary
+    field :serialized_class, type: String
 
     after_build do |document|
-      document.initialize_value if document.raw_value
+      document.initialize_value if document.serialized_value
     end
 
     after_find do |document|
-      document.initialize_value if document.raw_value
+      document.initialize_value if document.serialized_value
     end
   end
 end
@@ -52,5 +57,19 @@ Rails.application.compendium = compendium
 
 Service = SDL::Base::Type::Service
 
-Service.include ServiceFieldDefinitions
-HistoricalServiceRecord.include ServiceFieldDefinitions
+unless Rails.configuration.cache_classes
+  ActionDispatch::Reloader.to_prepare do
+    Service = SDL::Base::Type::Service
+
+    Service.instance_eval do
+      include ServiceFieldDefinitions
+    end
+
+    HistoricalServiceRecord.instance_eval do
+      include ServiceFieldDefinitions
+
+      @local_name = "HistoricalServiceRecord"
+      @properties = Service.properties.dup
+    end
+  end
+end

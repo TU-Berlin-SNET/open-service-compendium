@@ -28,15 +28,23 @@ module ServiceFieldDefinitions
     sdl = StringIO.new
 
     sdl_parts.each do |key, part|
-      sdl.puts "#BEGIN #{key}"
-      sdl.puts part
-      sdl.puts "#END #{key}"
+      sdl << "#BEGIN #{key}\r\n"
+      part.lines.each do |line|
+        sdl << "#{line}\r\n"
+      end
+      sdl << "#END #{key}\r\n"
     end
 
     sdl.string
   end
 
   def load_service_from_sdl
+    self.class.properties.each do |property|
+      unless self[property.name].blank?
+        self.send "#{property.name}=", nil
+      end
+    end
+
     receiver = SDL::Receivers::TypeInstanceReceiver.new(self)
 
     receiver.instance_eval to_service_sdl

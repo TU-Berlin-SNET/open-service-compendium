@@ -56,6 +56,8 @@ gem 'nokogiri'
 gem 'verbs'
 gem 'linkeddata'
 gem 'uuid'
+gem 'money'
+gem 'monetize'
 
 # Twitter bootstrap
 gem 'bootstrap-sass', '~> 3.0.3.0'

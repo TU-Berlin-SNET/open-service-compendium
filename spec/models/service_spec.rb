@@ -34,7 +34,7 @@ describe Service do
     firefox = SDL::Base::Type::Browser[:firefox]
 
     expect(new_service.payment_options.first).to eql credit_card
-    expect(new_service.browser_interface.compatible_browsers.first.browser).to eq firefox
+    expect(new_service.compatible_browsers.first.browser).to eq firefox
   end
 
   it 'does not alter predefined types' do
@@ -56,17 +56,19 @@ describe Service do
     service = create(:approved_service)
     service_id = service._id
 
-    browser_interface = SDL::Base::Type::BrowserInterface.new
-    compatible_browser = SDL::Base::Type::CompatibleBrowser.new
-    compatible_browser.browser = SDL::Base::Type::Browser[:firefox].clone
-    browser_interface.compatible_browsers << compatible_browser
+    compatible_browser_1 = SDL::Base::Type::CompatibleBrowser.new
+    compatible_browser_1.browser = SDL::Base::Type::Browser[:firefox].clone
+    compatible_browser_2 = SDL::Base::Type::CompatibleBrowser.new
+    compatible_browser_2.browser = SDL::Base::Type::Browser[:chrome].clone
 
-    service.browser_interface = browser_interface
+    service.compatible_browsers << compatible_browser_1
+    service.compatible_browsers << compatible_browser_2
+
     service.save!
 
     service = nil
 
     new_service = Service.find(service_id)
-    expect(new_service.browser_interface.compatible_browsers.first.browser).to eq SDL::Base::Type::Browser[:firefox]
+    expect(new_service.compatible_browsers.first.browser).to eq SDL::Base::Type::Browser[:firefox]
   end
 end

@@ -1,8 +1,8 @@
 type :status
 
 status :draft
-status :submitted
 status :approved
+status :deleted
 
 service_properties do
   status

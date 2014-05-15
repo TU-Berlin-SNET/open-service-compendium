@@ -12,11 +12,12 @@ class ServicesController < ApplicationController
   def list_versions
     slug = params[:id].split('-')[0]
 
-    @versions = HistoricalServiceRecord.where('_id._id' => slug).only(:_version, :valid_from, :valid_until, :deleted)
+    @versions = HistoricalServiceRecord.where('_id._id' => slug).only(:_id, :_version, :valid_from, :valid_until, :deleted)
 
     respond_to do |format|
       format.html
       format.json { render json: @versions, root: false }
+      format.xml
     end
   end
 
@@ -81,6 +82,7 @@ class ServicesController < ApplicationController
     slug = params[:id].split('-')[0]
 
     service = Service.where(:_id => slug).first
+    original_attributes = service.attributes.deep_dup
 
     if service.nil?
       flash[:message] = t('service.show.service_not_found')
@@ -90,19 +92,35 @@ class ServicesController < ApplicationController
     else
       if params[:name]
         service.name = params[:name]
-        service.archive_and_save!
-      elsif params[:sdl_part] || params[:sdl_parts]
+        service.archive_and_save!(original_attributes)
+      end
+
+      if params[:sdl_part] || params[:sdl_parts]
         begin
+          changed = false
+
           if params[:sdl_part]
-            service.sdl_parts[params[:sdl_part]] = request.body.read
+            new_part_content = params[:service_description] || request.body.read
+
+            if(service.sdl_parts[params[:sdl_part]] != new_part_content)
+              service.sdl_parts[params[:sdl_part]] = new_part_content
+
+              changed = true
+            end
           else
             service.sdl_parts = params[:sdl_parts]
+
+            changed = true
           end
 
-          service.load_service_from_sdl
+          if changed
+            service.load_service_from_sdl
 
-          service.archive_and_save!
+            service.archive_and_save!(original_attributes)
+          end
         rescue Exception => e
+          service.update_attributes! original_attributes
+
           relevant_backtrace = e.backtrace.select do |entry| entry.include? 'mongodb://' end
           relevant_line = relevant_backtrace[0].match(/:(\d+):/)[1] unless relevant_backtrace.empty?
 

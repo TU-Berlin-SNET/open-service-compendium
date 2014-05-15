@@ -41,31 +41,29 @@ class SDL::Base::Type::Service < SDL::Base::Type
     HistoricalServiceRecord.where('_id._id' => _id)
   end
 
-  def uri
-    "mongodb://service_records/#{_id}"
-  end
-
   def slug
     "#{_id}-#{name}"
   end
 
-  def prepare_historical_attributes
-    historic_attributes = attributes.merge(changed_attributes).dup
-    historic_attributes['_type'] = 'HistoricalServiceRecord'
-    historic_attributes['valid_from'] = historic_attributes['updated_at']
-    historic_attributes['_id'] = {
-        '_id' => historic_attributes['_id'],
-        '_version' => historic_attributes['_version']
+  def prepare_historic_record(original_attributes)
+    original_attributes.delete('_type')
+    original_attributes.delete('_id')
+    original_attributes['valid_from'] = original_attributes['updated_at']
+    %w(updated_at created_at).each do |key| original_attributes[key] = nil end
+    original_attributes['valid_until'] = Time.now
+
+    historical_record = HistoricalServiceRecord.new(original_attributes)
+    historical_record._id = {
+        '_id' => _id,
+        '_version' => _version
     }
-    %w(updated_at created_at).each do |key| historic_attributes[key] = nil end
-    historic_attributes['valid_until'] = Time.now
-    historic_attributes
+
+    historical_record
   end
 
-  def archive_and_save!
-    historic_attributes = prepare_historical_attributes
-
-    HistoricalServiceRecord.collection.insert historic_attributes
+  def archive_and_save!(original_attributes)
+    historical_service_record = prepare_historic_record(original_attributes)
+    historical_service_record.save!
 
     self._version += 1
 
@@ -74,10 +72,9 @@ class SDL::Base::Type::Service < SDL::Base::Type
 
   def delete_and_archive!
     # Duplicate attributes and insert historic version information
-    historic_attributes = prepare_historical_attributes
-    historic_attributes['deleted'] = true
-
-    HistoricalServiceRecord.collection.insert historic_attributes
+    historical_service_record = prepare_historic_record(attributes.deep_dup)
+    historical_service_record.deleted = true
+    historical_service_record.save!
 
     delete
   end
