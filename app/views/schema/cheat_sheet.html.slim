@@ -1,25 +1,10 @@
-- sorted_fact_classes = @compendium.fact_classes.sort_by{|c| c.local_name}
-- sorted_type_classes = @compendium.types.sort_by{|c| c.name}
+- sorted_type_classes = [Service, @compendium.types].flatten.sort_by{|c| c.name}
 
 h1= t('cheat_sheet.service_definition_syntax')
 
 p== t('cheat_sheet.service_definition_syntax_link')
 
 h1= t('cheat_sheet.overview')
-
-h3= t('cheat_sheet.fact_classes')
-
-table
-  tr
-    td= t('cheat_sheet.fact_class')
-    td= t('cheat_sheet.documentation')
-
-  - sorted_fact_classes.each do |fact_class|
-    tr
-      td
-        a[href="##{cheat_sheet_link(fact_class)}"]
-          = fact_class.local_name
-      td= fact_class.documentation
 
 h3= t('cheat_sheet.type_classes')
 
@@ -34,29 +19,9 @@ table
           = type_class.local_name
       td= type_class.documentation
 
+h1= t('cheat_sheet.service_properties')
 
-h1= t('cheat_sheet.fact_classes')
-
-- sorted_fact_classes.each do |fact_class|
-  h3[id=cheat_sheet_link(fact_class)]= fact_class.local_name
-  p= fact_class.documentation
-
-  = render 'parent_classes', :klass => fact_class
-
-  = render 'subtypes', :klass => fact_class
-
-  h4= t('cheat_sheet.keywords')
-  ul
-    - fact_class.keywords.each do |keyword|
-      li
-        code= keyword
-  - unless fact_class.propertyless?
-    h4= t('cheat_sheet.properties')
-    = render 'properties', :properties => fact_class.properties(true)
-
-  h4= t('cheat_sheet.examples')
-
-  = render 'fact_example', :fact_class => fact_class
+= render 'properties', :properties => Service.properties(true)
 
 h1= t('cheat_sheet.type_classes')
 
@@ -71,7 +36,7 @@ h1= t('cheat_sheet.type_classes')
   - unless type_class.propertyless?
     h4= t('cheat_sheet.properties')
     = render 'properties', :properties => type_class.properties(true)
-  - unless @compendium.type_instances[type_class].empty?
+  - unless @compendium.type_instances[type_class].blank?
     h4= t('cheat_sheet.instances')
     dl.dl-horizontal
       - @compendium.type_instances[type_class].each do |symbol, instance|

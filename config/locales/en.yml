@@ -28,7 +28,7 @@ en:
       submit: "Create service"
       service_description_placeholder: "A newly created service."
     edit:
-      header: "Edit service '%{service_name}'"
+      header: "Edit '%{service_name}'"
       save: "Save"
       preview: "Preview"
       help: "Syntax"
@@ -47,7 +47,7 @@ en:
       service_not_found: "Cannot find service"
       service_not_found_detail: "The URL or the service description are invalid."
   cheat_sheet:
-    fact_classes: "Fact classes"
+    service_properties: "Service properties"
     first_form: "First form"
     second_form: "Second form"
     third_form: "Third form"
@@ -73,3 +73,4 @@ en:
     ancestors: "Supertype"
     descendants: "Subtypes"
     not_yet_defined: "not_yet_defined"
+    service_property: "Service property"

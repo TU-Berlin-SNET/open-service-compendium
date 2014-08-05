@@ -1,8 +1,6 @@
 module SchemaHelper
   def cheat_sheet_link(klass)
-    if klass < SDL::Base::Fact
-      klass.local_name + '_fact'
-    elsif klass < SDL::Base::Type
+    if klass < SDL::Base::Type
       klass.local_name + '_type'
     elsif klass < SDL::Types::SDLSimpleType
       klass.name.demodulize
