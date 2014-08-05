@@ -45,11 +45,31 @@ class ClientsController < ApplicationController
   END
   error 404, 'The client does not exist'
   def show
-    @client = Client.find(params[:id])
+    begin
+      @client = Client.find(params[:id])
+    rescue Mongoid::Errors::DocumentNotFound
+      render text: 'Client not found', status: 404
+    end
   end
 
+  api :POST, 'clients', 'Creates a new client'
+  param :client_data, String, :desc => 'Arbitrary client data', :required => false
+  param :client_profile, String, :desc => 'Client search profile', :required => false
+  description <<-END
+    On successful invocation, the method returns the HTTP status code `201 Created` with the URL of the client as the HTTP `Location` header.
+  END
+  error 500, 'Server error while creating client'
   def create
+    begin
+      client = Client.create!(
+          :client_data => params[:client_data],
+          :client_profile => params[:client_profile]
+      )
 
+      render text: 'Created', location: client_url(client), status: 201
+    rescue Mongoid::Errors::MongoidError => e
+      render text: "Error creating client: #{e.message}", status: 500
+    end
   end
 
   def update
