@@ -58,9 +58,9 @@ Rails.application.compendium = compendium
 Service = SDL::Base::Type::Service
 
 to_prepare = Proc.new do
-  Service = SDL::Base::Type::Service
+  s = SDL::Base::Type::Service
 
-  Service.instance_eval do
+  s.instance_eval do
     include ServiceFieldDefinitions
   end
 
@@ -68,7 +68,7 @@ to_prepare = Proc.new do
     include ServiceFieldDefinitions
 
     @local_name = "HistoricalServiceRecord"
-    @properties = Service.properties.dup
+    @properties = s.properties.dup
   end
 end
 
