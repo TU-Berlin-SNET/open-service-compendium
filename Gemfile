@@ -71,7 +71,8 @@ gem 'radix'
 gem 'mongoid', github: 'mongoid/mongoid'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.0.beta'
+  gem 'rspec-rails', '~> 3.0.2'
+  gem 'rspec-collection_matchers'
   gem 'spork-rails'
 end
 
@@ -80,6 +81,8 @@ group :test do
   gem 'factory_girl'
   gem 'humanize'
   gem 'zeus'
+  gem 'minitest'
+  gem 'simplecov'
 end
 
 gem 'active_model_serializers'

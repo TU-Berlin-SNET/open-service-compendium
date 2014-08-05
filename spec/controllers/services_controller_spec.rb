@@ -275,7 +275,7 @@ describe ServicesController do
       json_response.each do |hash|
         expect{URI.parse(hash['url'])}.not_to raise_exception
         expect{Time.parse(hash['valid_from'])}.not_to raise_exception
-        expect(hash['deleted']).to be false
+        expect(hash['service_deleted']).to be false
       end
     end
 
@@ -294,7 +294,7 @@ describe ServicesController do
       expect{Service.find(service_id)}.to raise_exception
 
       deleted_record = HistoricalServiceRecord.find({:_id => service_id, :_version => 1})
-      expect(deleted_record.deleted).to be true
+      expect(deleted_record.service_deleted).to be true
     end
   end
 

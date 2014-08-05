@@ -12,7 +12,7 @@ class ServicesController < ApplicationController
   def list_versions
     slug = params[:id].split('-')[0]
 
-    @versions = HistoricalServiceRecord.where('_id._id' => slug).only(:_id, :_version, :valid_from, :valid_until, :deleted)
+    @versions = HistoricalServiceRecord.where('_id._id' => slug).only(:_id, :_version, :valid_from, :valid_until, :service_deleted)
 
     respond_to do |format|
       format.html

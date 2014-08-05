@@ -73,7 +73,7 @@ class SDL::Base::Type::Service < SDL::Base::Type
   def delete_and_archive!
     # Duplicate attributes and insert historic version information
     historical_service_record = prepare_historic_record(attributes.deep_dup)
-    historical_service_record.deleted = true
+    historical_service_record.service_deleted = true
     historical_service_record.save!
 
     delete

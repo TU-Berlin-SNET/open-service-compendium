@@ -4,7 +4,7 @@ class HistoricalServiceRecord < SDL::Base::Type
       field :_id, type: Hash
       field :valid_from, type: Time
       field :valid_until, type: Time
-      field :deleted, type: Boolean, default: false
+      field :service_deleted, type: Boolean, default: false
 
       store_in collection: "historical_service_records"
     end
