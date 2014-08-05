@@ -86,3 +86,8 @@ group :test do
 end
 
 gem 'active_model_serializers'
+
+gem 'apipie-rails'
+
+gem 'kramdown'
+gem 'coderay'
