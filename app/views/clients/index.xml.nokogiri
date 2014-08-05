@@ -1,0 +1,15 @@
+xml.clients :count => @clients.count do
+  @clients.each do |client|
+    xml.client :url => client_url(client) do
+      %w[client_profile client_data].each do |field|
+        field_data = client.send(field)
+
+        if field_data
+          xml.send(field) do
+            xml.cdata field_data
+          end
+        end
+      end
+    end
+  end
+end

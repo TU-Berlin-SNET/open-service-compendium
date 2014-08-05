@@ -19,4 +19,6 @@ OpenServiceBroker::Application.routes.draw do
     put ':sdl_part', on: :member, action: 'update'
     delete '', on: :member, action: 'delete'
   end
+
+  resources :clients
 end

@@ -4,6 +4,9 @@
     td
       - if property.multi?
         - [value].flatten.each do |v|
-          li== render_value(v)
+          - if (v.class < SDL::Types::SDLSimpleType) || v.class.multi_property?
+            == render_value(v)
+          - else
+            li== render_value(v)
       - else
         == render_value(value)

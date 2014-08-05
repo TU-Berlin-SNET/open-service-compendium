@@ -5,7 +5,7 @@
 h1
   = link_to t('services.list.list'), services_path
   | &nbsp;>&nbsp;
-  = t('services.edit.header', service_name: params[:id])
+  = t('services.edit.header', service_name: @service.try(:service_name) || params[:id])
 
 = render 'flash'
 
