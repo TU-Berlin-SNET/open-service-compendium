@@ -1,6 +1,6 @@
-xml.client :url => client_url(client) do
+xml.client :url => client_url(@client) do
   %w[client_profile client_data].each do |field|
-    field_data = client.send(field)
+    field_data = @client.send(field)
 
     if field_data
       xml.send(field) do

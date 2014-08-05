@@ -31,8 +31,21 @@ class ClientsController < ApplicationController
     @clients = Client.all
   end
 
+  api :GET, 'clients/:id', 'Shows a client'
+  formats ['xml']
+  description <<-END
+    # Example Response
+    ~~~ xml
+    <?xml version="1.0"?>
+    <client url="http://192.168.147.145:3000/clients/be21c819-6bc7-4c09-b565-0ce72048b25c">
+      <client_profile><![CDATA[PROFILE]]></client_profile>
+      <client_data><![CDATA[DATA]]></client_data>
+    </client>
+    ~~~
+  END
+  error 404, 'The client does not exist'
   def show
-
+    @client = Client.find(params[:id])
   end
 
   def create
