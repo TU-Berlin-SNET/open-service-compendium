@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "TRESOR Broker Demo"
+AuthUserFile /var/www/htpasswd
+Require user tresor

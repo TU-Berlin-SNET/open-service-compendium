@@ -13,7 +13,10 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
-/tmp
+/tmp/cache/*
+/tmp/pids/*
+/tmp/sessions/*
+/tmp/sockets/*
 
 # Ignore RubyMine directory
 .idea
