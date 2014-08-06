@@ -8,6 +8,8 @@ describe 'When exporting services' do
       service.save
 
       get "/services/#{service._id}.xml"
+
+      pending :not_implemented
     end
   end
 end
