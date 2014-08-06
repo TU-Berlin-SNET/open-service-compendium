@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/asalme/radix.git
+  revision: e00382cb2ca78ad5f379f39aff317c8bd323e855
+  branch: master
+  specs:
+    radix (2.2.0)
+
+GIT
   remote: git://github.com/bmabey/database_cleaner.git
   revision: 8d7f72ffc99befd5ce67d333a99e0cf054c24f81
   specs:

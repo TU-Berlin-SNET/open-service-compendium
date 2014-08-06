@@ -66,7 +66,7 @@ gem 'jquery-ui-rails'
 # Rails config
 gem 'rails_config'
 
-gem 'radix', github: 'rubyworks/radix', branch: 'master'
+gem 'radix', github: 'asalme/radix', branch: 'master'
 
 gem 'mongoid', github: 'mongoid/mongoid'
 
