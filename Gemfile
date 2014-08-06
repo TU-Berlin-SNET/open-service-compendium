@@ -66,7 +66,7 @@ gem 'jquery-ui-rails'
 # Rails config
 gem 'rails_config'
 
-gem 'radix'
+gem 'radix', github: 'rubyworks/radix', branch: 'master'
 
 gem 'mongoid', github: 'mongoid/mongoid'
 
@@ -93,3 +93,6 @@ gem 'kramdown'
 gem 'coderay'
 
 gem 'capistrano', '~> 3.2.0'
+gem 'capistrano-bundler'
+gem 'capistrano-rails'
+gem 'capistrano-rvm'
