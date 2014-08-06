@@ -76,10 +76,6 @@ describe ClientsController do
       expect(client.client_data).to eq 'new'
       expect(client.client_profile).to eq 'old'
     end
-
-    it 'responds with 422 if the id was missing' do
-
-    end
   end
 
   describe 'DELETE #delete' do

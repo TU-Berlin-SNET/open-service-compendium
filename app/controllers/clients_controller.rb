@@ -80,23 +80,18 @@ class ClientsController < ApplicationController
 
     If the client already exists, the method updates `client_data` and `client_profile` if specified and returns `204 No Content`.
   END
-  error 422, 'ID missing or invalid'
   error 500, 'Internal server error while creating or updating client'
   def update
-    if params[:id]
-      client_attributes = {}
-      client_attributes['client_data'] = params[:client_data] if params[:client_data]
-      client_attributes['client_profile'] = params[:client_profile] if params[:client_profile]
+    client_attributes = {}
+    client_attributes['client_data'] = params[:client_data] if params[:client_data]
+    client_attributes['client_profile'] = params[:client_profile] if params[:client_profile]
 
-      operation_result = Client.collection.find(_id: params[:id]).update({'$set' => client_attributes}, [:upsert])
+    operation_result = Client.collection.find(_id: params[:id]).update({'$set' => client_attributes}, [:upsert])
 
-      if operation_result['updatedExisting']
-        head :no_content
-      else
-        head :created
-      end
+    if operation_result['updatedExisting']
+      head :no_content
     else
-      render text: 'ID missing or invalid', status: 422
+      head :created
     end
   end
 
