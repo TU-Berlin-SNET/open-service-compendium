@@ -1,0 +1,11 @@
+xml.provider :url => provider_url(@provider) do
+  %w[provider_data].each do |field|
+    field_data = @provider.send(field)
+
+    if field_data
+      xml.send(field) do
+        xml.cdata field_data
+      end
+    end
+  end
+end

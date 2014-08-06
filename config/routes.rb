@@ -22,4 +22,5 @@ OpenServiceBroker::Application.routes.draw do
   end
 
   resources :clients
+  resources :providers
 end
