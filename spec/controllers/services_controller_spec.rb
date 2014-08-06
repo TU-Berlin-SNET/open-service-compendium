@@ -2,13 +2,22 @@ require 'spec_helper'
 
 shared_context 'demo services' do
   before :each do
-    4.times do create(:draft_service) end
-    2.times do create(:approved_service) end
-    create(:service)
+    4.times do
+      service = create(:draft_service)
+      service.new_record?
+    end
+
+    2.times do
+      service = create(:approved_service)
+      service.new_record?
+    end
+
+    service = create(:service)
+    service.new_record?
   end
 
   after :each do
-    Service.delete_all
+    Service.with(safe: true).delete_all
   end
 end
 

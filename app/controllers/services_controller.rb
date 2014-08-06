@@ -6,7 +6,7 @@ class ServicesController < ApplicationController
   def list
     status = params[:status] || :approved
 
-    @services = Service.with_status(status)
+    @services = Service.with(safe: true).with_status(status)
   end
 
   def list_versions
