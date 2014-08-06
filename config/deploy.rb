@@ -34,6 +34,8 @@ set :deploy_to, '/var/www/tresor-broker'
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+set :git_strategy, SubmoduleStrategy
+
 namespace :deploy do
 
   desc 'Restart application'
