@@ -22,13 +22,6 @@ GIT
       tzinfo (>= 0.3.37)
 
 GIT
-  remote: git://github.com/rubyworks/radix.git
-  revision: b2e9e2e3439e93577849e95bddca51eb0bcddc50
-  branch: master
-  specs:
-    radix (2.2.0)
-
-GIT
   remote: git://github.com/slim-template/slim.git
   revision: bc359ee586eaa96fd9196e4d22eada0acfe03d68
   specs:
