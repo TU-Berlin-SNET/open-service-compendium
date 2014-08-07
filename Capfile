@@ -21,6 +21,7 @@ require 'capistrano/bundler'
 require 'capistrano/rails/assets'
 require 'capistrano/git'
 require './lib/capistrano/submodule_strategy'
+require 'capistrano-resque'
 # require 'capistrano/rails/migrations'
 
 # Loads custom tasks from `lib/capistrano/tasks' if you have any defined.

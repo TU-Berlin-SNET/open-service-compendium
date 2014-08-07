@@ -36,6 +36,15 @@ FactoryGirl.define do
       end
     end
 
+    factory :immediately_bookable_service do
+      sdl_parts {
+        {
+            'meta' => 'status approved',
+            'main' => 'immediate_booking "http://www.cloud-tresor.de"'
+        }
+      }
+    end
+
     after(:build) do |service|
       service.load_service_from_sdl
     end

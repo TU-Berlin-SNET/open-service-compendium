@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe BookingsController do
-  after(:each) do
+  before(:each) do
     [ServiceBooking, Service, Client].each do |klass|
       klass.with(safe:true).delete_all
     end
@@ -46,6 +46,62 @@ describe BookingsController do
 
       expect(response).to be_missing
       expect(response.status).to eq(404)
+    end
+  end
+
+  describe 'POST #create' do
+    before(:each) do
+      ResqueSpec.reset!
+      Resque.redis.flushall
+    end
+
+    it 'creates a new booking and enques a new resque booking task' do
+      client = create(:client)
+      service = create(:approved_service)
+
+      post :create, :client_id => client._id, :service_id => service._id, :callback_url => 'http://test.host', :format => :xml
+
+      expect(response).to be_success
+      expect(response.status).to eq(201)
+      expect(response['Location']).to eq(client_booking_url(client._id, ServiceBooking.first._id))
+
+      expect(BookingWorker).to have_queued(ServiceBooking.first._id, :book).in(:booking)
+    end
+
+    it 'responds with 404 if the client does not exist' do
+      post :create, :client_id => 'abc', :service_id => create(:service)._id, :callback_url => 'http://test.host', :format => :xml
+
+      expect(response).to be_missing
+      expect(response.status).to eq(404)
+    end
+
+    it 'responds with 422 if the service does not exist' do
+      post :create, :client_id => create(:client)._id, :service_id => 'abc', :callback_url => 'http://test.host', :format => :xml
+
+      expect(response).to be_client_error
+      expect(response.status).to eq(422)
+    end
+
+    it 'responds with 422 if the callback URL is invalid' do
+      post :create, :client_id => create(:client)._id, :service_id => create(:service)._id, :callback_url => 'invalid', :format => :xml
+      
+      expect(response).to be_client_error
+      expect(response.status).to eq(422)
+    end
+
+    it 'can book immediately bookable services' do
+      ResqueSpec.inline = true
+
+      service = create(:immediately_bookable_service)
+      client = create(:client)
+
+      post :create, :client_id => client._id, :service_id => service._id, :callback_url => 'http://test.host', :format => :xml
+
+      booking = ServiceBooking.first
+
+      expect(booking.booking_status).to eq :booked
+      expect(booking.endpoint_url).to eq service.immediate_booking.endpoint_url.value
+      expect(booking.booking_time).to be < Time.now
     end
   end
 end

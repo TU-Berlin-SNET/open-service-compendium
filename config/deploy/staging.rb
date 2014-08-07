@@ -4,7 +4,7 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'tresor-dev-broker.snet.tu-berlin.de', user: 'www-data', roles: %w{web app db}
+server 'tresor-dev-broker.snet.tu-berlin.de', user: 'www-data', roles: %w{web app db resque_worker resque_scheduler}
 
 
 # Custom SSH Options

@@ -56,7 +56,7 @@ The service booking was canceled and the Cloud Marketplace is notified using the
 
   respond_to :xml
 
-  api :GET, 'clients/:id/bookings', 'Retrieves the bookings of clients'
+  api :GET, 'clients/:id/bookings', 'Retrieves the service bookings of a client'
   formats ['xml']
   description <<-END
 # Example response
@@ -133,7 +133,7 @@ The service booking was canceled and the Cloud Marketplace is notified using the
     @bookings = ServiceBooking.where(client_id: params[:client_id])
   end
 
-  api :GET, 'clients/:id/bookings/:id', 'Retrieves a client booking'
+  api :GET, 'clients/:id/bookings/:id', 'Retrieves a service booking'
   formats ['xml']
   description <<-END
 # Example response
@@ -157,6 +157,47 @@ The service booking was canceled and the Cloud Marketplace is notified using the
       @booking = ServiceBooking.where(client_id: params[:client_id]).find(params[:id])
     rescue Mongoid::Errors::DocumentNotFound
       render text: 'Booking not found', status: 404
+    end
+  end
+
+  api :POST, 'clients/:id/bookings', 'Creates a new service booking'
+  formats ['xml']
+  description <<-END
+    On successful completion, the method returns the HTTP status code `201 Created` with the URL of the booking as the HTTP `Location` header.
+  END
+  param :service_id, String, :desc => 'The ID of the service which should be booked', :required => true
+  param :callback_url, String, :desc => 'The callback URL of the Cloud Marketplace', :required => true
+  error 404, 'The client does not exist'
+  error 422, 'The service does not exist'
+  error 422, 'The callback URL is missing or invalid'
+  def create
+    if !Client.where(_id: params[:client_id]).exists?
+      render text: 'The client does not exist', status: 404
+    elsif !Service.where(_id: params[:service_id]).exists?
+      #TODO: Test if service is bookable
+      render text: 'The service does not exist', status: 422
+    elsif (params[:callback_url].blank?)
+      render text: 'The callback URL is missing', status: 422
+    else
+      begin
+        callback_uri = URI.parse(params[:callback_url])
+
+        raise URI::InvalidURIError unless %w[http https].include? callback_uri.scheme
+
+        booking = ServiceBooking.create(
+            client_id: params[:client_id],
+            service_id: params[:service_id],
+            booking_time: Time.new,
+            callback_url: params[:callback_url])
+
+        Resque.enqueue(BookingWorker, booking._id, :book)
+
+        head :created, location: client_booking_url(params[:client_id], booking._id)
+      rescue URI::InvalidURIError
+        render text: 'The callback URL is invalid', status: 422
+      rescue Exception => e
+        render text: e.message, status: 500
+      end
     end
   end
 end

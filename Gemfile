@@ -84,6 +84,7 @@ group :test do
   gem 'zeus'
   gem 'minitest'
   gem 'simplecov'
+  gem 'resque_spec'
 end
 
 gem 'active_model_serializers'
@@ -97,3 +98,5 @@ gem 'capistrano', '~> 3.2.0'
 gem 'capistrano-bundler'
 gem 'capistrano-rails'
 gem 'capistrano-rvm'
+gem 'capistrano-resque', require: false
+gem 'resque'

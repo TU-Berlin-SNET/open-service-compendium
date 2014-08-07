@@ -25,5 +25,5 @@ OpenServiceBroker::Application.routes.draw do
     resources :bookings
   end
 
-  resources :providers
+  resources :providers, defaults: {format: 'xml'}
 end
