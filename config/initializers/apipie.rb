@@ -17,8 +17,9 @@ module Apipie::Helpers
     end.join("\n")
 
     coderay_link = "<link type='text/css' rel='stylesheet' href='/assets/coderay.css?body=1'/>"
+    extra_styles_link = "<link type='text/css' rel='stylesheet' href='/assets/apipie_extra.css?body=1'/>"
 
-    (orig + coderay_link).html_safe
+    (orig + coderay_link + extra_styles_link).html_safe
   end
 end
 
