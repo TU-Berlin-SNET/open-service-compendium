@@ -29,6 +29,13 @@ GIT
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
 
+GIT
+  remote: git://github.com/thetron/mongoid-enum.git
+  revision: a04acec0da0601a16f513e3addfb3786de7cdb45
+  specs:
+    mongoid-enum (0.2.0)
+      mongoid (~> 4.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -341,6 +348,7 @@ DEPENDENCIES
   monetize
   money
   mongoid!
+  mongoid-enum!
   nokogiri
   radix!
   rails (= 4.1.0)

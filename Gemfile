@@ -69,6 +69,7 @@ gem 'rails_config'
 gem 'radix', github: 'asalme/radix', branch: 'master'
 
 gem 'mongoid', github: 'mongoid/mongoid'
+gem 'mongoid-enum', github: 'thetron/mongoid-enum'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.2'

@@ -1,0 +1,5 @@
+xml.bookings :count => @bookings.count do
+  @bookings.each do |booking|
+    eval(File.read(File.expand_path('./_booking.xml.nokogiri', File.dirname(__FILE__))), binding)
+  end
+end

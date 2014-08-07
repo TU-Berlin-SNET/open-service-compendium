@@ -1,0 +1,11 @@
+xml.booking :url => client_booking_url(booking.client, booking) do
+  xml.callback_url(booking.callback_url)
+  xml.endpoint_url(booking.endpoint_url) if booking.endpoint_url
+
+  xml.status(booking.booking_status)
+  xml.failed_reason(booking.failed_reason) if booking.failed_reason
+
+  ServiceBooking::STATUSES.each do |status|
+    xml.send("#{status}_time", booking.send("#{status}_time").iso8601) if booking.send("#{status}_time")
+  end
+end

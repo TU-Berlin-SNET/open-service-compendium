@@ -21,6 +21,9 @@ OpenServiceBroker::Application.routes.draw do
     delete '', on: :member, action: 'delete'
   end
 
-  resources :clients
+  resources :clients do
+    resources :bookings
+  end
+
   resources :providers
 end

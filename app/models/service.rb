@@ -21,6 +21,8 @@ class SDL::Base::Type::Service < SDL::Base::Type
       scope :with_status, ->(status) do where('status.identifier' => status) end
 
       store_in collection: "service_records"
+
+      has_many :service_bookings
     end
   end
 
