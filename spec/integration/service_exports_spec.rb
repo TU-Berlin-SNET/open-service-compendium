@@ -9,7 +9,7 @@ describe 'When exporting services' do
 
       get "/services/#{service._id}.xml"
 
-      pending :not_implemented
+      fail pending
     end
   end
 end
