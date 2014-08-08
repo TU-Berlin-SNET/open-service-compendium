@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe ClientsController do
+  before(:each) do
+    Client.delete_all
+  end
 
   describe 'GET #index' do
     include_context 'with existing clients'
@@ -36,10 +39,6 @@ describe ClientsController do
   end
 
   describe 'POST #create' do
-    after(:each) do
-      Client.delete_all
-    end
-
     it 'responds with 201 and returns the correct client URL' do
       post :create, :client_data => 'client data', :client_profile => 'client profile'
 
@@ -50,10 +49,6 @@ describe ClientsController do
   end
 
   describe 'PUT #update' do
-    after(:each) do
-      Client.delete_all
-    end
-
     it 'creates a new client and responds with 201 if the client did not exist' do
       put :update, :id => 'new-id', :client_data => 'client data', :client_profile => 'client profile'
 
@@ -79,11 +74,6 @@ describe ClientsController do
   end
 
   describe 'DELETE #delete' do
-    after(:each) do
-      # If the test fails, leave a clean database
-      Client.delete_all
-    end
-
     it 'deletes a client and returns 204' do
       client = Client.create
 
