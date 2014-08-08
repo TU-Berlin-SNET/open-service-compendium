@@ -74,3 +74,27 @@ en:
     descendants: "Subtypes"
     not_yet_defined: "not_yet_defined"
     service_property: "Service property"
+  sdl:
+    type:
+      booking: "Information about the service booking process"
+      booking_immediate_booking: "Immediate booking without provisioning, i.e., each service user uses the same endpoint."
+      booking_synchronous_booking: "The booking will be done synchronously with the backend"
+      status: "Service status"
+    property:
+      type:
+        service:
+          status: "The service status"
+          immediate_booking: "Immediate booking information"
+          synchronous_booking: "Synchronous booking information"
+          provider_id: "The service provider ID"
+          default_user_group: "TRESOR authorization by user group"
+        booking_immediate_booking:
+          endpoint_url: "The service-wide endpoint URL"
+        booking_synchronous_booking:
+          booking_url: "The URL used for synchronous booking"
+    instance:
+      type:
+        status:
+          draft: "Draft"
+          deleted: "Deleted"
+          approved: "Approved"
