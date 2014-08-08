@@ -1,9 +1,8 @@
 FactoryGirl.define do
   factory :service_booking do
-    callback_url 'http://tresor-dev-mp.snet.tu-berlin.de/booking_completed'
     endpoint_url 'http://www.cloud-tresor.de'
 
-    service
+    association :service, factory: :immediately_bookable_service
     client
 
     factory :booking_service_booking do

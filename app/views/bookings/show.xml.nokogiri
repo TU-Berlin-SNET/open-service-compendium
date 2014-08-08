@@ -1,3 +1,5 @@
-booking = @booking
+booking = @booking || local_assigns[:booking]
 
-eval(File.read(File.expand_path('./_booking.xml.nokogiri', File.dirname(__FILE__))), binding)
+partial = File.expand_path('./_booking.xml.nokogiri', File.dirname(__FILE__))
+
+eval(File.read(partial), binding, partial)

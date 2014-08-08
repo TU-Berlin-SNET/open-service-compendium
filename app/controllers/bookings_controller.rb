@@ -10,12 +10,32 @@ A service booking is the result of a user booking a service through the Cloud Ma
 |Type     |Multiplicity|Name         |Type  |Description|
 |---------+------------+-------------+------+-----------|
 |Attribute|1           |url          |string|The booking URL
-|Element  |1           |callback_url |string|The callback URL for notifying the Cloud Marketplace about `booking` and `canceled` statuses
+|Element  |1           |client_url   |string|The URL of the client who initiated the booking
+|Element  |1           |service_url  |string|The URL of the service
+|Element  |0..1        |callback_url |string|The callback URL for notifying the Cloud Marketplace about `booking` and `canceled` statuses
 |Element  |0..1        |endpoint_url |string|The service endpoint URL specified by the service backend
 |Element  |1           |status       |string|The statuses (see [statuses](#statuses))
 |Element  |0..1        |failed_reason|string|The failure reason
 |Element  |0..1        |*status*_time|date  |The date a specific status has occured (e.g., 'booked_time' or 'canceling_time')
 |---------+------------+-------------+------+-----------|
+
+## Booking, Provisioning and Deployment process
+
+After creating bookings or deleting a booking, the Broker starts a background worker which informs the service backend about the action, based on information in the service description.
+
+The service backend should then provision or deprovision a service instance for the user and, if first provisioning, return an endpoint URL to the broker, which is used by the Proxy to route service requests.
+
+After the worker completes, the callback URL receives the result of the action as a POST request, as it would have been rendered by GET /clients/:id/bookings/:id.
+
+There are two different booking types:
+
+### Immediate booking
+
+The immediate booking is simple: the endpoint URL given in the service description is used as the endpoint URL of the booking.
+
+### Synchronous booking
+
+Not implemented yet
 
 ## Statuses
 
@@ -64,67 +84,81 @@ The service booking was canceled and the Cloud Marketplace is notified using the
 <?xml version="1.0"?>
 <bookings count="7">
   <booking
-          url="http://test.host/clients/4f3d6824-5846-4e20-81e4-2a98a9cdb1d0/bookings/e3854730-f2e9-413c-9778-921ff7bf80ea">
+          url="http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a/bookings/fabbb152-06ac-436d-adc0-6565f6de7a2e">
+    <client_url>http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a</client_url>
+    <service_url>http://test.host/services/4a2Z927U4hUP33BpWwgSc</service_url>
     <callback_url>http://tresor-dev-mp.snet.tu-berlin.de/booking_completed</callback_url>
     <endpoint_url>http://www.cloud-tresor.de</endpoint_url>
     <status>booking</status>
-    <booking_time>2014-08-07T11:08:08Z</booking_time>
+    <booking_time>2014-08-07T21:06:32Z</booking_time>
   </booking>
   <booking
-          url="http://test.host/clients/4f3d6824-5846-4e20-81e4-2a98a9cdb1d0/bookings/1a68fb90-49e1-4129-b983-ae898fd8bca2">
+          url="http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a/bookings/98c943ad-51bb-4ce8-b0ba-a7f7a1a143b7">
+    <client_url>http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a</client_url>
+    <service_url>http://test.host/services/2Td2I8pm8g9lcSX5rrQf5</service_url>
     <callback_url>http://tresor-dev-mp.snet.tu-berlin.de/booking_completed</callback_url>
     <endpoint_url>http://www.cloud-tresor.de</endpoint_url>
     <status>booking_failed</status>
     <failed_reason>Could not reach service backend.</failed_reason>
-    <booking_time>2014-08-07T11:08:08Z</booking_time>
-    <booking_failed_time>2014-08-07T11:08:08Z</booking_failed_time>
+    <booking_time>2014-08-07T21:06:32Z</booking_time>
+    <booking_failed_time>2014-08-07T21:06:32Z</booking_failed_time>
   </booking>
   <booking
-          url="http://test.host/clients/4f3d6824-5846-4e20-81e4-2a98a9cdb1d0/bookings/7242c26a-ea91-475e-ba1f-fecb2a38c0c8">
+          url="http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a/bookings/4d5dc4dc-86e8-4830-973a-79d38079fb7c">
+    <client_url>http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a</client_url>
+    <service_url>http://test.host/services/4vW71H0n0DXLQKME9xldg</service_url>
     <callback_url>http://tresor-dev-mp.snet.tu-berlin.de/booking_completed</callback_url>
     <endpoint_url>http://www.cloud-tresor.de</endpoint_url>
     <status>booked</status>
-    <booking_time>2014-08-07T11:08:08Z</booking_time>
-    <booked_time>2014-08-07T11:08:08Z</booked_time>
+    <booking_time>2014-08-07T21:06:32Z</booking_time>
+    <booked_time>2014-08-07T21:06:32Z</booked_time>
   </booking>
   <booking
-          url="http://test.host/clients/4f3d6824-5846-4e20-81e4-2a98a9cdb1d0/bookings/deda26ac-0ef3-42fe-a00f-57146550729c">
+          url="http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a/bookings/dbefd37e-815e-48c0-982b-cc9d76b8386c">
+    <client_url>http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a</client_url>
+    <service_url>http://test.host/services/DUDXzluC_Qat3aMqDFAe</service_url>
     <callback_url>http://tresor-dev-mp.snet.tu-berlin.de/booking_completed</callback_url>
     <endpoint_url>http://www.cloud-tresor.de</endpoint_url>
     <status>canceling</status>
-    <booking_time>2014-08-07T11:08:08Z</booking_time>
-    <booked_time>2014-08-07T11:08:08Z</booked_time>
-    <canceling_time>2014-08-07T11:08:08Z</canceling_time>
+    <booking_time>2014-08-07T21:06:32Z</booking_time>
+    <booked_time>2014-08-07T21:06:32Z</booked_time>
+    <canceling_time>2014-08-07T21:06:32Z</canceling_time>
   </booking>
   <booking
-          url="http://test.host/clients/4f3d6824-5846-4e20-81e4-2a98a9cdb1d0/bookings/2207a2da-199d-4aae-bae2-574b761a041d">
+          url="http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a/bookings/967b4476-79bb-49fa-879d-9d938ab073b8">
+    <client_url>http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a</client_url>
+    <service_url>http://test.host/services/282Rl4qweXMGVPoOm0_0l</service_url>
     <callback_url>http://tresor-dev-mp.snet.tu-berlin.de/booking_completed</callback_url>
     <endpoint_url>http://www.cloud-tresor.de</endpoint_url>
     <status>canceling_failed</status>
     <failed_reason>Could not reach service backend.</failed_reason>
-    <booking_time>2014-08-07T11:08:08Z</booking_time>
-    <booked_time>2014-08-07T11:08:08Z</booked_time>
-    <canceling_time>2014-08-07T11:08:08Z</canceling_time>
-    <canceling_failed_time>2014-08-07T11:08:08Z</canceling_failed_time>
+    <booking_time>2014-08-07T21:06:32Z</booking_time>
+    <booked_time>2014-08-07T21:06:32Z</booked_time>
+    <canceling_time>2014-08-07T21:06:32Z</canceling_time>
+    <canceling_failed_time>2014-08-07T21:06:32Z</canceling_failed_time>
   </booking>
   <booking
-          url="http://test.host/clients/4f3d6824-5846-4e20-81e4-2a98a9cdb1d0/bookings/9fa64b14-0e35-4ed4-a29a-7e27177adb25">
+          url="http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a/bookings/1915ecd4-ae0f-43ab-b4d4-a01b83164838">
+    <client_url>http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a</client_url>
+    <service_url>http://test.host/services/3eo764767K87pSeo5v6Rn</service_url>
     <callback_url>http://tresor-dev-mp.snet.tu-berlin.de/booking_completed</callback_url>
     <endpoint_url>http://www.cloud-tresor.de</endpoint_url>
     <status>canceled</status>
-    <booking_time>2014-08-07T11:08:08Z</booking_time>
-    <booked_time>2014-08-07T11:08:08Z</booked_time>
-    <canceling_time>2014-08-07T11:08:08Z</canceling_time>
-    <canceled_time>2014-08-07T11:08:08Z</canceled_time>
+    <booking_time>2014-08-07T21:06:32Z</booking_time>
+    <booked_time>2014-08-07T21:06:32Z</booked_time>
+    <canceling_time>2014-08-07T21:06:32Z</canceling_time>
+    <canceled_time>2014-08-07T21:06:32Z</canceled_time>
   </booking>
   <booking
-          url="http://test.host/clients/4f3d6824-5846-4e20-81e4-2a98a9cdb1d0/bookings/3bb3d564-858e-446b-bd8b-aa151ea6ae02">
+          url="http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a/bookings/221abbd4-5711-4a09-8b34-5971f32ec903">
+    <client_url>http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a</client_url>
+    <service_url>http://test.host/services/30eWnLpPGmaUlJRpKaqjf</service_url>
     <callback_url>http://tresor-dev-mp.snet.tu-berlin.de/booking_completed</callback_url>
     <endpoint_url>http://www.cloud-tresor.de</endpoint_url>
     <status>locked</status>
-    <booking_time>2014-08-07T11:08:08Z</booking_time>
-    <booked_time>2014-08-07T11:08:08Z</booked_time>
-    <locked_time>2014-08-07T11:08:08Z</locked_time>
+    <booking_time>2014-08-07T21:06:32Z</booking_time>
+    <booked_time>2014-08-07T21:06:32Z</booked_time>
+    <locked_time>2014-08-07T21:06:32Z</locked_time>
   </booking>
 </bookings>
 ~~~
@@ -140,16 +174,16 @@ The service booking was canceled and the Cloud Marketplace is notified using the
 ~~~ xml
 <?xml version="1.0"?>
 <booking
-        url="http://test.host/clients/4f3d6824-5846-4e20-81e4-2a98a9cdb1d0/bookings/2207a2da-199d-4aae-bae2-574b761a041d">
+        url="http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a/bookings/4d5dc4dc-86e8-4830-973a-79d38079fb7c">
+  <client_url>http://test.host/clients/cb8931f0-e527-485a-88bd-7d52eeaaf80a</client_url>
+  <service_url>http://test.host/services/4vW71H0n0DXLQKME9xldg</service_url>
   <callback_url>http://tresor-dev-mp.snet.tu-berlin.de/booking_completed</callback_url>
   <endpoint_url>http://www.cloud-tresor.de</endpoint_url>
-  <status>canceling_failed</status>
-  <failed_reason>Could not reach service backend.</failed_reason>
-  <booking_time>2014-08-07T11:08:08Z</booking_time>
-  <booked_time>2014-08-07T11:08:08Z</booked_time>
-  <canceling_time>2014-08-07T11:08:08Z</canceling_time>
-  <canceling_failed_time>2014-08-07T11:08:08Z</canceling_failed_time>
+  <status>booked</status>
+  <booking_time>2014-08-07T21:06:32Z</booking_time>
+  <booked_time>2014-08-07T21:06:32Z</booked_time>
 </booking>
+~~~
   END
   error 404, 'The booking does not exist'
   def show
@@ -163,26 +197,26 @@ The service booking was canceled and the Cloud Marketplace is notified using the
   api :POST, 'clients/:id/bookings', 'Creates a new service booking'
   formats ['xml']
   description <<-END
-    On successful completion, the method returns the HTTP status code `201 Created` with the URL of the booking as the HTTP `Location` header.
+On successful completion, the method returns the HTTP status code `201 Created` with the URL of the booking as the HTTP `Location` header. Afterwards, the method starts the booking, provisioning and deployment process (please see [the resource description](#booking-provisioning-and-deployment-process)).
   END
   param :service_id, String, :desc => 'The ID of the service which should be booked', :required => true
-  param :callback_url, String, :desc => 'The callback URL of the Cloud Marketplace', :required => true
+  param :callback_url, String, :desc => 'The callback URL of the Cloud Marketplace'
   error 404, 'The client does not exist'
   error 422, 'The service does not exist'
-  error 422, 'The callback URL is missing or invalid'
+  error 422, 'The callback URL is invalid'
   def create
     if !Client.where(_id: params[:client_id]).exists?
       render text: 'The client does not exist', status: 404
     elsif !Service.where(_id: params[:service_id]).exists?
       #TODO: Test if service is bookable
       render text: 'The service does not exist', status: 422
-    elsif (params[:callback_url].blank?)
-      render text: 'The callback URL is missing', status: 422
     else
       begin
-        callback_uri = URI.parse(params[:callback_url])
+        if params[:callback_url]
+          callback_uri = URI.parse(params[:callback_url])
 
-        raise URI::InvalidURIError unless %w[http https].include? callback_uri.scheme
+          raise URI::InvalidURIError unless %w[http https].include? callback_uri.scheme
+        end
 
         booking = ServiceBooking.create(
             client_id: params[:client_id],
@@ -190,7 +224,7 @@ The service booking was canceled and the Cloud Marketplace is notified using the
             booking_time: Time.new,
             callback_url: params[:callback_url])
 
-        Resque.enqueue(BookingWorker, booking._id, :book)
+        Resque.enqueue(BookingWorker, request.host, booking._id, 'book')
 
         head :created, location: client_booking_url(params[:client_id], booking._id)
       rescue URI::InvalidURIError
@@ -198,6 +232,28 @@ The service booking was canceled and the Cloud Marketplace is notified using the
       rescue Exception => e
         render text: e.message, status: 500
       end
+    end
+  end
+
+  api :DELETE, 'clients/:id/bookings/:id', 'Cancel an existing booking'
+  description <<-END
+On successful completion, the method returns the HTTP status code `204 No Content`. Afterwards, the method starts the cancelation process (please see [the resource description](#booking-provisioning-and-deployment-process)).
+  END
+  error 404, 'The booking does not exist'
+  error 422, 'The booking cannot be canceled'
+  def destroy
+    begin
+      booking = ServiceBooking.find(params[:id])
+
+      if booking.booked?
+        Resque.enqueue(BookingWorker, request.host, booking._id, 'cancel')
+
+        head :no_content
+      else
+        render :text => "The booking cannot be canceled, as its status is '#{booking.booking_status}' instead of 'booked'.", :status => 422
+      end
+    rescue Mongoid::Errors::DocumentNotFound
+      render text: 'Client not found', status: 404
     end
   end
 end

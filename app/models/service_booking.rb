@@ -19,5 +19,5 @@ class ServiceBooking
   belongs_to :client
   belongs_to :service
 
-  validates_presence_of :callback_url, :client, :service
+  validates_presence_of :client, :service
 end

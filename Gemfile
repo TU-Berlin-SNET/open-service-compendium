@@ -85,6 +85,7 @@ group :test do
   gem 'minitest'
   gem 'simplecov'
   gem 'resque_spec'
+  gem 'webmock'
 end
 
 gem 'active_model_serializers'
