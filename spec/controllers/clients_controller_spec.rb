@@ -92,4 +92,67 @@ describe ClientsController do
       expect(response.status).to eq(404)
     end
   end
+
+  context 'a client profile' do
+    before(:each) do
+      Client.delete_all
+      Service.delete_all
+    end
+
+    context 'can retrieve a list of compatible services' do
+      it 'with "should_be identifier" syntax' do
+        client = create(:client, client_profile: 'cloud_service_model should_be saas')
+
+        saas_service = create(:service, sdl_parts: {'main' => 'cloud_service_model saas'})
+        paas_service = create(:service, sdl_parts: {'main' => 'cloud_service_model paas'})
+        iaas_service = create(:service, sdl_parts: {'main' => 'cloud_service_model iaas'})
+
+        get :compatible_services, :id => client._id, :format => :xml
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+
+        compatible_services = assigns(:compatible_services).to_a
+
+        expect(compatible_services).to include saas_service
+        expect(compatible_services).not_to include paas_service, iaas_service
+      end
+
+      it 'with should_include value syntax' do
+        client = create(:client, client_profile: 'service_tags should_include ["a", "c"]')
+
+        abc_service = create(:service, sdl_parts: {'main' => "service_tag 'a'\r\nservice_tag 'b'\r\nservice_tag 'c'"})
+        bd_service = create(:service, sdl_parts: {'main' => "service_tag 'b'\r\nservice_tag 'd'"})
+        c_service = create(:service, sdl_parts: {'main' => "service_tag 'c'"})
+
+        get :compatible_services, :id => client._id, :format => :xml
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+
+        compatible_services = assigns(:compatible_services).to_a
+
+        expect(compatible_services).to include abc_service, c_service
+        expect(compatible_services).not_to include bd_service
+      end
+
+      it 'with should_include instance syntax' do
+        client = create(:client, client_profile: 'compatible_browsers_browser should_include firefox')
+
+        ff_service = create(:service, sdl_parts: {'main' => "compatible_browser firefox"})
+        ieff_service = create(:service, sdl_parts: {'main' => "compatible_browser firefox\r\ncompatible_browser internet_explorer"})
+        ie_service = create(:service, sdl_parts: {'main' => "compatible_browser internet_explorer"})
+
+        get :compatible_services, :id => client._id, :format => :xml
+
+        expect(response).to be_successful
+        expect(response.status).to eq(200)
+
+        compatible_services = assigns(:compatible_services).to_a
+
+        expect(compatible_services).to include ff_service, ieff_service
+        expect(compatible_services).not_to include ie_service
+      end
+    end
+  end
 end

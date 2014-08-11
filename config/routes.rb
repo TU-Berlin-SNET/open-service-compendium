@@ -22,6 +22,8 @@ OpenServiceBroker::Application.routes.draw do
   end
 
   resources :clients do
+    get 'compatible_services', on: :member, action: 'compatible_services'
+
     resources :bookings
   end
 

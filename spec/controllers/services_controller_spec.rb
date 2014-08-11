@@ -2,6 +2,8 @@ require 'spec_helper'
 
 shared_context 'demo services' do
   before :each do
+    Service.with(safe: true).delete_all
+
     4.times do
       service = create(:draft_service)
       service.new_record?
@@ -14,10 +16,6 @@ shared_context 'demo services' do
 
     service = create(:service)
     service.new_record?
-  end
-
-  after :each do
-    Service.with(safe: true).delete_all
   end
 end
 

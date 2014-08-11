@@ -17,6 +17,7 @@ gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
+gem 'therubyrhino', platforms: :jruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -46,8 +47,6 @@ end
 
 gem 'slim', github: 'slim-template/slim'
 
-gem 'thin'
-
 #gem 'sdl-ng', :path => 'lib/sdl-ng', require: false
 
 # SDL-NG is included as a 'library' to support development class reloading
@@ -74,7 +73,6 @@ gem 'mongoid-enum', github: 'thetron/mongoid-enum'
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.2'
   gem 'rspec-collection_matchers'
-  gem 'spork-rails'
 end
 
 group :test do

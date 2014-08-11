@@ -109,4 +109,24 @@ class ClientsController < ApplicationController
       render text: 'Client not found', status: 404
     end
   end
+
+  api :GET, 'client/compatible_services', 'Gets services compatible to the search profile'
+  description <<-END
+
+  END
+  error 404, 'The client does not exist'
+  error 422, 'The client profile is invalid'
+  def compatible_services
+    begin
+      client = Client.find(params[:id])
+
+      profile = ClientProfile.new(client.client_profile)
+
+      @compatible_services = profile.compatible_services
+    rescue ClientProfile::ClientProfileError => e
+      render text: "Client profile error: #{e}", status: 422
+    rescue Mongoid::Errors::DocumentNotFound
+      render text: 'Client not found', status: 404
+    end
+  end
 end
