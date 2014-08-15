@@ -1,9 +1,7 @@
 shared_context 'with existing clients' do
   before :each do
-    3.times { create(:client) }
-  end
+    Client.with(safe: true).delete_all
 
-  after :each do
-    Client.delete_all
+    3.times { create(:client) }
   end
 end
