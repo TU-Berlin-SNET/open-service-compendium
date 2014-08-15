@@ -1,6 +1,15 @@
 Rails.application.eager_load!
 
 to_prepare = Proc.new do
+  # Load the application and all libraries (including the
+  # unmodified SDL-NG)
+
+
+  # Load all extensions to the SDL-NG
+  Dir.glob(File.join(Rails.root, 'app', 'models', 'sdl', '**', '*.rb')).each do |file|
+    load file
+  end
+
   register_uri_mapper = lambda do
     require_dependency File.join(Rails.root, 'app', 'models', 'OSBURIMapper.rb')
 
