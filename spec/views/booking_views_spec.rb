@@ -13,6 +13,7 @@ describe 'bookings/index' do
     }.not_to raise_exception
 
     expect(@xml.root.name).to eq 'bookings'
+    expect(@xml.root['count']).to eq @xml.root.elements.count.to_s
 
     service_bookings.each do |booking|
       expect(@xml.xpath("/bookings/booking[@url = '#{client_booking_url(booking.client, booking)}']")).to have_exactly(1).node
