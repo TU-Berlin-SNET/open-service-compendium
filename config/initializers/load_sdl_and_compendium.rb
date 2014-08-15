@@ -1,12 +1,10 @@
+# Load the application and all libraries (including the
+# unmodified SDL-NG)
 Rails.application.eager_load!
 
 to_prepare = Proc.new do
-  # Load the application and all libraries (including the
-  # unmodified SDL-NG)
-
-
   # Load all extensions to the SDL-NG
-  Dir.glob(File.join(Rails.root, 'app', 'models', 'sdl', '**', '*.rb')).each do |file|
+  Dir.glob(File.join(Rails.root, 'lib', 'sdl-ng-overrides', '**', '*.rb')).each do |file|
     load file
   end
 
