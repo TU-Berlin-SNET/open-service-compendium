@@ -94,64 +94,32 @@ describe ClientsController do
   end
 
   context 'a client profile' do
-    before(:each) do
-      Client.delete_all
-      Service.delete_all
-    end
-
     context 'can retrieve a list of compatible services' do
-      it 'with "should_be identifier" syntax' do
-        client = create(:client, client_profile: 'cloud_service_model should_be saas')
+      include_context 'with client profile examples'
 
-        saas_service = create(:service, sdl_parts: {'main' => 'cloud_service_model saas'})
-        paas_service = create(:service, sdl_parts: {'main' => 'cloud_service_model paas'})
-        iaas_service = create(:service, sdl_parts: {'main' => 'cloud_service_model iaas'})
+      client_profile_examples.each do |syntax, data|
+        it "with supports '#{syntax}' syntax syntax" do
+          client = create(:client, client_profile: data[:profile])
 
-        get :compatible_services, :id => client._id, :format => :xml
+          created_services = {}
 
-        expect(response).to be_successful
-        expect(response.status).to eq(200)
+          data[:services].each do |identifier, sdl|
+            created_services[identifier] = create(:service, sdl_parts: {'main' => sdl})
+          end
 
-        compatible_services = assigns(:compatible_services).to_a
+          get :compatible_services, :id => client._id, :format => :xml
 
-        expect(compatible_services).to include saas_service
-        expect(compatible_services).not_to include paas_service, iaas_service
-      end
+          expect(response).to be_successful
+          expect(response.status).to eq(200)
 
-      it 'with should_include value syntax' do
-        client = create(:client, client_profile: 'service_tags should_include ["a", "c"]')
+          compatible_services = assigns(:compatible_services).to_a
 
-        abc_service = create(:service, sdl_parts: {'main' => "service_tag 'a'\r\nservice_tag 'b'\r\nservice_tag 'c'"})
-        bd_service = create(:service, sdl_parts: {'main' => "service_tag 'b'\r\nservice_tag 'd'"})
-        c_service = create(:service, sdl_parts: {'main' => "service_tag 'c'"})
+          included_services = created_services.select{|k, v| data[:included].include? k}.values
+          not_included_services = (created_services.values - included_services)
 
-        get :compatible_services, :id => client._id, :format => :xml
-
-        expect(response).to be_successful
-        expect(response.status).to eq(200)
-
-        compatible_services = assigns(:compatible_services).to_a
-
-        expect(compatible_services).to include abc_service, c_service
-        expect(compatible_services).not_to include bd_service
-      end
-
-      it 'with should_include instance syntax' do
-        client = create(:client, client_profile: 'compatible_browsers_browser should_include firefox')
-
-        ff_service = create(:service, sdl_parts: {'main' => "compatible_browser firefox"})
-        ieff_service = create(:service, sdl_parts: {'main' => "compatible_browser firefox\r\ncompatible_browser internet_explorer"})
-        ie_service = create(:service, sdl_parts: {'main' => "compatible_browser internet_explorer"})
-
-        get :compatible_services, :id => client._id, :format => :xml
-
-        expect(response).to be_successful
-        expect(response.status).to eq(200)
-
-        compatible_services = assigns(:compatible_services).to_a
-
-        expect(compatible_services).to include ff_service, ieff_service
-        expect(compatible_services).not_to include ie_service
+          expect(compatible_services.to_a).to include *included_services
+          expect(compatible_services.to_a).not_to include *not_included_services
+        end
       end
     end
   end

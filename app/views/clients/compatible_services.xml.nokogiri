@@ -1,0 +1,5 @@
+xml.compatible_services(:count => @compatible_services.count) do
+  @compatible_services.each do |service|
+    xml.compatible_service(:url => service_url(service))
+  end
+end

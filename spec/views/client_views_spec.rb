@@ -37,3 +37,25 @@ describe 'clients/show' do
     expect(@xml.xpath('/client/@url').first.value).to eq client_url(Client.first)
   end
 end
+
+describe 'clients/compatible_services' do
+  before(:each) do
+    Service.with(safe: true).delete_all
+  end
+
+  it 'gives out a list of compatible services' do
+    3.times do create(:service) end
+
+    assign(:compatible_services, Service.all)
+
+    render
+
+    expect {
+      @xml = Nokogiri::XML(rendered)
+    }.not_to raise_exception
+
+    expect(@xml.root.name).to eq 'compatible_services'
+    expect(@xml.root.elements.count).to eq 3
+    expect(@xml.xpath('//compatible_service/@url').map &:value).to include *(Service.all.map{|s| service_url(s)})
+  end
+end
