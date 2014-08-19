@@ -3,17 +3,11 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
 
-  before_filter :store_current_request
-
   protected
     ##
     # Retrieves the compendium
     # @return [SDL::Base::ServiceCompendium] The compendium
     def compendium
       Rails.application.compendium
-    end
-
-    def store_current_request
-      @@current_request = request
     end
 end

@@ -11,6 +11,10 @@ to_prepare = Proc.new do
   register_uri_mapper = lambda do
     require_dependency File.join(Rails.root, 'app', 'models', 'OSBURIMapper.rb')
 
+    OSBURIMapper.instance_eval do
+      include Rails.application.routes.url_helpers
+    end
+
     [SDL::Base::Type, SDL::Base::Type.class].each do |klass|
       klass.class_eval do
         def uri_mapper
@@ -64,19 +68,6 @@ to_prepare = Proc.new do
   Rails.application.compendium = compendium
 
   Service = SDL::Base::Type::Service
-
-  s = SDL::Base::Type::Service
-
-  s.instance_eval do
-    include ServiceFieldDefinitions
-  end
-
-  HistoricalServiceRecord.instance_eval do
-    include ServiceFieldDefinitions
-
-    @local_name = "HistoricalServiceRecord"
-    @properties = s.properties.dup
-  end
 
   ClientProfile.initialize_for_sdl
 end
