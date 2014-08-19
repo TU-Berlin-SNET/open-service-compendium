@@ -1,9 +1,10 @@
 xml.versions :count => @versions.count do
   @versions.each do |version|
-    xml.version :url => historical_service_url(version._id['_id'], version._version) do
-      xml.valid_from version.valid_from
-      xml.valid_until version.valid_until
-      xml.deleted version.deleted
+    xml.version :url => version_service_url(version.service_id, version._id) do
+      xml.valid_from version.try(:valid_from).try(:iso8601) if version.try(:valid_from)
+      xml.valid_until version.try(:valid_until).try(:iso8601) if version.try(:valid_until)
+      xml.status version.try(:status).try(:identifier) if version.try(:status).try(:identifier)
+      xml.deleted version.service_deleted
     end
   end
 end

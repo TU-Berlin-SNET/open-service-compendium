@@ -31,4 +31,5 @@ Apipie.configure do |config|
   config.api_controllers_matcher = "#{Rails.root}/app/controllers/*.rb"
   config.markup                  = Apipie::Markup::Kramdown.new
   config.reload_controllers      = true
+  config.validate                = false
 end

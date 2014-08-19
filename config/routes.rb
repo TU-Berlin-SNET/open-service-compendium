@@ -1,4 +1,12 @@
 OpenServiceBroker::Application.routes.draw do
+  if Rails.env.production?
+    default_url_options(host: 'tresor-dev-broker.snet.tu-berlin.de')
+  elsif Rails.env.test?
+    default_url_options(host: 'test.host')
+  else
+    default_url_options(host: 'dev.host')
+  end
+
   apipie
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -13,7 +21,8 @@ OpenServiceBroker::Application.routes.draw do
     get 'edit', on: :member, action: 'edit'
 
     get 'versions', on: :member, action: 'list_versions'
-    get 'versions/:version', on: :member, action: 'show', as: :historical
+    get 'versions/:version', on: :member, action: 'show', as: :version
+    delete 'versions/:version', on: :member, action: 'delete'
     get 'versions/:version/:sdl_part', on: :member, action: 'show'
 
     get ':sdl_part', on: :member, action: 'show', as: :sdl_part_of

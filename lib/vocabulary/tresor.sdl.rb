@@ -2,7 +2,6 @@ type :status
 
 status :draft
 status :approved
-status :deleted
 
 type :booking do
   subtype :immediate_booking do
