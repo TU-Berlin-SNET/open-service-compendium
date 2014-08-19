@@ -2,11 +2,13 @@ class ServicesController < ApplicationController
   resource_description do
     short 'Services'
     full_description <<-END
-The services contained in the Open Service Broker are described using the [SDL-NG framework](https://github.com/TU-Berlin-SNET/sdl-ng).
+The services contained in the Open Service Broker are described using the [SDL-NG framework](https://github.com/TU-Berlin-SNET/sdl-ng), please refer it to get information about the general syntax of the service descriptions. (currently not up-to-date!)
+
+The current vocabulary can be seen [on this page](/schema).
 
 ## Service statuses
 
-
+The broker supports two distinct statuses: `draft` and `approved`.
 
 ## XML data format
 
@@ -14,8 +16,8 @@ The services contained in the Open Service Broker are described using the [SDL-N
 |Type     |Multiplicity|Name               |Type   |Description|
 |---------+------------+-------------------+-------+-----------|
 |Attribute|1           |service_version_url|string |The client URL
-|Elements |1..         |_diverse_          |diverse|The service properties
-|---------+------------+--------------+------+-----------|
+|Elements |1..n        |_diverse_          |diverse|The service properties, according to the current SDL-NG vocabulary
+|---------+------------+-------------------+-------+-----------|
 
     END
   end
@@ -45,6 +47,7 @@ This list can be filtered using the `status` and `deleted` parameters.
 This method lists all versions of a service, their `status`, and their `service_deleted` flag. For any approved version, it lists their `valid_from` and `valid_until` dates, i.e., the timeframe those versions represented the current, non-deleted version.
 
 ## Example response
+~~~ xml
 <?xml version="1.0"?>
 <versions count="8">
   <version
@@ -95,6 +98,7 @@ This method lists all versions of a service, their `status`, and their `service_
     <deleted>false</deleted>
   </version>
 </versions>
+~~~
   END
   def list_versions
     @versions = Service.where(service_id: params[:id]).order(updated_at: -1).only(:_id, :service_id, :status, :service_deleted, :created_at, :updated_at).to_a
@@ -172,9 +176,7 @@ When querying for the SDL-NG source, the `sdl-part` parameter can be used to ret
   end
 
   def edit
-    slug = params[:id].split('-')[0]
-
-    @service = Service.find(slug)
+    @service = Service.where(service_id: params[:id]).order(updated_at: -1).first
 
     @service_description = @service.sdl_parts['main']
   end

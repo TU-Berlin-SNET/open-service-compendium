@@ -3,21 +3,18 @@ h1 List of all services in the Open Service Broker
 .services
   - @services.each do |service|
     h2
-      = service.service_name
+      = service.service_name || service.service_id
 
     h3
-      = link_to 'HTML', service_path(service._id)
-      = link_to 'XML', service_path(service._id, :format => :xml)
-      = link_to 'RDF', service_path(service._id, :format => :rdf)
-      = link_to t('services.list.source'), service_path(service._id, :format => :sdl)
-      = link_to t('services.list.edit'), edit_service_path(service._id)
+      = link_to 'HTML', service_path(service.service_id)
+      = link_to 'XML', service_path(service.service_id, :format => :xml)
+      = link_to 'RDF', service_path(service.service_id, :format => :rdf)
+      = link_to t('services.list.source'), service_path(service.service_id, :format => :sdl)
+      = link_to t('services.list.edit'), edit_service_path(service.service_id)
 
 h1=t('services.new.header')
 
 row
   fieldset
     = form_tag services_path, :method => :post, :role => 'form' do |f|
-      .form-group
-        label[for='name']= t('service.id')
-        input[type='text' class='form-control' name='name' id='name' placeholder=t('service.id_placeholder') value=@name]
       button[type='submit' class="btn btn-default"]= t('services.new.submit')
