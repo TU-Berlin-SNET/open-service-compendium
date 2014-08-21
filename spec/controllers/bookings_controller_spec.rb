@@ -59,7 +59,7 @@ describe BookingsController do
       client = create(:client)
       service = create(:approved_service)
 
-      post :create, :client_id => client._id, :service_id => service._id, :format => :xml
+      post :create, :client_id => client._id, :service_id => service.service_id, :format => :xml
 
       expect(response).to be_success
       expect(response.status).to eq(201)
@@ -69,7 +69,7 @@ describe BookingsController do
     end
 
     it 'responds with 404 if the client does not exist' do
-      post :create, :client_id => 'abc', :service_id => create(:service)._id, :callback_url => 'http://test.host', :format => :xml
+      post :create, :client_id => 'abc', :service_id => create(:service).service_id, :callback_url => 'http://test.host', :format => :xml
 
       expect(response).to be_missing
       expect(response.status).to eq(404)
@@ -84,7 +84,16 @@ describe BookingsController do
 
     it 'responds with 422 if the callback URL is invalid' do
       post :create, :client_id => create(:client)._id, :service_id => create(:service)._id, :callback_url => 'invalid', :format => :xml
-      
+
+      expect(response).to be_client_error
+      expect(response.status).to eq(422)
+    end
+
+    it 'responds with 422 if there is no bookable version of a service' do
+      service = create(:draft_service)
+
+      post :create, :client_id => create(:client)._id, :service_id => service.service_id, :callback_url => 'http://test.host', :format => :xml
+
       expect(response).to be_client_error
       expect(response.status).to eq(422)
     end
@@ -95,7 +104,7 @@ describe BookingsController do
       service = create(:immediately_bookable_service)
       client = create(:client)
 
-      post :create, :client_id => client._id, :service_id => service._id, :format => :xml
+      post :create, :client_id => client._id, :service_id => service.service_id, :format => :xml
 
       booking = ServiceBooking.first
 

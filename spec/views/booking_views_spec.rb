@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe 'bookings/index' do
   it 'gives out an xml document with all bookings' do
+    ServiceBooking.with(safe: true).delete_all
+
     service_bookings = create(:client, :with_bookings).service_bookings
 
     assign(:bookings, service_bookings)
@@ -23,6 +25,8 @@ end
 
 describe 'bookings/show' do
   it 'gives out an xml document with the specified booking' do
+    ServiceBooking.with(safe: true).delete_all
+
     booking = create(:canceling_failed_service_booking)
 
     assign(:booking, booking)

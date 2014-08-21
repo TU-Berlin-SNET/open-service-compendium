@@ -1,6 +1,6 @@
 xml.booking :url => client_booking_url(booking.client, booking) do
   xml.client_url(client_url(booking.client_id))
-  xml.service_url(service_url(booking.service_id))
+  xml.service_url(version_service_url(booking.service.service_id, booking.service_id))
   xml.callback_url(booking.callback_url)
   xml.endpoint_url(booking.endpoint_url) if booking.endpoint_url
 
