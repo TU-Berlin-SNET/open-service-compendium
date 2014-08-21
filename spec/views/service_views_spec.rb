@@ -14,6 +14,6 @@ describe 'services/show.xml.ruby' do
 
     expect(@xml.root.name).to eq 'service'
 
-    expect(@xml.xpath('//@service_version_url').first.value).to eq version_service_url(service.service_id, service._id)
+    expect(@xml.xpath('//@uri').first.value).to eq version_service_url(service.service_id, service._id)
   end
 end
