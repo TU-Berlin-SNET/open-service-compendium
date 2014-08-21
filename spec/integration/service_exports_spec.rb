@@ -7,9 +7,25 @@ describe 'When exporting services' do
 
       service.save
 
-      get "/services/#{service._id}.xml"
+      get "/services/#{service.service_id}.xml"
 
-      fail pending
+      service_xml = response.body
+
+      expect {
+        @xml = Nokogiri::XML(service_xml)
+      }.not_to raise_exception
+
+      schema_uri = URI(@xml.xpath('//@xsi:schemaLocation').first.value)
+
+      get schema_uri.path
+
+      expect {
+        @schema = Nokogiri::XML::Schema(response.body)
+      }.not_to raise_exception
+
+      errors = @schema.validate(@xml)
+
+      expect(errors).to be_empty
     end
   end
 end
