@@ -6,16 +6,26 @@ The services contained in the Open Service Broker are described using the [SDL-N
 
 The current vocabulary can be seen [on this page](/schema).
 
+## Service versioning
+
+When `approved` services are updated, new versions are created. A specific service version can be retrieved using `/service/:id/versions/:version_id`. The URL `/service/:id` corresponds to the latest approved, non-deleted version of a service.
+
 ## Service statuses
 
-The broker supports two distinct statuses: `draft` and `approved`.
+The broker supports two distinct service statuses (`draft` and `approved`) with the following characteristics:
+
+* Only the latest `approved` version of a service will be shown in the service list
+* Only `approved` services can be booked
+* `approved` services cannot be changed
+* Any change to an `approved` service creates a new `draft` version
+* There is at most one `draft` version of a service which is newer than the latest `approved` version
 
 ## XML data format
 
 |---------+------------+-------------------+-------+-----------|
 |Type     |Multiplicity|Name               |Type   |Description|
 |---------+------------+-------------------+-------+-----------|
-|Attribute|1           |service_version_url|string |The client URL
+|Attribute|1           |uri                |string |The URL to the specific version of the service.
 |Elements |1..n        |_diverse_          |diverse|The service properties, according to the current SDL-NG vocabulary
 |---------+------------+-------------------+-------+-----------|
 
