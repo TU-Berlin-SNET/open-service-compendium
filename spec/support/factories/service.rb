@@ -10,7 +10,7 @@ FactoryGirl.define do
     %w(draft approved).each do |status|
       factory "#{status}_service" do
         after(:build) do |service|
-          service.sdl_parts['meta'] = "status #{status}\nprovider_id 123"
+          service.sdl_parts['meta'] = "status #{status}\nprovider_id '123'"
 
           service.load_service_from_sdl
         end

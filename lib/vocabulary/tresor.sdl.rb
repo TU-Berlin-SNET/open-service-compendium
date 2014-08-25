@@ -16,7 +16,7 @@ end
 service_properties do
   status
 
-  integer :provider_id
+  string :provider_id
 
   string :default_user_group
 
