@@ -104,7 +104,7 @@ describe ClientsController do
           created_services = {}
 
           data[:services].each do |identifier, sdl|
-            created_services[identifier] = create(:service, sdl_parts: {'main' => sdl})
+            created_services[identifier] = create(:service, sdl_parts: {'meta' => 'status approved', 'main' => sdl})
           end
 
           get :compatible_services, :id => client._id, :format => :xml

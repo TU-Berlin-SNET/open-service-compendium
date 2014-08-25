@@ -10,7 +10,7 @@ describe ClientProfile do
       created_services = {}
 
       data[:services].each do |identifier, sdl|
-        created_services[identifier] = create(:service, sdl_parts: {'main' => sdl})
+        created_services[identifier] = create(:service, sdl_parts: {'meta' => 'status approved', 'main' => sdl})
       end
 
       compatible_services = client_profile.compatible_services
@@ -21,5 +21,25 @@ describe ClientProfile do
       expect(compatible_services.to_a).to include *included_services
       expect(compatible_services.to_a).not_to include *not_included_services
     end
+  end
+
+  it 'should not list older non-approved services' do
+    create(:approved_service, :with_older_versions)
+
+    client_profile = ClientProfile.new('service_tags should_include "new-tag"')
+
+    compatible_services = client_profile.compatible_services
+
+    expect(compatible_services).to have_exactly(1).service
+  end
+
+  it 'should not list deleted services' do
+    create(:approved_service, :deleted)
+
+    client_profile = ClientProfile.new('service_tags should_include "new-tag"')
+
+    compatible_services = client_profile.compatible_services
+
+    expect(compatible_services).to have_exactly(0).service
   end
 end

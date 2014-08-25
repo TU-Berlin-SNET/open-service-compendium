@@ -150,7 +150,7 @@ class ClientProfile
   # Retrieves all compatible services to this client profile
   # @return [Mongoid::Criteria] The resulting mongoid criteria, ready for querying the database.
   def compatible_services
-    Service.and(@query_statements)
+    Service.latest_with_status(:approved).and(@query_statements)
   end
 
   # Class representing a client profile error, e.g., the profile
