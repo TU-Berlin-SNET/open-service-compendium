@@ -192,31 +192,36 @@ When querying for the SDL-NG source, the `sdl-part` parameter can be used to ret
   end
 
   api :POST, 'services', 'Creates a service'
-  param :sdl_parts, Hash, :desc => 'Parts of the service description. Simple default applies if not specified.', :required => false do
-    param :meta, String, :desc => 'Meta information, e.g. `status`'
+  param :sdl_parts, Hash, :desc => 'Parts of the service description.', :required => false do
+    param :meta, String, :desc => 'Meta information. Has to contain at least `status`.'
     param :main, String, :desc => 'The main service description'
   end
   description <<-END
+The `sdl_parts` `main` and `meta` will be set to defaults if not specified. The `meta` part will default to `status draft` and the `main` part to `service_name '...'` (containing a localized default name).
+
 On successful creation, the method returns the HTTP status code `201 Created` with an HTTP `Location` header. Ths header represents either the service (if approved), or a specific version (if draft).
   END
   error 422, 'Service not created, errors in service description'
   def create
-    service = Service.new ( {
-        :sdl_parts => params[:sdl_parts] || {
-            'meta' => 'status draft',
-            'main' => "service_name '#{t('services.new.service_description_placeholder')}'"
-        }
-    })
+    params[:sdl_parts] = {} if params[:sdl_parts].blank?
+    params[:sdl_parts]['meta'] = 'status draft' unless params[:sdl_parts]['meta']
+    params[:sdl_parts]['main'] = "service_name '#{t('services.new.service_description_placeholder')}'" unless params[:sdl_parts]['main']
+
+    service = Service.new(:sdl_parts => params[:sdl_parts])
 
     begin
       service.load_service_from_sdl
 
-      service.save
-
-      if(service.status.identifier == :approved)
-        head :created, location: service_url(service.service_id)
+      if(service.status.blank?)
+        render text: 'sdl_parts["meta"] did not contain a service status', status: 422
       else
-        head :created, location: version_service_url(service.service_id, service._id)
+        service.save
+
+        if(service.status.identifier == :approved)
+          head :created, location: service_url(service.service_id)
+        else
+          head :created, location: version_service_url(service.service_id, service._id)
+        end
       end
     rescue Exception => e
       service.delete

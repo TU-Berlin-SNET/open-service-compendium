@@ -90,6 +90,53 @@ describe ServicesController do
       expect(response['Location']).to eq service_url(service.service_id)
     end
 
+    it 'sets the status to draft if only given sdl_parts[main]' do
+      post :create, {
+          :sdl_parts => {
+              'main' => 'exportable_data_format csv'
+          }
+      }
+
+      service = Service.first
+
+      expect(service.sdl_parts['main']).to eq 'exportable_data_format csv'
+      expect(service.sdl_parts['meta']).to eq 'status draft'
+
+      expect(service.exportable_data_formats[0].identifier).to eq :csv
+      expect(service.status.identifier).to eq :draft
+
+      expect(response.status).to eq 201
+      expect(response['Location']).to eq version_service_url(service.service_id, service._id)
+    end
+
+    it 'sets a default name if only given sdl_parts[meta]' do
+      post :create, {
+          :sdl_parts => {
+              'meta' => 'status approved'
+          }
+      }
+
+      service = Service.first
+
+      expect(service.sdl_parts['main']).to match /service_name '.+'/
+      expect(service.sdl_parts['meta']).to eq 'status approved'
+
+      expect(service.status.identifier).to eq :approved
+
+      expect(response.status).to eq 201
+      expect(response['Location']).to eq service_url(service.service_id)
+    end
+
+    it 'does not create a service without a status' do
+      post :create, {
+          :sdl_parts => {
+              'meta' => 'provider_id "123456"'
+          }
+      }
+
+      expect(response.status).to eq 422
+    end
+
     it 'sends the relevant URI as HTTP location header' do
       post :create, {:sdl_parts => {
           'main' => 'service_name "ABC"',
