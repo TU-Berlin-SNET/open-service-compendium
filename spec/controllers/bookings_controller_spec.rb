@@ -1,10 +1,13 @@
 require 'spec_helper'
+require 'webmock/rspec'
 
 describe BookingsController do
   before(:each) do
     [ServiceBooking, Service, Client].each do |klass|
       klass.with(safe:true).delete_all
     end
+
+    stub_request(:post, 'http://market.place/bookings')
   end
 
   describe 'GET #index' do
