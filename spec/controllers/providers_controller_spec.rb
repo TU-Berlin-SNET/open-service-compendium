@@ -75,6 +75,26 @@ describe ProvidersController do
 
       expect(provider.provider_data).to eq 'new'
     end
+
+    it 'responds with 422 if specifying invalid or missing parameters' do
+      provider = Provider.create(:provider_data => 'old')
+
+      put :update, :id => provider._id, :invalid => 'abc'
+
+      expect(response).to be_client_error
+      expect(response.status).to eq 422
+
+      put :update, :id => provider._id
+
+      provider.reload
+
+      expect(response).to be_client_error
+      expect(response.status).to eq 422
+
+      provider.reload
+
+      expect(provider.provider_data).to eq 'old'
+    end
   end
 
   describe 'DELETE #delete' do

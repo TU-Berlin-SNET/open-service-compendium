@@ -71,6 +71,27 @@ describe ClientsController do
       expect(client.client_data).to eq 'new'
       expect(client.client_profile).to eq 'old'
     end
+
+    it 'responds with 422 if specifying invalid or missing parameters' do
+      client = Client.create(:client_data => 'old', :client_profile => 'old')
+
+      put :update, :id => client._id, :invalid => 'abc'
+
+      expect(response).to be_client_error
+      expect(response.status).to eq 422
+
+      put :update, :id => client._id
+
+      client.reload
+
+      expect(response).to be_client_error
+      expect(response.status).to eq 422
+
+      client.reload
+
+      expect(client.client_data).to eq 'old'
+      expect(client.client_profile).to eq 'old'
+    end
   end
 
   describe 'DELETE #delete' do

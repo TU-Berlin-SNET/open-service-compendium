@@ -73,17 +73,22 @@ class ProvidersController < ApplicationController
 
     If the provider already exists, the method updates `provider_data` and returns `204 No Content`.
   END
+  error 422, 'Provider attributes missing or invalid'
   error 500, 'Internal server error while creating or updating provider'
   def update
     provider_attributes = {}
     provider_attributes['provider_data'] = params[:provider_data] if params[:provider_data]
 
-    operation_result = Provider.collection.find(_id: params[:id]).update({'$set' => provider_attributes}, [:upsert])
-
-    if operation_result['updatedExisting']
-      head :no_content
+    if provider_attributes.blank?
+      render :text => 'Provider attributes missing or invalid', :status => 422
     else
-      head :created
+      operation_result = Provider.collection.find(_id: params[:id]).update({'$set' => provider_attributes}, [:upsert])
+
+      if operation_result['updatedExisting']
+        head :no_content
+      else
+        head :created
+      end
     end
   end
 
