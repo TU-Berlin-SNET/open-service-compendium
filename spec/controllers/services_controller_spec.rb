@@ -331,6 +331,8 @@ describe ServicesController do
 
       delete :delete, {:id => service.service_id}
 
+      expect(response.status).to eq(204)
+
       expect(Service.where(service_id: service.service_id).all? { |s| s.service_deleted? })
     end
 
@@ -343,8 +345,10 @@ describe ServicesController do
 
       [service, old_version].each &:reload
 
-      expect(!service.service_deleted?)
-      expect(old_version.service_deleted?)
+      expect(response.status).to eq(204)
+
+      expect(service.service_deleted?).to be false
+      expect(old_version.service_deleted?).to be true
     end
 
     it 'deletes the latest version of a service' do
@@ -355,8 +359,10 @@ describe ServicesController do
 
       service.reload
 
-      expect(service.service_deleted?)
-      expect(older_versions.none?{|s| s.service_deleted?})
+      expect(response.status).to eq(204)
+
+      expect(service.service_deleted?).to be true
+      expect(older_versions.none?{|s| s.service_deleted?}).to be true
     end
   end
 end

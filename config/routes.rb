@@ -22,7 +22,7 @@ OpenServiceBroker::Application.routes.draw do
 
     get 'versions', on: :member, action: 'list_versions'
     get 'versions/:version', on: :member, action: 'show', as: :version
-    delete 'versions/:version', on: :member, action: 'delete'
+    delete 'versions/:version_id', on: :member, action: 'delete'
     get 'versions/:version/:sdl_part', on: :member, action: 'show'
 
     get ':sdl_part', on: :member, action: 'show', as: :sdl_part_of

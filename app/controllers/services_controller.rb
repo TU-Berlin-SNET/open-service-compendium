@@ -329,7 +329,7 @@ A service version is never removed from the DB, but marked by the attribute `ser
       if params[:version_id].eql? 'latest'
         @service = Service.latest_approved(params[:id])
       else
-        @service = Service.where(_id: params[:id]).first
+        @service = Service.where(_id: params[:version_id]).first
       end
 
       if @service.nil?
@@ -337,12 +337,12 @@ A service version is never removed from the DB, but marked by the attribute `ser
       else
         @service.update_attributes!(:service_deleted => true)
 
-        head :success
+        head :no_content
       end
     else
       Service.where(service_id: params[:id]).set(:service_deleted => true)
 
-      head :success
+      head :no_content
     end
   end
 
