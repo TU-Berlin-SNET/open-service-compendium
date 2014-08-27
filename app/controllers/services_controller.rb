@@ -251,7 +251,7 @@ On successful update this method returns 204 No content and a Location header. T
     service = Service.where(:service_id => params[:id]).order(updated_at: -1).first
 
     draft_service = nil
-    if(service.status.identifier == :draft)
+    if(service.try(:status).try(:identifier) == :draft)
       draft_service = service
     else
       draft_service = service.new_draft
@@ -282,12 +282,12 @@ On successful update this method returns 204 No content and a Location header. T
           end
 
           if changed
-            draft_service.load_service_from_sdl
+            draft_service.load_service_from_sdl(request.path)
 
             draft_service.save!
           end
         rescue Exception => e
-          relevant_backtrace = e.backtrace.select do |entry| entry.include? 'http://' end
+          relevant_backtrace = e.backtrace.select do |entry| entry.include? request.path end
           relevant_line = relevant_backtrace[0].match(/:(\d+):/)[1] unless relevant_backtrace.empty?
 
           render text: "#{e.message}#{relevant_line ? " in line #{relevant_line}" : ''}", status: 422
@@ -299,7 +299,9 @@ On successful update this method returns 204 No content and a Location header. T
       flash[:message] = t('services.update.successful')
 
       respond_to do |format|
-        format.html { redirect_to :action => :edit, :id => params[:id] }
+        format.html do
+          redirect_to({:action => :edit, :id => params[:id]}, :status => 303)
+        end
         format.any do
           if draft_service.status.identifier == :draft
             head :no_content, location: service_url(draft_service.service_id)

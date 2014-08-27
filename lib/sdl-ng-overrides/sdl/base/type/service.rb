@@ -64,7 +64,7 @@ class SDL::Base::Type::Service < SDL::Base::Type
     sdl.string
   end
 
-  def load_service_from_sdl
+  def load_service_from_sdl(filename = nil)
     self.class.properties.each do |property|
       unless self[property.name].blank?
         self.send "#{property.name}=", nil
@@ -73,7 +73,7 @@ class SDL::Base::Type::Service < SDL::Base::Type
 
     receiver = SDL::Receivers::TypeInstanceReceiver.new(self)
 
-    receiver.instance_eval to_service_sdl
+    receiver.instance_eval(to_service_sdl, filename || 'service_sdl')
 
     self
   end
