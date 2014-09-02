@@ -22,6 +22,27 @@ class SDL::Base::Type::Service < SDL::Base::Type
     where(:service_id => service_id, 'status.identifier' => 'approved', 'service_deleted' => false).sort(:updated_at => -1).limit(1).first
   end
 
+  def self.versions(service_id)
+    versions = where(service_id: service_id).order(updated_at: -1).only(:_id, :service_id, :status, :service_deleted, :created_at, :updated_at).to_a
+
+    versions.select{|v| (v.status.identifier == :approved) && !v.service_deleted?}.each do |version|
+      if(@newer_updated_at)
+        newer_updated_at = @newer_updated_at.clone
+        version.define_singleton_method :valid_until do
+          newer_updated_at
+        end
+      end
+
+      def version.valid_from
+        updated_at
+      end
+
+      @newer_updated_at = version.updated_at
+    end
+
+    versions
+  end
+
   def self.latest_with_status(status_identifier, deleted = false)
     @id_version_updated = collection.aggregate(
       {'$match' => {

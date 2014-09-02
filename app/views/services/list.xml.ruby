@@ -4,7 +4,7 @@ Nokogiri::XML::Builder.new do |xml|
       'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
       'xsi:schemaLocation' => xml_schema_url) do
     @services.each do |service|
-      @exporter ||= SDL::Exporters::XMLServiceExporter.new
+      @exporter ||= BrokerXMLServiceExporter.new
 
       @exporter.build_service(service, xml)
     end

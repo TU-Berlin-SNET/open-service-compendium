@@ -26,6 +26,8 @@ The broker supports two distinct service statuses (`draft` and `approved`) with 
 |Type     |Multiplicity|Name               |Type   |Description|
 |---------+------------+-------------------+-------+-----------|
 |Attribute|1           |uri                |string |The URL to the specific version of the service.
+|Attribute|1           |service_uuid       |UUID   |The UUID of the service on this broker.
+|Attribute|1           |version_uuid       |UUID   |The UUID of the specific version on this broker.
 |Elements |1..n        |_diverse_          |diverse|The service properties, according to the current SDL-NG vocabulary
 |---------+------------+-------------------+-------+-----------|
 
@@ -59,51 +61,60 @@ This method lists all versions of a service, their `status`, and their `service_
 ## Example response
 ~~~ xml
 <?xml version="1.0"?>
-<versions count="8">
+<versions count="8" service_url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905"
+          service_uuid="e64e00d3-6db0-4a1e-aa12-afc35a3cf905">
   <version
-          url="http://test.host/services/9243a1db-7f2d-43aa-9c8d-12101fea4a3d/versions/dd55c091-a8f4-4511-bc48-7647d8e8d95d">
-    <valid_from>2014-08-19T15:47:09Z</valid_from>
+          url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905/versions/dbf91658-6c53-46c1-ac85-c5219a4abe15"
+          version_uuid="dbf91658-6c53-46c1-ac85-c5219a4abe15">
+    <valid_from>2014-09-02T12:21:31Z</valid_from>
     <status>approved</status>
     <deleted>false</deleted>
   </version>
   <version
-          url="http://test.host/services/9243a1db-7f2d-43aa-9c8d-12101fea4a3d/versions/9e67983c-e6a0-488e-a34a-416adbc861de">
-    <valid_from>2014-08-19T14:47:09Z</valid_from>
-    <valid_until>2014-08-19T15:47:09Z</valid_until>
+          url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905/versions/0dcb0d0c-730d-44ac-82c2-15700370d03c"
+          version_uuid="0dcb0d0c-730d-44ac-82c2-15700370d03c">
+    <valid_from>2014-09-02T11:21:31Z</valid_from>
+    <valid_until>2014-09-02T12:21:31Z</valid_until>
     <status>approved</status>
     <deleted>false</deleted>
   </version>
   <version
-          url="http://test.host/services/9243a1db-7f2d-43aa-9c8d-12101fea4a3d/versions/9b9e7bda-7439-4849-bb62-15ad8177e8e1">
+          url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905/versions/9dd9f9e7-cb76-4ae7-8bdc-7f32018b8b76"
+          version_uuid="9dd9f9e7-cb76-4ae7-8bdc-7f32018b8b76">
     <status>draft</status>
     <deleted>false</deleted>
   </version>
   <version
-          url="http://test.host/services/9243a1db-7f2d-43aa-9c8d-12101fea4a3d/versions/01dec1eb-451f-4d9c-8b1f-691ee690aecb">
+          url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905/versions/01dd52cd-56a2-404e-bd3e-34c3049379fc"
+          version_uuid="01dd52cd-56a2-404e-bd3e-34c3049379fc">
     <status>draft</status>
     <deleted>false</deleted>
   </version>
   <version
-          url="http://test.host/services/9243a1db-7f2d-43aa-9c8d-12101fea4a3d/versions/3860a58e-1d1d-49b8-83e9-72d712085bad">
-    <valid_from>2014-08-19T11:47:09Z</valid_from>
-    <valid_until>2014-08-19T14:47:09Z</valid_until>
+          url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905/versions/d4cb07d5-e098-4f91-9ea3-4056e97ff3cd"
+          version_uuid="d4cb07d5-e098-4f91-9ea3-4056e97ff3cd">
+    <valid_from>2014-09-02T08:21:31Z</valid_from>
+    <valid_until>2014-09-02T11:21:31Z</valid_until>
     <status>approved</status>
     <deleted>false</deleted>
   </version>
   <version
-          url="http://test.host/services/9243a1db-7f2d-43aa-9c8d-12101fea4a3d/versions/0f8a7f4a-27af-4f5f-a1a2-e3faac515a56">
+          url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905/versions/ef89291f-36e2-4769-ae32-f922eaf228e5"
+          version_uuid="ef89291f-36e2-4769-ae32-f922eaf228e5">
     <status>draft</status>
     <deleted>false</deleted>
   </version>
   <version
-          url="http://test.host/services/9243a1db-7f2d-43aa-9c8d-12101fea4a3d/versions/76409a34-e25b-465a-8eb6-fec67fd63bb4">
-    <valid_from>2014-08-19T09:47:09Z</valid_from>
-    <valid_until>2014-08-19T11:47:09Z</valid_until>
+          url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905/versions/3ea4b47c-75fa-4346-b2ae-62a9288a296f"
+          version_uuid="3ea4b47c-75fa-4346-b2ae-62a9288a296f">
+    <valid_from>2014-09-02T06:21:31Z</valid_from>
+    <valid_until>2014-09-02T08:21:31Z</valid_until>
     <status>approved</status>
     <deleted>false</deleted>
   </version>
   <version
-          url="http://test.host/services/9243a1db-7f2d-43aa-9c8d-12101fea4a3d/versions/a4def45c-b6be-4bc4-801d-34d3001882ef">
+          url="http://test.host/services/e64e00d3-6db0-4a1e-aa12-afc35a3cf905/versions/c8b499f0-1448-445a-b50e-a9fe2b240105"
+          version_uuid="c8b499f0-1448-445a-b50e-a9fe2b240105">
     <status>draft</status>
     <deleted>false</deleted>
   </version>
@@ -111,22 +122,7 @@ This method lists all versions of a service, their `status`, and their `service_
 ~~~
   END
   def list_versions
-    @versions = Service.where(service_id: params[:id]).order(updated_at: -1).only(:_id, :service_id, :status, :service_deleted, :created_at, :updated_at).to_a
-
-    @versions.select{|v| (v.status.identifier == :approved) && !v.service_deleted?}.each do |version|
-      if(@newer_updated_at)
-        newer_updated_at = @newer_updated_at.clone
-        version.define_singleton_method :valid_until do
-          newer_updated_at
-        end
-      end
-
-      def version.valid_from
-        updated_at
-      end
-
-      @newer_updated_at = version.updated_at
-    end
+    @versions = Service.versions(params[:id])
 
     respond_to do |format|
       format.html

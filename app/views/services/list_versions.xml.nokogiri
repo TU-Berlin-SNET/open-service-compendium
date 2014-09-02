@@ -1,6 +1,6 @@
-xml.versions :count => @versions.count do
+xml.versions :count => @versions.count, :service_url => service_url(@versions.first.service_id), :service_uuid => @versions.first.service_id do
   @versions.each do |version|
-    xml.version :url => version_service_url(version.service_id, version._id) do
+    xml.version :url => version_service_url(version.service_id, version._id), :version_uuid => version._id do
       xml.valid_from version.try(:valid_from).try(:iso8601) if version.try(:valid_from)
       xml.valid_until version.try(:valid_until).try(:iso8601) if version.try(:valid_until)
       xml.status version.try(:status).try(:identifier) if version.try(:status).try(:identifier)
