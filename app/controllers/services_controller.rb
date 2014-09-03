@@ -370,6 +370,24 @@ A service version is never removed from the DB, but marked by the attribute `ser
     end
   end
 
+  api :GET, 'service_uuid/:name', 'Get service UUID for name'
+  description <<-END
+Returns the Service UUID for the service with the name :name.
+
+Used for TRESOR proxy authorization.
+  END
+  param :name, String, 'The service name for which to retrieve the UUID'
+  error 404, 'Service not found'
+  def uuid
+    service = Service.where(:name => params[:name]).first
+
+    if(service)
+      render :text => service.service_id
+    else
+      render :text => 'Service not found', :status => 404
+    end
+  end
+
   private
     def disable_pretty_printing
       Slim::Engine.default_options[:pretty] = false

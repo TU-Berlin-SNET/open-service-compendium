@@ -19,7 +19,7 @@ describe BookingsController do
       expect(response).to be_success
       expect(response.status).to eq(200)
 
-      expect(assigns[:bookings]).to have_exactly(ServiceBooking::STATUSES.count).bookings
+      expect(assigns[:bookings]).to have_exactly(ServiceBooking::STATUSES.count + 1).bookings
     end
   end
 

@@ -59,7 +59,7 @@ describe ServicesController do
     end
 
     it 'creates a new service and loads it to the db and compendium' do
-      post :create
+      post :create, :format => :xml
 
       service = Service.first
 
@@ -77,7 +77,7 @@ describe ServicesController do
       post :create, {:sdl_parts => {
           'main' => 'exportable_data_format csv',
           'meta' => 'status approved'
-      }}
+      }, :format => :xml}
 
       service = Service.first
 
@@ -94,7 +94,7 @@ describe ServicesController do
       post :create, {
           :sdl_parts => {
               'main' => 'exportable_data_format csv'
-          }
+          }, :format => :xml
       }
 
       service = Service.first
@@ -113,7 +113,7 @@ describe ServicesController do
       post :create, {
           :sdl_parts => {
               'meta' => 'status approved'
-          }
+          }, :format => :xml
       }
 
       service = Service.first
@@ -131,7 +131,7 @@ describe ServicesController do
       post :create, {
           :sdl_parts => {
               'meta' => 'provider_id "123456"'
-          }
+          }, :format => :xml
       }
 
       expect(response.status).to eq 422
@@ -141,7 +141,7 @@ describe ServicesController do
       post :create, {:sdl_parts => {
           'main' => 'service_name "ABC"',
           'meta' => 'status approved'
-      }}
+      }, :format => :xml}
 
       service = Service.first
 
@@ -329,7 +329,7 @@ describe ServicesController do
     it 'deletes all versions of a service' do
       service = create(:approved_service, :with_older_versions)
 
-      delete :delete, {:id => service.service_id}
+      delete :delete, {:id => service.service_id, :format => :xml}
 
       expect(response.status).to eq(204)
 
@@ -341,7 +341,7 @@ describe ServicesController do
 
       old_version = Service.where(:service_id => service.service_id).order(:created_at => 1).first
 
-      delete :delete, {:id => service.service_id, :version_id => old_version._id}
+      delete :delete, {:id => service.service_id, :version_id => old_version._id, :format => :xml}
 
       [service, old_version].each &:reload
 
@@ -355,7 +355,7 @@ describe ServicesController do
       service = create(:approved_service, :with_older_versions)
       older_versions = Service.where(:service_id => service.service_id, :id => {'$ne' => service._id})
 
-      delete :delete, {:id => service.service_id, :version_id => 'latest'}
+      delete :delete, {:id => service.service_id, :version_id => 'latest', :format => :xml}
 
       service.reload
 
@@ -363,6 +363,30 @@ describe ServicesController do
 
       expect(service.service_deleted?).to be true
       expect(older_versions.none?{|s| s.service_deleted?}).to be true
+    end
+  end
+
+  describe 'GET #uuid' do
+    before(:each) do
+      Service.delete_all
+    end
+
+    render_views
+
+    it 'retrieves the UUID for a service' do
+      service = create(:approved_service)
+      service.update_attributes!(name: 'my-service')
+
+      get :uuid, {:name => 'my-service'}
+
+      expect(response).to be_success
+      expect(response.body).to eq(service.service_id)
+    end
+
+    it 'returns 404 if it does not find a service' do
+      get :uuid, {:name => 'other-service'}
+
+      expect(response.status).to eq(404)
     end
   end
 end

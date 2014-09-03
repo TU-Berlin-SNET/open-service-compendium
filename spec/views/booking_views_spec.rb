@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'bookings/index' do
+describe 'bookings/index.xml.nokogiri' do
   it 'gives out an xml document with all bookings' do
     ServiceBooking.with(safe: true).delete_all
 
@@ -23,7 +23,7 @@ describe 'bookings/index' do
   end
 end
 
-describe 'bookings/show' do
+describe 'bookings/show.xml.nokogiri' do
   it 'gives out an xml document with the specified booking' do
     ServiceBooking.with(safe: true).delete_all
 
