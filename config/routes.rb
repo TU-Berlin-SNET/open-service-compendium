@@ -1,7 +1,5 @@
 OpenServiceBroker::Application.routes.draw do
-  if Rails.env.production?
-    default_url_options(host: 'tresor-dev-broker.snet.tu-berlin.de')
-  elsif Rails.env.test?
+  if Rails.env.test?
     default_url_options(host: 'test.host')
   else
     default_url_options(host: 'dev.host')
