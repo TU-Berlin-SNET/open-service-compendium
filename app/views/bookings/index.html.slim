@@ -1,0 +1,38 @@
+= render 'flash'
+
+h1= t('broker.bookings.list', organization: @client.tresor_organization)
+
+- if @bookings.blank?
+  p.lead= t('broker.bookings.empty')
+- else
+  table.table
+    thead
+      tr
+        th= t('broker.bookings.list_table.booking_status')
+        th= t('broker.bookings.list_table.booking_date')
+        th= t('broker.bookings.list_table.service_name')
+        th= t('broker.bookings.list_table.service_uuid')
+        th= t('broker.bookings.list_table.service_url')
+        th= t('broker.bookings.list_table.actions')
+    tbody
+      - @bookings.each do |booking|
+        tr.table-striped
+          td= t("broker.bookings.status.#{booking.booking_status}")
+          td
+            = t('broker.bookings.list_table.booking.booking_date', ago: time_ago_in_words(booking.booked_time)) if booking.booked_time
+          td= link_to booking.service.try(:service_name), service_path(booking.service.service_id)
+          td= booking.service.service_id
+          td
+            a[href="http://#{booking.service.name}.services.cloud-tresor.de"]= "http://#{booking.service.name}.services.cloud-tresor.de" if booking.booked?
+          td= link_to t('broker.bookings.delete'), client_booking_path(@client._id, booking._id), :method => :delete
+
+h1=t('broker.bookings.create_new')
+
+fieldset
+  = form_tag client_bookings_path(@client), :method => :post, :role => 'form' do |f|
+    input[type='hidden' name='client_id' value=@client._id ]
+    .form-group
+      label[for='service_id']= t('broker.bookings.list_table.service_name')
+      select[name='service_id' class='form-control']
+        = options_for_select Service.latest_with_status('approved').collect{|service|[service.service_name, service.service_id]}
+    button[type='submit' class="btn btn-default"]= t('broker.bookings.create')

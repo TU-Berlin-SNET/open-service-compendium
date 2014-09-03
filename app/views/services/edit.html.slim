@@ -11,16 +11,17 @@ h1
 
 row
   fieldset
-    = form_tag sdl_part_of_service_path(params[:id], 'main'), :method => :put, :role => 'form' do |f|
+    = form_tag service_path(params[:id]), :method => :put, :role => 'form' do |f|
+      input[type='hidden' name='sdl_parts[meta]' value='status approved']
       .form-group
-        label[for='symbolic_name']= t('service.id')
-        input[type='text' class='form-control' name='symbolic_name' id='symbolic_name'placeholder=t('service.id_placeholder') value=params[:id]]
+        label[for='name']= t('service.id')
+        input[type='text' class='form-control' name='name' id='name' placeholder=t('service.id_placeholder') value=@service.name]
       .form-group
-        label[for='service_description']
+        label[for='sdl_parts[main]']
           = t('service.description')
           = link_to " (#{t('services.edit.help')})", cheat_sheet_path, :target => '_blank'
-        textarea[name='service_description']
-          =@service_description
+        textarea[name='sdl_parts[main]']
+          =@service.sdl_parts['main']
         #service_description
       - if @error_row
         input[type='hidden' id='error_row' value=@error_row]
@@ -36,7 +37,7 @@ javascript:
   $(document).ready(function() {
     ace.require("ace/ext/language_tools");
     var editor = ace.edit('service_description')
-    var textarea = $('textarea[name="service_description"]').hide();
+    var textarea = $('textarea[name="sdl_parts[main]"]').hide();
     editor.setTheme('ace/theme/github')
     editor.getSession().setMode('ace/mode/ruby')
     editor.setOptions({

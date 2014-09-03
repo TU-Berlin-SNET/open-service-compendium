@@ -11,10 +11,15 @@ h1 List of all services in the Open Service Broker
       = link_to 'RDF', service_path(service.service_id, :format => :rdf)
       = link_to t('services.list.source'), service_path(service.service_id, :format => :sdl)
       = link_to t('services.list.edit'), edit_service_path(service.service_id)
+      = link_to t('service.delete'), service_path(service.service_id), :method => :delete
 
 h1=t('services.new.header')
 
 row
   fieldset
     = form_tag services_path, :method => :post, :role => 'form' do |f|
+      input[type='hidden' name='sdl_parts[meta]' value='status approved' ]
+      input[type='hidden' name='sdl_parts[main]' value='service_name "My test service"' ]
+      label[for='name']= t('service.id')
+      input[type='text' class='form-control' name='name' id='name' placeholder=t('service.id_placeholder')]
       button[type='submit' class="btn btn-default"]= t('services.new.submit')

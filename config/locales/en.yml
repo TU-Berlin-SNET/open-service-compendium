@@ -46,6 +46,7 @@ en:
     show:
       service_not_found: "Cannot find service"
       service_not_found_detail: "The URL or the service description are invalid."
+    delete: "Delete"
   cheat_sheet:
     service_properties: "Service properties"
     first_form: "First form"
@@ -98,3 +99,24 @@ en:
           draft: "Draft"
           deleted: "Deleted"
           approved: "Approved"
+  broker:
+    logged_in_as: "Logged in as \"%{user}\" (TRESOR organization \"%{organization}\")"
+    menu:
+      services: "Services"
+      bookings: "Bookings"
+    bookings:
+      list: "List of all bookings for client \"%{organization}\""
+      list_table:
+        service_name: "Name"
+        service_uuid: "UUID"
+        service_url: "URL"
+        booking:
+          booking_date: "%{ago} ago"
+        actions: "Actions"
+        booking_status: "Status"
+        booking_date: "When"
+      empty: "No services booked."
+      create_new: "Book service"
+      create: "Book"
+      created: "Service marked for booking. Refresh page for updates."
+      deleted: "Booking marked for deletion."

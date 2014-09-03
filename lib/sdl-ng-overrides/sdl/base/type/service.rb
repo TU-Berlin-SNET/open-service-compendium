@@ -15,7 +15,7 @@ class SDL::Base::Type::Service < SDL::Base::Type
 
   index({ service_id: 1 }, { unique: false, name: 'service_id' })
 
-  field :identifier, type: Symbol
+  field :name, type: Symbol
   field :sdl_parts, type: Hash, default: {}
 
   def self.latest_approved(service_id)

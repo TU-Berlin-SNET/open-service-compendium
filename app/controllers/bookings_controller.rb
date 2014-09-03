@@ -74,7 +74,7 @@ The service booking was canceled and the Cloud Marketplace is notified using the
     END
   end
 
-  respond_to :xml
+  respond_to :xml, :html
 
   api :GET, 'clients/:id/bookings', 'Retrieves the service bookings of a client'
   formats ['xml']
@@ -178,7 +178,7 @@ The service booking was canceled and the Cloud Marketplace is notified using the
 ~~~
   END
   def index
-    @bookings = ServiceBooking.where(client_id: params[:client_id])
+    @bookings = ServiceBooking.where(client_id: params[:client_id], booking_status: {'$ne' => :canceled})
   end
 
   api :GET, 'clients/:id/bookings/:id', 'Retrieves a service booking'
@@ -249,7 +249,16 @@ On successful completion, the method returns the HTTP status code `201 Created` 
 
           Resque.enqueue(BookingWorker, request.host, booking._id, 'book')
 
-          head :created, location: client_booking_url(params[:client_id], booking._id)
+          respond_to do |format|
+            format.html do
+              flash[:message] = t('broker.bookings.created')
+              redirect_to :back
+            end
+
+            format.any do
+              head :created, location: client_booking_url(params[:client_id], booking._id)
+            end
+          end
         rescue URI::InvalidURIError
           render text: 'The callback URL is invalid', status: 422
         rescue Exception => e
@@ -272,7 +281,16 @@ On successful completion, the method returns the HTTP status code `204 No Conten
       if booking.booked?
         Resque.enqueue(BookingWorker, request.host, booking._id, 'cancel')
 
-        head :no_content
+        respond_to do |format|
+          format.html do
+            flash[:message] = t('broker.bookings.deleted')
+            redirect_to :back
+          end
+
+          format.any do
+            head :no_content
+          end
+        end
       else
         render :text => "The booking cannot be canceled, as its status is '#{booking.booking_status}' instead of 'booked'.", :status => 422
       end

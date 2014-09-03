@@ -26,6 +26,7 @@ The broker supports two distinct service statuses (`draft` and `approved`) with 
 |Type     |Multiplicity|Name               |Type   |Description|
 |---------+------------+-------------------+-------+-----------|
 |Attribute|1           |uri                |string |The URL to the specific version of the service.
+|Attribute|1           |name               |string |The service name, used for routing.
 |Attribute|1           |service_uuid       |UUID   |The UUID of the service on this broker.
 |Attribute|1           |version_uuid       |UUID   |The UUID of the specific version on this broker.
 |Elements |1..n        |_diverse_          |diverse|The service properties, according to the current SDL-NG vocabulary
@@ -183,11 +184,10 @@ When querying for the SDL-NG source, the `sdl-part` parameter can be used to ret
 
   def edit
     @service = Service.where(service_id: params[:id]).order(updated_at: -1).first
-
-    @service_description = @service.sdl_parts['main']
   end
 
   api :POST, 'services', 'Creates a service'
+  param :name, String, :desc => 'The service name. Used for routing.', :required => false
   param :sdl_parts, Hash, :desc => 'Parts of the service description.', :required => false do
     param :meta, String, :desc => 'Meta information. Has to contain at least `status`.'
     param :main, String, :desc => 'The main service description'
@@ -203,20 +203,29 @@ On successful creation, the method returns the HTTP status code `201 Created` wi
     params[:sdl_parts]['meta'] = 'status draft' unless params[:sdl_parts]['meta']
     params[:sdl_parts]['main'] = "service_name '#{t('services.new.service_description_placeholder')}'" unless params[:sdl_parts]['main']
 
-    service = Service.new(:sdl_parts => params[:sdl_parts])
+    service = Service.new(:sdl_parts => params[:sdl_parts], :name => params[:name])
 
     begin
       service.load_service_from_sdl
 
-      if(service.status.blank?)
-        render text: 'sdl_parts["meta"] did not contain a service status', status: 422
-      else
-        service.save
+      respond_to do |format|
+        format.html do
+          service.save
 
-        if(service.status.identifier == :approved)
-          head :created, location: service_url(service.service_id)
-        else
-          head :created, location: version_service_url(service.service_id, service._id)
+          redirect_to(edit_service_url(service.service_id), :status => 303)
+        end
+        format.any do
+          if(service.status.blank?)
+            render text: 'sdl_parts["meta"] did not contain a service status', status: 422
+          else
+            service.save
+
+            if(service.status.identifier == :approved)
+              head :created, location: service_url(service.service_id)
+            else
+              head :created, location: version_service_url(service.service_id, service._id)
+            end
+          end
         end
       end
     rescue Exception => e
@@ -228,7 +237,7 @@ On successful creation, the method returns the HTTP status code `201 Created` wi
 
   api :PUT, 'services/:id[/:sdl_part]', 'Updates a service'
   description <<-END
-This method can either update the whole service description (using the parameter `sdl_parts`), or update a specific part of a service description (identified by the path component `:sdl_part`). When updating a specific part, the HTTP body is used as the parts contents.
+This method can either update the whole service description (using the parameter `sdl_parts`), or update a specific part of a service description (identified by the path component `:sdl_part`) or the service routing name. When updating a specific part, the HTTP body is used as the parts contents.
 
 A request for updating an approved service creates a new version of the service. Thus, an approved service will never be changed. The new version will automatically be set to a `draft` status, unless `sdl_parts` contains `status approved`.
 
@@ -236,6 +245,7 @@ If an approved service already has a newer draft version, this version will be t
 
 On successful update this method returns 204 No content and a Location header. This location header contains either the URL of a new draft version, or the URL to the service, if a new approved version was created.
   END
+  param :name, String, :desc => 'The service name. Used for routing.', :required => false
   param :sdl_parts, Hash, :desc => 'Updates for the whole service description' do
     param :meta, String, :desc => 'Meta information, e.g. `status`.'
     param :main, String, :desc => 'The main service description'
@@ -259,9 +269,10 @@ On successful update this method returns 204 No content and a Location header. T
 
       render :text => 'Service not found', :status => 404
     else
-      if params[:sdl_part] || params[:sdl_parts]
+      if params[:sdl_part] || params[:sdl_parts] || params[:name]
         begin
-          changed = false
+          changed_sdl = false
+          changed_name = false
 
           if params[:sdl_part]
             new_part_content = request.body.read
@@ -269,16 +280,22 @@ On successful update this method returns 204 No content and a Location header. T
             if(draft_service.sdl_parts[params[:sdl_part]] != new_part_content)
               draft_service.sdl_parts[params[:sdl_part]] = new_part_content
 
-              changed = true
+              changed_sdl = true
             end
-          else
-            draft_service.sdl_parts = params[:sdl_parts]
-
-            changed = true
           end
 
-          if changed
-            draft_service.load_service_from_sdl(request.path)
+          if params[:sdl_parts]
+            draft_service.sdl_parts = params[:sdl_parts]
+
+            changed_sdl = true
+          end
+
+          if params[:name]
+            draft_service.name = params[:name]
+          end
+
+          if changed_sdl || changed_name
+            draft_service.load_service_from_sdl(request.path) if changed_sdl
 
             draft_service.save!
           end
@@ -333,12 +350,23 @@ A service version is never removed from the DB, but marked by the attribute `ser
       else
         @service.update_attributes!(:service_deleted => true)
 
-        head :no_content
+        @no_content = true
       end
     else
       Service.where(service_id: params[:id]).set(:service_deleted => true)
 
-      head :no_content
+      @no_content = true
+    end
+
+    if @no_content
+      respond_to do |format|
+        format.html do
+          redirect_to :back
+        end
+        format.any do
+          head :no_content
+        end
+      end
     end
   end
 
