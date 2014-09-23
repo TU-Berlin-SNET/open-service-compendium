@@ -23,6 +23,8 @@ A service booking is the result of a user booking the latest approved, non-delet
 
 After creating bookings or deleting a booking, the Broker starts a background worker which informs the service backend about the action, based on information in the service description.
 
+Additionally, the broker starts another background worker, which informs the policy management system about the access policy which should be applied to client user accounts accessing the service.
+
 The service backend should then provision or deprovision a service instance for the user and, if first provisioning, return an endpoint URL to the broker, which is used by the Proxy to route service requests.
 
 After the worker completes, the callback URL receives the result of the action as a POST request, as it would have been rendered by GET /clients/:id/bookings/:id.
@@ -36,6 +38,22 @@ The immediate booking is simple: the endpoint URL given in the service descripti
 ### Synchronous booking
 
 Not implemented yet
+
+## Service access policies
+
+When booking a service, there are three possible access policies, which the broker can upload to the access management system. A client can additionally use the Policy Administration Point (PAP) for flexible adjustment of these access policies.
+
+### `deny_all`
+
+The policy denies all client user accounts access to the service.
+
+### `allow_all`
+
+The policy allows all client user accounts access to the service.
+
+### `allow_from_usergroup`
+
+The policy allows only those client user accounts belonging to a specific user group access to the service.
 
 ## Statuses
 
@@ -222,12 +240,18 @@ On successful completion, the method returns the HTTP status code `201 Created` 
   END
   param :service_id, String, :desc => 'The ID of the service which should be booked', :required => true
   param :callback_url, String, :desc => 'The callback URL of the Cloud Marketplace'
+  param :access_policy, %w(deny_all allow_all allow_from_usergroup), :desc => 'The access policy. Defaults to `allow_all`.'
+  param :access_policy_usergroup, String, :desc => 'If `access_policy` is `allow_from_usergroup`, define the user group to allow access from.'
   error 404, 'The client does not exist'
   error 422, 'The service does not exist or is not bookable'
   error 422, 'The callback URL is invalid'
   def create
     if !Client.where(_id: params[:client_id]).exists?
       render text: 'The client does not exist', status: 404
+    elsif params[:access_policy].present? && %w(deny_all allow_all allow_from_usergroup).exclude?(params[:access_policy])
+      render text: 'The access policy is invalid', status: 422
+    elsif params[:access_policy] == 'allow_from_usergroup' && params[:access_policy_usergroup].blank?
+      render text: 'Please specify access_policy_usergroup parameter for allow_from_usergroup access policy', status: 422
     else
       bookable_service_version = Service.latest_approved(params[:service_id])
 
@@ -248,6 +272,8 @@ On successful completion, the method returns the HTTP status code `201 Created` 
               callback_url: params[:callback_url])
 
           Resque.enqueue(BookingWorker, request.host, booking._id, 'book')
+
+          Resque.enqueue(PolicyUploadWorker, params[:access_policy] || 'allow_all', params[:service_id], params[:client_id], params[:access_policy_usergroup])
 
           respond_to do |format|
             format.html do

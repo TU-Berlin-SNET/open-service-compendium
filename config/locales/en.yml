@@ -120,3 +120,9 @@ en:
       create: "Book"
       created: "Service marked for booking. Refresh page for updates."
       deleted: "Booking marked for deletion."
+      access_policy: "Client access policy"
+      access_policies:
+        allow_all: "Allow all client user accounts access to the service"
+        deny_all: "Deny all user accounts access to the service"
+        allow_from_usergroup: "Only allow from the given usergroup"
+      access_policy_usergroup: "The usergroup to allow access to"

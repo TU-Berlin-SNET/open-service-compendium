@@ -12,6 +12,8 @@ describe BookingsController do
 
   describe 'GET #index' do
     it 'responds with an HTTP 200 status code and lists the active bookings' do
+      ServiceBooking.with(safe: true).delete_all
+
       client = create(:client, :with_bookings)
 
       get :index, :client_id => client._id, :format => :xml
@@ -19,7 +21,7 @@ describe BookingsController do
       expect(response).to be_success
       expect(response.status).to eq(200)
 
-      expect(assigns[:bookings]).to have_exactly(ServiceBooking::STATUSES.count + 1).bookings
+      expect(assigns[:bookings]).to have_exactly(6).bookings
     end
   end
 
@@ -58,17 +60,32 @@ describe BookingsController do
       Resque.redis.flushall
     end
 
-    it 'creates a new booking and enques a new resque booking task' do
-      client = create(:client)
-      service = create(:approved_service)
+    context 'after creating a new booking' do
+      let :client do
+        create(:client)
+      end
 
-      post :create, :client_id => client._id, :service_id => service.service_id, :format => :xml
+      let :service do
+        create(:approved_service)
+      end
 
-      expect(response).to be_success
-      expect(response.status).to eq(201)
-      expect(response['Location']).to eq(client_booking_url(client._id, ServiceBooking.first._id))
+      before(:each) do
+        post :create, :client_id => client._id, :service_id => service.service_id, :format => :xml
+      end
 
-      expect(BookingWorker).to have_queued('test.host', ServiceBooking.first._id, 'book').in(:booking)
+      it 'creates a new booking' do
+        expect(response).to be_success
+        expect(response.status).to eq(201)
+        expect(response['Location']).to eq(client_booking_url(client._id, ServiceBooking.first._id))
+      end
+
+      it 'enqueues a new booking worker' do
+        expect(BookingWorker).to have_queued('test.host', ServiceBooking.first._id, 'book').in(:booking)
+      end
+
+      it 'enqueues a new policy upload worker with a default policy of allow_all' do
+        expect(PolicyUploadWorker).to have_queued('allow_all', service.service_id, client._id, nil)
+      end
     end
 
     it 'responds with 404 if the client does not exist' do
@@ -96,6 +113,26 @@ describe BookingsController do
       service = create(:draft_service)
 
       post :create, :client_id => create(:client)._id, :service_id => service.service_id, :callback_url => 'http://test.host', :format => :xml
+
+      expect(response).to be_client_error
+      expect(response.status).to eq(422)
+    end
+
+    it 'responds with 422 if the access_policy is invalid' do
+      client = create(:client)
+      service = create(:approved_service)
+
+      post :create, :client_id => client._id, :service_id => service.service_id, :access_policy => 'unknown_policy', :format => :xml
+
+      expect(response).to be_client_error
+      expect(response.status).to eq(422)
+    end
+
+    it 'responds with 422 if the access_policy_usergroup is missing when access_policy is allow_from_usergroup' do
+      client = create(:client)
+      service = create(:approved_service)
+
+      post :create, :client_id => client._id, :service_id => service.service_id, :access_policy => 'allow_from_usergroup', :format => :xml
 
       expect(response).to be_client_error
       expect(response.status).to eq(422)

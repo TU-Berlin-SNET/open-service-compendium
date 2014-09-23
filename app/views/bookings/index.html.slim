@@ -31,8 +31,29 @@ h1=t('broker.bookings.create_new')
 fieldset
   = form_tag client_bookings_path(@client), :method => :post, :role => 'form' do |f|
     input[type='hidden' name='client_id' value=@client._id ]
+
     .form-group
       label[for='service_id']= t('broker.bookings.list_table.service_name')
       select[name='service_id' class='form-control']
         = options_for_select Service.latest_with_status('approved').collect{|service|[service.service_name, service.service_id]}
+
+    .input-group
+      = t('broker.bookings.access_policy')
+      .radio
+        label
+          input[type='radio' name='access_policy' value='allow_all' checked='checked']
+          = t('broker.bookings.access_policies.allow_all')
+      .radio
+        label
+          input[type='radio' name='access_policy' value='deny_all']
+          = t('broker.bookings.access_policies.deny_all')
+      .radio
+        label
+          input[type='radio' name='access_policy' value='deny_all']
+          = t('broker.bookings.access_policies.allow_from_usergroup')
+
+    .input-group
+      label[for='access_policy_usergroup']= t('broker.bookings.access_policy_usergroup')
+      input[type="text" name='access_policy_usergroup']
+
     button[type='submit' class="btn btn-default"]= t('broker.bookings.create')

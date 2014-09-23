@@ -1,1 +1,2 @@
 services_path: 'lib/sdl-ng/examples/services'
+pdp_url: 'http://xacml.snet.tu-berlin.de:9090/v2/policy/:client_id/:service_id'
