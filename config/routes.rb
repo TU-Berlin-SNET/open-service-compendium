@@ -1,11 +1,12 @@
 OpenServiceBroker::Application.routes.draw do
   if Rails.env.test?
     default_url_options(host: 'test.host')
-  else
+  elsif Rails.env.development?
     default_url_options(host: 'dev.host')
   end
 
   apipie
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
