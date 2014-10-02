@@ -20,6 +20,8 @@ namespace :tresor do
   desc "Setup for the TRESOR development environment. Creates clients, some applications (including the broker), and
         creates policies for these applications"
   task :setup_environment => :environment do |t, args|
+    Resque.inline = true
+
     Settings.pdp_username = ENV['PDP_USERNAME'] if ENV['PDP_USERNAME']
     Settings.pdp_password = ENV['PDP_PASSWORD'] if ENV['PDP_PASSWORD']
 
