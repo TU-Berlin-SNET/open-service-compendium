@@ -6,13 +6,14 @@ A broker client represents a company or single person who uses the broker to fin
 
 ## XML data format
 
-|---------+------------+--------------+------+-----------|
-|Type     |Multiplicity|Name          |Type  |Description|
-|---------+------------+--------------+------+-----------|
-|Attribute|1           |url           |string|The client URL
-|Element  |0..1        |client_profile|string|The client search profile
-|Element  |0..1        |client_data   |string|Arbitrary data about the client
-|---------+------------+--------------+------+-----------|
+|---------+------------+-------------------+------+-----------|
+|Type     |Multiplicity|Name               |Type  |Description|
+|---------+------------+-------------------+------+-----------|
+|Attribute|1           |url                |string|The client URL
+|Element  |0..1        |tresor_organization|string|The TRESOR organization name
+|Element  |0..1        |client_profile     |string|The client search profile
+|Element  |0..1        |client_data        |string|Arbitrary data about the client
+|---------+------------+-------------------+------+-----------|
 
 ## Client search profile
 
@@ -78,14 +79,17 @@ Possible value types include:
       <client url="http://192.168.147.145:3000/clients/be21c819-6bc7-4c09-b565-0ce72048b25c">
         <client_profile><![CDATA[PROFILE]]></client_profile>
         <client_data><![CDATA[DATA]]></client_data>
+        <tresor_organization><![CDATA[MMS]]></tresor_organization>
       </client>
       <client url="http://192.168.147.145:3000/clients/08091a55-dd99-4e8f-a11a-0dc7ce7a2d31">
         <client_profile><![CDATA[PROFILE]]></client_profile>
         <client_data><![CDATA[DATA]]></client_data>
+        <tresor_organization><![CDATA[DHZB]]></tresor_organization>
       </client>
       <client url="http://192.168.147.145:3000/clients/ed4c2db1-7642-4caf-88cd-706f05cae2fe">
         <client_profile><![CDATA[PROFILE]]></client_profile>
         <client_data><![CDATA[DATA]]></client_data>
+        <tresor_organization><![CDATA[SNET]]></tresor_organization>
       </client>
     </clients>
     ~~~
@@ -103,6 +107,7 @@ Possible value types include:
     <client url="http://192.168.147.145:3000/clients/be21c819-6bc7-4c09-b565-0ce72048b25c">
       <client_profile><![CDATA[PROFILE]]></client_profile>
       <client_data><![CDATA[DATA]]></client_data>
+      <tresor_organization><![CDATA[SNET]]></tresor_organization>
     </client>
     ~~~
   END
@@ -118,6 +123,7 @@ Possible value types include:
   api :POST, 'clients', 'Creates a new client'
   param :client_data, String, :desc => 'Arbitrary client data', :required => false
   param :client_profile, String, :desc => 'Client search profile', :required => false
+  param :tresor_organization, String, :desc => 'TRESOR organization name', :required => false
   description <<-END
     On successful completion, the method returns the HTTP status code `201 Created` with the URL of the client as the HTTP `Location` header.
   END
@@ -126,7 +132,8 @@ Possible value types include:
     begin
       client = Client.create!(
           :client_data => params[:client_data],
-          :client_profile => params[:client_profile]
+          :client_profile => params[:client_profile],
+          :tresor_organization => params[:tresor_organization]
       )
 
       head :created, location: client_url(client)
@@ -138,6 +145,7 @@ Possible value types include:
   api :PUT, 'clients/:id', 'Updates or creates a new client with the specified id'
   param :client_data, String, :desc => 'Arbitrary client data', :required => false
   param :client_profile, String, :desc => 'Client search profile', :required => false
+  param :tresor_organization, String, :desc => 'TRESOR organization name', :required => false
   description <<-END
     If the client does not exist yet, the method creates a new client and returns `201 Created`.
 
@@ -149,6 +157,7 @@ Possible value types include:
     client_attributes = {}
     client_attributes['client_data'] = params[:client_data] if params[:client_data]
     client_attributes['client_profile'] = params[:client_profile] if params[:client_profile]
+    client_attributes['tresor_organization'] = params[:tresor_organization] if params[:tresor_organization]
 
     if client_attributes.blank?
       render :text => 'Client attributes missing or invalid', :status => 422
@@ -205,6 +214,45 @@ Possible value types include:
       render text: "Client profile error: #{e}", status: 422
     rescue Mongoid::Errors::DocumentNotFound
       render text: 'Client not found', status: 404
+    end
+  end
+
+  api :GET, 'clients/tresor_organization_ids/:tresor_organization', 'Retrieves the client profile id of a specific TRESOR organization'
+  description <<-END
+    This method returns the id of the client profile belonging to a specific TRESOR organization.
+  END
+  error 404, 'There is no client profile for the given TRESOR organization'
+  def client_uuid
+    client = Client.where(tresor_organization: params[:tresor_organization]).only(:_id).first
+
+    if client
+      render :text => client._id
+    else
+      render text: 'There is no client profile for the given TRESOR organization', status: 404
+    end
+  end
+
+  api :GET, 'clients/:id/endpoint_urls/:service_name', 'Retrieves the endpoint URL for a specific booked service of a client'
+  description <<-END
+    This method returns the URL of the endpoint of a booked service.
+  END
+  param :id, String, :desc => 'The ID of the client', :required => true
+  param :service_name, String, :desc => 'The symbolic name of the service', :required => true
+  error 404, 'The client does not exist'
+  error 404, 'The service is not booked'
+  def endpoint_url
+    begin
+      client = Client.find(params[:id])
+
+      booking = client.service_bookings.detect do |b| b.booking_status == :booked && b.service.name == params[:service_name].to_sym end
+
+      if booking.try(:endpoint_url)
+        render text: booking.endpoint_url
+      else
+        render text: 'The service is not booked', status: 404
+      end
+    rescue Mongoid::Errors::DocumentNotFound => e
+      render text: 'The client does not exist', status: 404
     end
   end
 end

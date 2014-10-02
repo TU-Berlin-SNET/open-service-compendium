@@ -50,16 +50,17 @@ describe ClientsController do
 
   describe 'PUT #update' do
     it 'creates a new client and responds with 201 if the client did not exist' do
-      put :update, :id => 'new-id', :client_data => 'client data', :client_profile => 'client profile'
+      put :update, :id => 'new-id', :client_data => 'client data', :client_profile => 'client profile', :tresor_organization => 'MMS'
 
       expect(Client.find('new-id').client_data).to eq 'client data'
+      expect(Client.find('new-id').tresor_organization).to eq 'MMS'
 
       expect(response).to be_success
       expect(response.status).to eq 201
     end
 
     it 'updates an existing client and responds with 204' do
-      client = Client.create(:client_data => 'old', :client_profile => 'old')
+      client = Client.create(:client_data => 'old', :client_profile => 'old', :tresor_organization => 'old')
 
       put :update, :id => client._id, :client_data => 'new'
 
@@ -70,6 +71,7 @@ describe ClientsController do
 
       expect(client.client_data).to eq 'new'
       expect(client.client_profile).to eq 'old'
+      expect(client.tresor_organization).to eq 'old'
     end
 
     it 'responds with 422 if specifying invalid or missing parameters' do
@@ -142,6 +144,53 @@ describe ClientsController do
           expect(compatible_services.to_a).not_to include *not_included_services
         end
       end
+    end
+  end
+
+  describe 'GET #client_uuid' do
+    render_views
+
+    it 'retrieves the id of a specific TRESOR organization' do
+      client = create(:client)
+
+      client.update_attributes!(tresor_organization: 'SNET')
+
+      get :client_uuid, :tresor_organization => 'SNET'
+
+      expect(response).to be_success
+      expect(response.body).to eq client._id
+    end
+
+    it 'returns 404 if the client profile does not exist' do
+      get :client_uuid, :tresor_organization => 'ABC'
+
+      expect(response).to be_not_found
+      expect(response.code).to eq "404"
+    end
+  end
+
+  describe 'GET #endpoint_url' do
+    render_views
+
+    it 'retrieves the endpoint URL of a booked service' do
+      client = create(:client, :with_bookings)
+
+      booking = client.service_bookings.detect do |b| b.booking_status == :booked end
+
+      get :endpoint_url, :id => client._id, :service_name => booking.service.name
+
+      expect(response).to be_success
+      expect(response.body).to eq booking.endpoint_url
+    end
+
+    it 'returns 404 if the service is not booked' do
+      client = create(:client, :with_bookings)
+
+      booking = client.service_bookings.detect do |b| b.booking_status == :canceled end
+
+      get :endpoint_url, :id => client._id, :service_name => booking.service.name
+
+      expect(response).to be_not_found
     end
   end
 end

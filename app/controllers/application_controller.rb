@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
 
   private
     def set_client_from_tresor_headers
-      tresor_organization = Settings.tresor_organization || request.headers['TRESOR-Organization']
+      tresor_organization = request.headers['TRESOR-Organization'] || Settings.tresor_organization
 
       if(tresor_organization)
         @client = Client.find_or_create_by(tresor_organization: tresor_organization)
@@ -24,6 +24,6 @@ class ApplicationController < ActionController::Base
     end
 
     def set_tresor_identity
-      @tresor_identity = Settings.tresor_identity || request.headers['TRESOR-Identity']
+      @tresor_identity = request.headers['TRESOR-Identity'] || Settings.tresor_identity
     end
 end

@@ -31,7 +31,9 @@ OpenServiceBroker::Application.routes.draw do
   end
 
   resources :clients do
+    get 'tresor_organization_ids/:tresor_organization', on: :collection, action: 'client_uuid'
     get 'compatible_services', on: :member, action: 'compatible_services'
+    get 'endpoint_urls/:service_name', on: :member, action: 'endpoint_url'
 
     resources :bookings
   end

@@ -1,2 +1,15 @@
 services_path: 'lib/sdl-ng/examples/services'
-pdp_url: 'http://xacml.snet.tu-berlin.de:9090/v2/policy/:client_id/:service_id'
+pdp_url: 'http://xacml.snet.tu-berlin.de:9090/policy/:client_id/:service_id'
+demo_services:
+  'broker':
+    :url: 'http://tresor-dev-broker.snet.tu-berlin.de'
+    :name: 'TRESOR Broker'
+  'tresordemo':
+    :url: 'http://tresordemo.130.149.80.220.xip.io'
+    :name: 'TRESOR Demo'
+  'tuberlin':
+    :url: 'http://www.tu-berlin.de'
+    :name: 'TU Berlin Homepage'
+  'homepage':
+    :url: 'http://www.cloud-tresor.de'
+    :name: 'TRESOR Homepage'

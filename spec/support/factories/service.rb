@@ -4,8 +4,8 @@ FactoryGirl.define do
   end
 
   factory :service do
-    identifier { generate (:service_name) }
-    sdl_parts { {'main' => "service_name '#{identifier}'\r\nservice_tag 'new-tag'"} }
+    name { generate (:service_name) }
+    sdl_parts { {'main' => "service_name '#{name}'\r\nservice_tag 'new-tag'"} }
 
     %w(draft approved).each do |status|
       factory "#{status}_service" do
