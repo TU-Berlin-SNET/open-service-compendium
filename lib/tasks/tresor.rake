@@ -19,13 +19,8 @@ namespace :tresor do
 
   desc "Setup for the TRESOR development environment. Creates clients, some applications (including the broker), and
         creates policies for these applications"
-
-  task :setup_development_environment, [:broker_url, :pdp_url_template] => :environment do |t, args|
-    raise "Need to define both broker_url and pdp_url_template" if args.count != 2
-
+  task :setup_environment => :environment do |t, args|
     [Service, ServiceBooking, Client].map &:delete_all
-
-    Settings.pdp_url = args[:pdp_url_template]
 
     Settings.demo_services.each do |symbolic_name, args|
       service = Service.new(
