@@ -23,7 +23,7 @@ h1= t('broker.bookings.list', organization: @client.tresor_organization)
           td= link_to booking.service.try(:service_name), service_path(booking.service.service_id)
           td= booking.service.service_id
           td
-            a[href="http://#{booking.service.name}.services.cloud-tresor.de"]= "http://#{booking.service.name}.services.cloud-tresor.de" if booking.booked?
+            a[href="http://#{booking.service.name}.service.cloud-tresor.de"]= "http://#{booking.service.name}.service.cloud-tresor.de" if booking.booked?
           td= link_to t('broker.bookings.delete'), client_booking_path(@client._id, booking._id), :method => :delete
 
 h1=t('broker.bookings.create_new')
