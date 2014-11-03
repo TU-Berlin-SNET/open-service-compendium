@@ -8,7 +8,7 @@ class BrokerXMLServiceExporter < SDL::Exporters::XMLServiceExporter
 
     super(service).merge ({
       'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-      'xsi:schemaLocation' => xml_schema_url,
+      'xsi:schemaLocation' => xml_schema_path,
       'service_uuid' => service.service_id,
       'version_uuid' => service._id
     })

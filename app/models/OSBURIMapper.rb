@@ -2,7 +2,7 @@ class OSBURIMapper
   def self.uri(object)
     case object
       when SDL::Base::Type::Service
-        self.new.version_service_url(object.service_id, object._id)
+        self.new.version_service_path(object.service_id, object._id)
       when SDL::Base::Type.class
         "#{base_url}/types/#{object.local_name}"
       when SDL::Base::Type
