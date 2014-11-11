@@ -2,14 +2,26 @@ services_path: 'lib/sdl-ng/examples/services'
 pdp_url: 'http://xacml.snet.tu-berlin.de:9090/policy/:client_id/:service_id'
 demo_services:
   'broker':
+    :uuid: '5d64d146-1d24-426b-9f3c-c75932ebb03e'
     :url: 'http://tresor-dev-broker.snet.tu-berlin.de'
     :name: 'TRESOR Broker'
+  'pap':
+    :uuid: 'ddd99540-18b4-455c-b98d-b70f7d8588d2'
+    :url: 'http://xacml.snet.tu-berlin.de'
+    :name: 'TRESOR Policy Administration Point (PAP)'
+  'logging':
+    :uuid: 'f2f07c7a-1ada-4dbd-afda-3f3950c10fd9'
+    :url: 'http://xacml.snet.tu-berlin.de:9292'
+    :name: 'TRESOR Logging Interface'
+  'medisitedemo':
+    :uuid: 'ecd0ce01-3bad-4827-8a68-81fb389491aa'
+    :url: 'http://demo-tresor.paasplus.com'
+    :name: 'TRESOR Medisite Demo Application'
   'tresordemo':
+    :uuid: 'cc570ef5-9257-4152-9b2c-2c3632935f66'
     :url: 'http://tresordemo.130.149.80.220.xip.io'
-    :name: 'TRESOR Demo'
-  'tuberlin':
-    :url: 'http://www.tu-berlin.de'
-    :name: 'TU Berlin Homepage'
+    :name: 'TRESOR SNET Demo Application'
   'homepage':
+    :uuid: '10670c3a-d5bd-49ef-a61b-8eb4fff2f0d6'
     :url: 'http://www.cloud-tresor.de'
     :name: 'TRESOR Homepage'

@@ -1,3 +1,5 @@
+require 'yaml'
+
 namespace :tresor do
   desc "Resets the database and populates with SDL-NG examples"
 
@@ -25,6 +27,14 @@ namespace :tresor do
     Settings.pdp_username = ENV['PDP_USERNAME'] if ENV['PDP_USERNAME']
     Settings.pdp_password = ENV['PDP_PASSWORD'] if ENV['PDP_PASSWORD']
 
+    organization_uuid_hash_file = if ENV['ORGANIZATION_UUID_HASH_FILE']
+                                    File.new(ENV['ORGANIZATION_UUID_HASH_FILE'])
+                                  else
+                                    File.new(File.join(Rails.root, 'lib', 'tasks', 'organization_uuids.yml'))
+                                  end
+
+    organization_uuid_hash = YAML.load(organization_uuid_hash_file)
+
     [Service, ServiceBooking, Client].map &:delete_all
 
     Settings.demo_services.each do |symbolic_name, args|
@@ -36,12 +46,14 @@ namespace :tresor do
           }
       )
       service.load_service_from_sdl
+      service.service_id = args[:uuid] if args[:uuid]
       service.save!
     end
 
-    %w[MMS HERZ MEDISITE].each do |tresor_organization|
+    organization_uuid_hash.each do |organization, uuid|
       organization = Client.create!(
-          :tresor_organization => tresor_organization
+          :_id => uuid,
+          :tresor_organization => organization,
       )
 
       Service.each do |service|
