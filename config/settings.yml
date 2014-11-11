@@ -11,7 +11,7 @@ demo_services:
     :name: 'TRESOR Policy Administration Point (PAP)'
   'logging':
     :uuid: 'f2f07c7a-1ada-4dbd-afda-3f3950c10fd9'
-    :url: 'http://xacml.snet.tu-berlin.de:9292'
+    :url: 'http://xacml.snet.tu-berlin.de'
     :name: 'TRESOR Logging Interface'
   'medisitedemo':
     :uuid: 'ecd0ce01-3bad-4827-8a68-81fb389491aa'
