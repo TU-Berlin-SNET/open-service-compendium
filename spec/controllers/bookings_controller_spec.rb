@@ -25,6 +25,20 @@ describe BookingsController do
     end
   end
 
+  describe 'GET #for_service' do
+    it 'responds with an HTTP 200 status code and lists all active bookings for a service' do
+      booking_a = create(:booked_service_booking)
+      booking_b = create(:booked_service_booking, :service => booking_a.service)
+
+      get :for_service, :id => booking_a.service.service_id, :format => :xml
+
+      expect(response).to be_success
+      expect(response.status).to eq(200)
+
+      expect(assigns[:bookings]).to have_exactly(2).bookings
+    end
+  end
+
   describe 'GET #show' do
     it 'responds with an HTTP 200 status code and shows a single booking' do
       booking = create(:booked_service_booking)

@@ -20,6 +20,8 @@ OpenServiceBroker::Application.routes.draw do
     delete 'versions/:version_id', on: :member, action: 'delete'
     get 'versions/:version/:sdl_part', on: :member, action: 'show'
 
+    get 'bookings', on: :member, to: 'bookings#for_service'
+
     get ':sdl_part', on: :member, action: 'show', as: :sdl_part_of
     put ':sdl_part', on: :member, action: 'update', constraints: { sdl_part: /(?!edit).*/}
     delete '', on: :member, action: 'delete'

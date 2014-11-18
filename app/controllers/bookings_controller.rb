@@ -324,4 +324,13 @@ On successful completion, the method returns the HTTP status code `204 No Conten
       render text: 'Client not found', status: 404
     end
   end
+
+  api :GET, 'services/:id/bookings', 'Retrieves all Bookings for a specific service'
+  def for_service
+    service_version_ids = Service.where(service_id: params[:id]).only(:_id).map &:_id
+
+    @bookings = ServiceBooking.where(:service_id => {'$in' => service_version_ids}, :booking_status => {'$ne' => :canceled})
+
+    render 'bookings/index'
+  end
 end
