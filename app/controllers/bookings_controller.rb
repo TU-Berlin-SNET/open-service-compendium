@@ -199,6 +199,14 @@ The service booking was canceled and the Cloud Marketplace is notified using the
     @bookings = ServiceBooking.where(client_id: params[:client_id], booking_status: {'$ne' => :canceled})
   end
 
+  api :GET, 'bookings', 'Retrieves all service bookings'
+  formats ['xml']
+  def list_all
+    @bookings = ServiceBooking.where(booking_status: {'$ne' => :canceled})
+
+    render 'bookings/index'
+  end
+
   api :GET, 'clients/:id/bookings/:id', 'Retrieves a service booking'
   formats ['xml']
   description <<-END

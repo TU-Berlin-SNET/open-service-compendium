@@ -25,6 +25,22 @@ describe BookingsController do
     end
   end
 
+  describe 'GET #list_all' do
+    it 'responds with an HTTP 200 status code and lists all active bookings' do
+      ServiceBooking.with(safe: true).delete_all
+
+      client_a = create(:client, :with_bookings)
+      client_b = create(:client, :with_bookings)
+
+      get :list_all, :format => :xml
+
+      expect(response).to be_success
+      expect(response.status).to eq(200)
+
+      expect(assigns[:bookings]).to have_exactly(12).bookings
+    end
+  end
+
   describe 'GET #for_service' do
     it 'responds with an HTTP 200 status code and lists all active bookings for a service' do
       booking_a = create(:booked_service_booking)
