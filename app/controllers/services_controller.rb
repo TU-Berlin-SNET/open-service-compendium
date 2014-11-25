@@ -285,7 +285,7 @@ On successful update this method returns 204 No content and a Location header. T
           end
 
           if params[:sdl_parts]
-            updated_service.sdl_parts = params[:sdl_parts]
+            updated_service.sdl_parts.merge! params[:sdl_parts]
 
             changed_sdl = true
           end

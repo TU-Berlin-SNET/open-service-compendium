@@ -259,7 +259,7 @@ describe ServicesController do
       Service.with(safe: true).delete_all
     end
 
-    it 'updates one sdl part of the service description and sets status to draft' do
+    it 'updates one sdl part of the service description using RAW body and sets status to draft' do
       service = create(:approved_service)
 
       old_service_name = service.service_name.value
@@ -277,6 +277,20 @@ describe ServicesController do
       expect(new_draft.sdl_parts['main']).to eql 'service_name "My Service"'
       expect(new_draft.service_name.value).to eql 'My Service'
       expect(new_draft.status).to eql SDL::Base::Type::Status[:draft]
+    end
+
+    it 'keeps the name if meta-information status is set to approved' do
+      service = create(:draft_service)
+
+      service_name = service.service_name.value
+
+      put :update, {:id => service.service_id, :sdl_parts => {'meta' => 'status approved'}}
+
+      approved_service = Service.latest_approved(service.service_id)
+
+      expect(approved_service.service_name.value).to eql service_name
+      expect(approved_service.status).to eql SDL::Base::Type::Status[:approved]
+      expect(approved_service.sdl_parts['main']).to match "service_name '#{service_name}'"
     end
 
     it 'updates all sdl parts of the service description' do
