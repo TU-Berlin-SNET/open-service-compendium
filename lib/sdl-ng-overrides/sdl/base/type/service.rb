@@ -18,8 +18,10 @@ class SDL::Base::Type::Service < SDL::Base::Type
   field :name, type: Symbol
   field :sdl_parts, type: Hash, default: {}
 
-  def self.latest_approved(service_id)
-    where(:service_id => service_id, 'status.identifier' => 'approved', 'service_deleted' => false).sort(:updated_at => -1).limit(1).first
+  %w[draft approved].each do |status|
+    self.define_singleton_method "latest_#{status}" do |service_id|
+      where(:service_id => service_id, 'status.identifier' => status, 'service_deleted' => false).sort(:updated_at => -1).limit(1).first
+    end
   end
 
   def self.versions(service_id)

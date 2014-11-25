@@ -256,11 +256,11 @@ On successful update this method returns 204 No content and a Location header. T
   def update
     service = Service.where(:service_id => params[:id]).order(updated_at: -1).first
 
-    draft_service = nil
+    updated_service = nil
     if(service.try(:status).try(:identifier) == :draft)
-      draft_service = service
+      updated_service = service
     else
-      draft_service = service.new_draft
+      updated_service = service.new_draft
     end
 
     if service.nil?
@@ -277,27 +277,27 @@ On successful update this method returns 204 No content and a Location header. T
           if params[:sdl_part]
             new_part_content = request.body.read
 
-            if(draft_service.sdl_parts[params[:sdl_part]] != new_part_content)
-              draft_service.sdl_parts[params[:sdl_part]] = new_part_content
+            if(updated_service.sdl_parts[params[:sdl_part]] != new_part_content)
+              updated_service.sdl_parts[params[:sdl_part]] = new_part_content
 
               changed_sdl = true
             end
           end
 
           if params[:sdl_parts]
-            draft_service.sdl_parts = params[:sdl_parts]
+            updated_service.sdl_parts = params[:sdl_parts]
 
             changed_sdl = true
           end
 
           if params[:name]
-            draft_service.name = params[:name]
+            updated_service.name = params[:name]
           end
 
           if changed_sdl || changed_name
-            draft_service.load_service_from_sdl(request.path) if changed_sdl
+            updated_service.load_service_from_sdl(request.path) if changed_sdl
 
-            draft_service.save!
+            updated_service.save!
           end
         rescue Exception => e
           relevant_backtrace = e.backtrace.select do |entry| entry.include? request.path end
@@ -316,10 +316,10 @@ On successful update this method returns 204 No content and a Location header. T
           redirect_to({:action => :edit, :id => params[:id]}, :status => 303)
         end
         format.any do
-          if draft_service.status.identifier == :draft
-            head :no_content, location: service_url(draft_service.service_id)
+          if updated_service.status.identifier == :draft
+            head :no_content, location: version_service_url(updated_service.service_id, updated_service._id)
           else
-            head :no_content, location: service_version_url(draft_service.service_id, draft_service._id)
+            head :no_content, location: service_url(updated_service.service_id)
           end
         end
       end

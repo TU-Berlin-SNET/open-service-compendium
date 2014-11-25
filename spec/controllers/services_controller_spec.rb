@@ -310,6 +310,26 @@ describe ServicesController do
       expect(service.service_name.value).to eql old_name
       expect(response.body).to match /'unknown'/
     end
+
+    it 'redirects to the draft version if status is draft' do
+      service = create(:approved_service)
+
+      put :update, {:id => service.service_id, :sdl_parts => {:main => 'service_name "Changed name"'}, :format => :xml}
+
+      latest_draft = Service.latest_draft(service.service_id)
+
+      expect(response.status).to eq 204
+      expect(response['Location']).to eq version_service_url(service.service_id, latest_draft._id)
+    end
+
+    it 'redirects to the service if status is approved' do
+      service = create(:draft_service)
+
+      put :update, {:id => service.service_id, :sdl_parts => {:meta => 'status approved'}, :format => :xml}
+
+      expect(response.status).to eq 204
+      expect(response['Location']).to eq service_url(service.service_id)
+    end
   end
 
   describe 'GET #list_versions' do
