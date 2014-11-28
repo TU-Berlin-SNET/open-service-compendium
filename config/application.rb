@@ -5,6 +5,7 @@ require File.expand_path('../boot', __FILE__)
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "sprockets/railtie"
+require 'logstash-logger'
 # require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -26,5 +27,8 @@ module OpenServiceBroker
     # config.i18n.default_locale = :de
 
     config.autoload_paths += %W(#{config.root}/lib/sdl-ng/lib)
+
+    # assign remote logger
+    config.remote_logger = LogStashLogger.new(:uri => Settings.logstash_uri) if Settings.logstash_uri
   end
 end

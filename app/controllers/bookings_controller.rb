@@ -283,6 +283,13 @@ On successful completion, the method returns the HTTP status code `201 Created` 
 
           Resque.enqueue(PolicyUploadWorker, params[:access_policy] || 'allow_all', params[:service_id], params[:client_id], params[:access_policy_usergroup])
 
+          log_remotely({
+            :message =>"Started booking #{booking._id} of '#{bookable_service_version.service_name.value}' (version #{bookable_service_version._id} of service #{params[:service_id]})",
+            :service_url => version_service_url(params[:service_id], bookable_service_version._id),
+            :booking_url => client_booking_url(params[:client_id], booking._id),
+            :category => 'Service booking'
+          })
+
           respond_to do |format|
             format.html do
               flash[:message] = t('broker.bookings.created')

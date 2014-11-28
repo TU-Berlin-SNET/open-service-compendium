@@ -99,3 +99,4 @@ gem 'capistrano-rails'
 gem 'capistrano-rvm'
 gem 'capistrano-resque', require: false
 gem 'resque'
+gem 'logstash-logger'

@@ -1,6 +1,6 @@
 pdp_url: 'http://127.0.0.1:8080/policy/:client_id/:service_id'
-tresor_organization: 'SNET'
-tresor_identity: 'User'
+tresor_organization: 'TUB'
+tresor_identity: 'TUB\mathias.slawik'
 demo_services:
   'broker':
     :url: 'http://127.0.0.1:3000'

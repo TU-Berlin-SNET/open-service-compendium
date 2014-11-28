@@ -28,13 +28,21 @@ class BookingWorker
           send("#{action}_#{type}", booking)
 
           notify_callback_url(booking) if booking.callback_url
+
+          message = action.eql?('book') ? "Finished booking #{booking._id}!" : "Canceled booking #{booking._id}!"
+
+          log_remotely 'INFO', message, booking
         end
       end
     rescue Exception => e
       if booking.booking?
         booking.booking_status = :booking_failed
+
+        log_remotely 'ERROR', "Booking #{booking._id} failed!", booking
       else
         booking.booking_status = :canceling_failed
+
+        log_remotely 'ERROR', "Canceling #{booking._id} failed!", booking
       end
 
       booking.send("#{booking.booking_status}_time=", Time.new)
@@ -72,5 +80,18 @@ class BookingWorker
       # We don't handle exceptions in callback URL notifications
       puts e
     end
+  end
+
+  def self.log_remotely(priority_string, msg, booking)
+    priority = Logger::Severity.constants.find{ |name| Logger::Severity.const_get(name) == priority_string }
+
+    Rails.configuration.remote_logger.log priority, {
+      :message => "#{msg} (Service '#{booking.service.service_name.value}' - version #{booking.service.service_id} of service #{booking.service.service_id})",
+      :category => 'Service booking',
+      :priority => priority_string,
+      'subject-id' => 'Broker',
+      'tresor-component' => 'Broker',
+      'client-id' => booking.client._id
+    }
   end
 end

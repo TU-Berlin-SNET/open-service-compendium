@@ -154,6 +154,10 @@ GEM
       rdf-turtle (>= 1.1.2)
       sparql (>= 1.1.2)
       sparql-client (>= 1.1.1)
+    logstash-event (1.2.02)
+    logstash-logger (0.7.0)
+      logstash-event (~> 1.2)
+      stud
     macaddr (1.7.1)
       systemu (~> 2.6.2)
     mail (2.5.4)
@@ -325,6 +329,7 @@ GEM
       colorize
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    stud (0.0.18)
     sxp (0.1.5)
     systemu (2.6.4)
     temple (0.6.8)
@@ -384,6 +389,7 @@ DEPENDENCIES
   jquery-ui-rails
   kramdown
   linkeddata
+  logstash-logger
   minitest
   monetize
   money

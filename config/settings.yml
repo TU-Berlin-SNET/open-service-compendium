@@ -1,5 +1,6 @@
 services_path: 'lib/sdl-ng/examples/services'
 pdp_url: 'http://xacml.snet.tu-berlin.de:9090/policy/:client_id/:service_id'
+logstash_uri: 'tcp://xacml.snet.tu-berlin.de:9400'
 demo_services:
   'broker':
     :uuid: '5d64d146-1d24-426b-9f3c-c75932ebb03e'
