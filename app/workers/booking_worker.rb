@@ -92,6 +92,6 @@ class BookingWorker
       'subject-id' => 'Broker',
       'tresor-component' => 'Broker',
       'client-id' => booking.client._id
-    }
+    } if Rails.configuration.remote_logger
   end
 end

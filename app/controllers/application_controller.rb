@@ -24,14 +24,14 @@ class ApplicationController < ActionController::Base
     end
 
     def set_tresor_identity
-      @tresor_identity = request.headers['TRESOR-Identity'] || Settings.tresor_identity
+      @tresor_identity = request.headers['TRESOR-Identity'] || Settings.tresor_identity || 'REST API'
     end
 
     def log_remotely(hash)
       Rails.configuration.remote_logger.log Logger::Severity::INFO, hash.merge({
         'priority' => 'INFO',
         'subject-id' => @tresor_identity,
-        'client-id' => @client._id,
+        'client-id' => @client.try(:_id),
         'tresor-component' => 'Broker'
       }) if Rails.configuration.remote_logger
     end

@@ -50,7 +50,7 @@ FactoryGirl.define do
       sdl_parts {
         {
             'meta' => 'status approved',
-            'main' => 'immediate_booking "http://www.cloud-tresor.de"'
+            'main' => "immediate_booking 'http://www.cloud-tresor.de'\r\nservice_name 'Test Service'"
         }
       }
     end

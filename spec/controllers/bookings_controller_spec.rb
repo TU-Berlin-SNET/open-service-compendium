@@ -182,6 +182,22 @@ describe BookingsController do
       expect(booking.endpoint_url).to eq service.immediate_booking.endpoint_url.value
       expect(booking.booking_time).to be < Time.now
     end
+
+    it 'can book immediately bookable services multiple times' do
+      ResqueSpec.inline = true
+
+      service = create(:immediately_bookable_service)
+      client = create(:client)
+
+      5.times do
+        expect do
+          post :create, :client_id => client._id, :service_id => service.service_id, :format => :xml
+
+          expect(response).to be_success
+          expect(response.status).to eq(201)
+        end.to change{ServiceBooking.all.count}.by(1)
+      end
+    end
   end
 
   describe 'DELETE #destroy' do

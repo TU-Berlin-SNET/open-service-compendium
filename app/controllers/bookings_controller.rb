@@ -287,7 +287,8 @@ On successful completion, the method returns the HTTP status code `201 Created` 
             :message =>"Started booking #{booking._id} of '#{bookable_service_version.service_name.value}' (version #{bookable_service_version._id} of service #{params[:service_id]})",
             :service_url => version_service_url(params[:service_id], bookable_service_version._id),
             :booking_url => client_booking_url(params[:client_id], booking._id),
-            :category => 'Service booking'
+            :category => 'Service booking',
+            'client-id' => params[:client_id]
           })
 
           respond_to do |format|
@@ -303,7 +304,7 @@ On successful completion, the method returns the HTTP status code `201 Created` 
         rescue URI::InvalidURIError
           render text: 'The callback URL is invalid', status: 422
         rescue Exception => e
-          render text: e.message, status: 500
+          render text: "#{e.message}\r\n#{e.backtrace.join('\r\n')}", status: 500
         end
       end
     end
