@@ -87,7 +87,7 @@ describe ServicesController do
       expect(service.exportable_data_formats[0].identifier).to eq :csv
 
       expect(response.status).to eq 201
-      expect(response['Location']).to eq service_url(service.service_id)
+      expect(response['Location']).to eq version_service_url(service.service_id, service._id)
     end
 
     it 'sets the status to draft if only given sdl_parts[main]' do
@@ -124,7 +124,7 @@ describe ServicesController do
       expect(service.status.identifier).to eq :approved
 
       expect(response.status).to eq 201
-      expect(response['Location']).to eq service_url(service.service_id)
+      expect(response['Location']).to eq version_service_url(service.service_id, service._id)
     end
 
     it 'does not create a service without a status' do
@@ -146,7 +146,7 @@ describe ServicesController do
       service = Service.first
 
       service_uri = response['Location']
-      assert_generates(service_uri, {:controller => 'services', :action => 'show', :id => service.service_id})
+      assert_generates(service_uri, {:controller => 'services', :action => 'show', :id => service.service_id, :version => service._id})
     end
 
     it 'returns an error, if the service definition is not correct' do
@@ -342,7 +342,7 @@ describe ServicesController do
       put :update, {:id => service.service_id, :sdl_parts => {:meta => 'status approved'}, :format => :xml}
 
       expect(response.status).to eq 204
-      expect(response['Location']).to eq service_url(service.service_id)
+      expect(response['Location']).to eq version_service_url(service.service_id, service._id)
     end
   end
 

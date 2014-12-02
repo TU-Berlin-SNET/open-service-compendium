@@ -195,7 +195,7 @@ When querying for the SDL-NG source, the `sdl-part` parameter can be used to ret
   description <<-END
 The `sdl_parts` `main` and `meta` will be set to defaults if not specified. The `meta` part will default to `status draft` and the `main` part to `service_name '...'` (containing a localized default name).
 
-On successful creation, the method returns the HTTP status code `201 Created` with an HTTP `Location` header. Ths header represents either the service (if approved), or a specific version (if draft).
+On successful creation, the method returns the HTTP status code `201 Created` with an HTTP `Location` header pointing to the created service version.
   END
   error 422, 'Service not created, errors in service description'
   def create
@@ -220,11 +220,7 @@ On successful creation, the method returns the HTTP status code `201 Created` wi
           else
             service.save
 
-            if(service.status.identifier == :approved)
-              head :created, location: service_url(service.service_id)
-            else
-              head :created, location: version_service_url(service.service_id, service._id)
-            end
+            head :created, location: version_service_url(service.service_id, service._id)
           end
         end
       end
@@ -243,7 +239,7 @@ A request for updating an approved service creates a new version of the service.
 
 If an approved service already has a newer draft version, this version will be the target for further updates until it is approved.
 
-On successful update this method returns 204 No content and a Location header. This location header contains either the URL of a new draft version, or the URL to the service, if a new approved version was created.
+On successful update this method returns 204 No content and a Location header. This location header contains the URL of a new version.
   END
   param :name, String, :desc => 'The service name. Used for routing.', :required => false
   param :sdl_parts, Hash, :desc => 'Updates for the whole service description' do
@@ -316,11 +312,7 @@ On successful update this method returns 204 No content and a Location header. T
           redirect_to({:action => :edit, :id => params[:id]}, :status => 303)
         end
         format.any do
-          if updated_service.status.identifier == :draft
-            head :no_content, location: version_service_url(updated_service.service_id, updated_service._id)
-          else
-            head :no_content, location: service_url(updated_service.service_id)
-          end
+          head :no_content, location: version_service_url(updated_service.service_id, updated_service._id)
         end
       end
     end
