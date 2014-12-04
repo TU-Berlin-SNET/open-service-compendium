@@ -371,7 +371,7 @@ Used for TRESOR proxy authorization.
   param :name, String, 'The service name for which to retrieve the UUID'
   error 404, 'Service not found'
   def uuid
-    service = Service.where(:name => params[:name]).first
+    service = Service.where(:name => {'$regex' => "/#{Regexp.quote(params[:name])}/i"}).first
 
     if(service)
       render :text => service.service_id

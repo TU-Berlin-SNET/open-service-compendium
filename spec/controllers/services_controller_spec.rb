@@ -407,11 +407,11 @@ describe ServicesController do
 
     render_views
 
-    it 'retrieves the UUID for a service' do
+    it 'retrieves the UUID for a service case insensitively' do
       service = create(:approved_service)
       service.update_attributes!(name: 'my-service')
 
-      get :uuid, {:name => 'my-service'}
+      get :uuid, {:name => 'My-SeRvIcE'}
 
       expect(response).to be_success
       expect(response.body).to eq(service.service_id)
