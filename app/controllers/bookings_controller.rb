@@ -251,7 +251,7 @@ On successful completion, the method returns the HTTP status code `201 Created` 
   param :access_policy, %w(deny_all allow_all allow_from_usergroup), :desc => 'The access policy. Defaults to `allow_all`.'
   param :access_policy_usergroup, String, :desc => 'If `access_policy` is `allow_from_usergroup`, define the user group to allow access from.'
   error 404, 'The client does not exist'
-  error 422, 'The service does not exist or is not bookable'
+  error 422, 'The service does not exist or is not bookable, i.e., has no booking information'
   error 422, 'The callback URL is invalid'
   def create
     if !Client.where(_id: params[:client_id]).exists?
@@ -265,6 +265,8 @@ On successful completion, the method returns the HTTP status code `201 Created` 
 
       if bookable_service_version.blank?
         render text: 'The service does not exist or is not bookable', status: 422
+      elsif !bookable_service_version.bookable?
+        render text: 'The service is not bookable, as there are no booking information', status: 422
       else
         begin
           if params[:callback_url]

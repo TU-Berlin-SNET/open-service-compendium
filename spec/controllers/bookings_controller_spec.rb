@@ -96,7 +96,7 @@ describe BookingsController do
       end
 
       let :service do
-        create(:approved_service)
+        create(:immediately_bookable_service)
       end
 
       before(:each) do
@@ -143,6 +143,16 @@ describe BookingsController do
       service = create(:draft_service)
 
       post :create, :client_id => create(:client)._id, :service_id => service.service_id, :callback_url => 'http://test.host', :format => :xml
+
+      expect(response).to be_client_error
+      expect(response.status).to eq(422)
+    end
+
+    it 'responds with 422 if the service has no booking information' do
+      client = create(:client)
+      service = create(:approved_service)
+
+      post :create, :client_id => client._id, :service_id => service.service_id, :access_policy => 'unknown_policy', :format => :xml
 
       expect(response).to be_client_error
       expect(response.status).to eq(422)

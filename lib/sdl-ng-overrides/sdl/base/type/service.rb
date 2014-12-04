@@ -24,6 +24,14 @@ class SDL::Base::Type::Service < SDL::Base::Type
     end
   end
 
+  def bookable?
+    booking_properties = self.class.properties.find_all{|p| p.type < SDL::Base::Type::Booking}
+
+    set_properties = property_values.keys
+
+    (booking_properties & set_properties).present?
+  end
+
   def self.versions(service_id)
     versions = where(service_id: service_id).order(updated_at: -1).only(:_id, :service_id, :status, :service_deleted, :created_at, :updated_at).to_a
 
