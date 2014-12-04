@@ -172,12 +172,12 @@ describe ClientsController do
   describe 'GET #endpoint_url' do
     render_views
 
-    it 'retrieves the endpoint URL of a booked service' do
+    it 'retrieves the endpoint URL of a booked service case insensitively' do
       client = create(:client, :with_bookings)
 
       booking = client.service_bookings.detect do |b| b.booking_status == :booked end
 
-      get :endpoint_url, :id => client._id, :service_name => booking.service.name
+      get :endpoint_url, :id => client._id, :service_name => booking.service.name.upcase
 
       expect(response).to be_success
       expect(response.body).to eq booking.endpoint_url

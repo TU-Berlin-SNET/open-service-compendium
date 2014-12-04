@@ -244,7 +244,7 @@ Possible value types include:
     begin
       client = Client.find(params[:id])
 
-      booking = client.service_bookings.detect do |b| b.booking_status == :booked && b.service.name == params[:service_name].to_sym end
+      booking = client.service_bookings.detect do |b| b.booking_status == :booked && b.service.name.downcase == params[:service_name].downcase.to_sym end
 
       if booking.try(:endpoint_url)
         render text: booking.endpoint_url
