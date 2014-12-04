@@ -409,9 +409,9 @@ describe ServicesController do
 
     it 'retrieves the UUID for a service case insensitively' do
       service = create(:approved_service)
-      service.update_attributes!(name: 'my-service')
+      service.update_attributes!(name: 'tresordemo')
 
-      get :uuid, {:name => 'My-SeRvIcE'}
+      get :uuid, {:name => 'TRESORdemo'}
 
       expect(response).to be_success
       expect(response.body).to eq(service.service_id)
