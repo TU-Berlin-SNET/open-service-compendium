@@ -73,12 +73,12 @@ class BookingWorker
     begin
       uri = URI(booking.callback_url)
 
-      Net::HTTP.start(uri.host, uri.port) do |http|
+      Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https', :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
         http.request_post(uri.path.blank? ? '/' : uri.path, booking_xml, {'Content-Type' => 'application/xml'})
       end
     rescue Exception => e
       # We don't handle exceptions in callback URL notifications
-      puts e
+      logger.error e.message + "\n " + e.backtrace.join("\n ")
     end
   end
 
