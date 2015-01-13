@@ -23,10 +23,11 @@ class PolicyUploadWorker
 
         message_string = "policy for client #{client_id} and service #{service_id}"
 
-        if response.code.eql? "200"
-          Rails.logger.info "Successfully uploaded #{message_string}"
-        else
-          raise Exception.new("Got HTTP #{response.code} code when trying to upload #{message_string}")
+        case response
+          when Net::HTTPSuccess
+            Rails.logger.info "Successfully uploaded #{message_string}"
+          else
+            raise Exception.new("Got HTTP server error #{response.code} when trying to upload #{message_string}.")
         end
       end
     rescue Exception => e
