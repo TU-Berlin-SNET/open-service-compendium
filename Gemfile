@@ -100,3 +100,7 @@ gem 'capistrano-rvm'
 gem 'capistrano-resque', require: false
 gem 'resque'
 gem 'logstash-logger'
+
+gem 'draper'
+gem 'awesome_print'
+gem 'tablemaker'

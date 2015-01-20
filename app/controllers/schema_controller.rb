@@ -6,4 +6,8 @@ class SchemaController < ApplicationController
   def cheat_sheet
     @compendium = compendium
   end
+
+  def service_properties
+
+  end
 end

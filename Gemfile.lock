@@ -71,6 +71,7 @@ GEM
     apipie-rails (0.2.2)
       json
     arel (5.0.1.20140414130214)
+    awesome_print (1.6.1)
     bootstrap-sass (3.0.3.0)
       sass (~> 3.2)
     bson (2.3.0)
@@ -107,6 +108,11 @@ GEM
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
+    draper (1.4.0)
+      actionpack (>= 3.0)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      request_store (~> 1.0)
     ebnf (0.3.6)
       haml (~> 4.0)
       rdf (~> 1.1)
@@ -187,6 +193,7 @@ GEM
     optionable (0.2.0)
     origin (2.1.1)
     polyglot (0.3.5)
+    psych (2.0.10)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
@@ -250,6 +257,7 @@ GEM
     redis-namespace (1.5.1)
       redis (~> 3.0, >= 3.0.4)
     ref (1.0.5)
+    request_store (1.1.0)
     resque (1.25.2)
       mono_logger (~> 1.0)
       multi_json (~> 1.0)
@@ -332,6 +340,9 @@ GEM
     stud (0.0.18)
     sxp (0.1.5)
     systemu (2.6.4)
+    tablemaker (0.0.2)
+      psych
+      rake
     temple (0.6.8)
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
@@ -373,6 +384,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   apipie-rails
+  awesome_print
   bootstrap-sass (~> 3.0.3.0)
   capistrano (~> 3.2.0)
   capistrano-bundler
@@ -382,6 +394,7 @@ DEPENDENCIES
   coderay
   coffee-rails (~> 4.0.0)
   database_cleaner!
+  draper
   factory_girl
   humanize
   jbuilder (~> 1.2)
@@ -407,6 +420,7 @@ DEPENDENCIES
   sdoc
   simplecov
   slim!
+  tablemaker
   therubyracer
   therubyrhino
   turbolinks

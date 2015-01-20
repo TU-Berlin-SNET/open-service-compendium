@@ -6,6 +6,16 @@ class ApplicationController < ActionController::Base
   before_filter :set_client_from_tresor_headers
   before_filter :set_tresor_identity
 
+  def default_url_options(options = {})
+    { locale: I18n.locale }.merge options
+  end
+
+  before_action :set_locale
+
+  def set_locale
+    I18n.locale = params[:locale].try(:to_sym) || I18n.default_locale
+  end
+
   protected
     ##
     # Retrieves the compendium

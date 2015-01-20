@@ -1,0 +1,11 @@
+- type.properties.each do |property|
+  tr
+    td
+      == prefix
+      = property.documentation
+
+      - unless property.try(:type).try(:instances).blank?
+        = " (z.B. #{property.type.instances.values.take(3).map(&:documentation).join(', ')})"
+
+  - unless property.simple_type? || property.type.propertyless?
+    = render 'properties_recursive', {type: property.type, prefix: "#{prefix}#{property.documentation} > "}

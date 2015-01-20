@@ -22,7 +22,7 @@ table, tr, td {
   padding: 0;
 }
 
-table {
+/*table {
   tr {
     td {
       vertical-align: top;
@@ -41,6 +41,17 @@ table {
       width: 100%;
       padding-bottom: 1em;
     }
+  }
+}*/
+
+table.service_table {
+  td {
+    border: 1px solid #CCC;
+    padding: 0.5em;
+  }
+
+  td.property {
+    background-color: #EEE;
   }
 }
 

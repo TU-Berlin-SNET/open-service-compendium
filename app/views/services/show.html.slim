@@ -1,4 +1,5 @@
-h1= @service.service_name
+h1= service.service_name
 
 table
-  = render 'properties', {:holder => @service}
+  tbody
+    = service.table_view

@@ -1,0 +1,7 @@
+a[href=instance.browser.url]
+  = instance.browser.documentation
+
+- if instance.min_version
+  = " (> #{instance.min_version})"
+- else
+  = " (recent)"

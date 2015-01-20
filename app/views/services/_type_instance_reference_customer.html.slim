@@ -1,0 +1,8 @@
+- if instance.url
+  a[href=instance.url]
+    = instance.name
+- else
+  = instance.name
+
+- if instance.users
+  == "&nbsp;(#{instance.users} Users)"

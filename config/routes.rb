@@ -25,6 +25,10 @@ OpenServiceBroker::Application.routes.draw do
     get ':sdl_part', on: :member, action: 'show', as: :sdl_part_of
     put ':sdl_part', on: :member, action: 'update', constraints: { sdl_part: /(?!edit).*/}
     delete '', on: :member, action: 'delete'
+
+    get 'compare/:first/:second', on: :collection, action: 'compare'
+
+    get 'service_properties', on: :collection, to: 'schema#service_properties'
   end
 
   resources :clients do

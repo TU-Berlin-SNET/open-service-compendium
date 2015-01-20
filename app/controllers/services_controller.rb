@@ -1,4 +1,6 @@
 class ServicesController < ApplicationController
+  decorates_assigned :service
+
   resource_description do
     short 'Services'
     full_description <<-END
@@ -174,6 +176,11 @@ When querying for the SDL-NG source, the `sdl-part` parameter can be used to ret
         end
       end
     end
+  end
+
+  def compare
+    @first = Service.latest_approved(params[:first])
+    @second = Service.latest_approved(params[:second])
   end
 
   def new

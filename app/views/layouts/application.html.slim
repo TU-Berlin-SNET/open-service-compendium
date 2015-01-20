@@ -1,8 +1,10 @@
 doctype html
 html
   head
-  title Open Service Broker
+  title Open Service Compendium
+  = stylesheet_link_tag 'vendor_bootstrap', media: 'all', 'data-turbolinks-track' => true
   = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+  = stylesheet_link_tag params[:controller], media: 'all', 'data-turbolinks-track' => true
   = javascript_include_tag 'application', 'data-turbolinks-track' => true
   = yield :head
   = csrf_meta_tags
@@ -17,7 +19,7 @@ body
           span.icon-bar
           span.icon-bar
           span.icon-bar
-        a.navbar-brand[href='/'] TRESOR Broker
+        a.navbar-brand[href='/'] Open Service Compendium
 
       .navbar-collapse.navbar-left.collapse
         ul.nav.navbar-nav
