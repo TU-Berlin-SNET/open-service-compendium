@@ -4,7 +4,7 @@ class SDL::Base::Type::ServiceDecorator < Draper::Decorator
   def table_hash(holder = object)
     if holder.class < SDL::Base::Type
       begin
-        h.render "type_instance_#{holder.class.local_name.underscore}", instance: holder
+        h.render "services/type_instance_#{holder.class.local_name.underscore}", instance: holder
       rescue ActionView::MissingTemplate
         puts "Cannot find #{"type_instance_#{holder.class.local_name.underscore}"}"
 
@@ -17,7 +17,7 @@ class SDL::Base::Type::ServiceDecorator < Draper::Decorator
         end
       end
     elsif holder.class < SDL::Types::SDLSimpleType
-      h.render "value_#{holder.class.name.demodulize.underscore}", value: holder
+      h.render "services/value_#{holder.class.name.demodulize.underscore}", value: holder
     else
       holder.map do |item|
         table_hash item

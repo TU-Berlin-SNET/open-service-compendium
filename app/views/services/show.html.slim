@@ -1,5 +1,10 @@
 h1= service.service_name
 
-table
+table.service_table
   tbody
-    = service.table_view
+    - table_hash = service.table_hash
+    - deepness = deepness(table_hash)
+
+    - table_hash.each do |property, value|
+      tr
+        = render 'property_value_cells', property: property, value:value, deepness: deepness, level: 0

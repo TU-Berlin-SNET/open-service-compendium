@@ -25,3 +25,7 @@ config/environments/*.local.yml
 coverage
 
 public/assets
+
+vendor/bower_components/*
+
+node_modules

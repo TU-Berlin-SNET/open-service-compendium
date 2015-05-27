@@ -4,7 +4,7 @@ require File.expand_path('../boot', __FILE__)
 #require "active_record/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
-require "sprockets/railtie"
+#require "sprockets/railtie"
 require 'logstash-logger'
 # require "rails/test_unit/railtie"
 
@@ -31,5 +31,8 @@ module OpenServiceBroker
 
     # assign remote logger
     config.remote_logger = LogStashLogger.new(:uri => Settings.logstash_uri) if Settings.logstash_uri
+
+    # Disable Sprockets as we'll use Grunt for asset compilation
+    config.assets.enabled = false
   end
 end

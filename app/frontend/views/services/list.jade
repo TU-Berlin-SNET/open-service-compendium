@@ -1,0 +1,10 @@
+div(ng-controller="ServicesController" ng-init="loadData()")
+
+h1 Services list
+
+ul
+    li(ng-repeat="service in services")
+        a(ui-sref="services.detail({id: service._id})")
+            | {{ service.service_name }}
+
+div(ui-view)

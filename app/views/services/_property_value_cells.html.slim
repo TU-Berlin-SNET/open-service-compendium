@@ -1,0 +1,18 @@
+- sub_deepness = deepness(value)
+
+td[colspan=[1, (deepness-level-sub_deepness)].max rowspan=rowspan(value) class="property"]=property
+
+- if value.is_a? Hash
+  - value.each_with_index do |(sub_property, sub_value), index|
+    =="</tr><tr>" unless index == 0
+    = render 'property_value_cells', property: sub_property, value: sub_value, deepness: deepness - 1, level: level + 1
+- elsif value.is_a? Array
+  - value.each_with_index do |item, index|
+    =="</tr><tr>" unless index == 0
+    - if item.is_a? Hash
+      - item.each do |sub_property, sub_value|
+        = render 'property_value_cells', property: sub_property, value: sub_value, deepness: deepness - 1, level: level + 1
+    - else
+      td=item
+- else
+  td=value

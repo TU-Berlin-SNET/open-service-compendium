@@ -1,5 +1,0 @@
-- if data.is_a? Hash
-  - data.each_with_index do |key, value, index|
-    - if index == 0
-      td=key
-      td=render 'data_table', data: value, row_prefix: "#{row_prefix}#<td>", row_suffix: "</td>#{row_suffix}"

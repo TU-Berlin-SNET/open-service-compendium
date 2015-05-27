@@ -1,27 +1,10 @@
 h1="Compare #{@first.service_name} and #{@second.service_name}"
 
-table
-  thead
-    td= t('services.compare.property_description')
-    td= @first.service_name
-    td= @second.service_name
-
+table.service_table
   tbody
-    - SDL::Base::PropertyClassification::PropertyCategory.key_category_map.values.each do |category|
-      tr
-        td[colspan="4"]
-          h4= category.documentation
+    - table_hash = merge_hashes(@first.decorate.table_hash, @second.decorate.table_hash)
+    - deepness = deepness(table_hash)
 
-      - (category.properties & (@first.property_values.keys + @second.property_values.keys)).each do |property|
-        tr
-          td= property.documentation
-          td
-            - if @first.get_sdl_value(property)
-              = render 'property_value', {property: property, value: @first.get_sdl_value(property)}
-            - else
-              | &nbsp;
-          td
-            - if @second.get_sdl_value(property)
-              = render 'property_value', {property: property, value: @second.get_sdl_value(property)}
-            - else
-              | &nbsp;
+    - table_hash.each do |property, value|
+      tr
+        = render 'property_value_cells', property: property, value:value, deepness: deepness, level: 0

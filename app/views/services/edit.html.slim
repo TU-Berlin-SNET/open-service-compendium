@@ -28,18 +28,22 @@ row
       button[type='submit' class="btn btn-default"]= t('services.edit.save')
 
 - if @service
-  h1= t('services.edit.preview')
+  table.service_table
+    tbody
+      - table_hash = @service.table_hash
+      - deepness = deepness(table_hash)
 
-  table
-    = render 'properties', {:holder => @service}
+      - table_hash.each do |property, value|
+        tr
+          = render 'property_value_cells', property: property, value:value, deepness: deepness, level: 0
 
 javascript:
   $(document).ready(function() {
     ace.require("ace/ext/language_tools");
-    var editor = ace.edit('service_description')
+    var editor = ace.edit('service_description');
     var textarea = $('textarea[name="sdl_parts[main]"]').hide();
-    editor.setTheme('ace/theme/github')
-    editor.getSession().setMode('ace/mode/ruby')
+    editor.setTheme('ace/theme/github');
+    editor.getSession().setMode('ace/mode/ruby');
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true
@@ -50,7 +54,7 @@ javascript:
     });
 
     if($('#error_row')[0] !== undefined) {
-      var error_row = $('#error_row')[0].value
+      var error_row = $('#error_row')[0].value;
 
       editor.getSession().setAnnotations([{
         row: error_row,
