@@ -6,16 +6,20 @@ namespace :tresor do
   task :reset_and_load_examples => :environment do
     Service.delete_all
 
-    Dir.glob(File.join(Rails.root, 'lib', 'sdl-ng', 'examples', 'services', '*')).each do |file|
-      s = Service.create(
-          name: file.match(/(\w+).service.rb/)[1],
-          sdl_parts: {
-              'meta' => 'status approved',
-              'main' => File.read(file)
-          }
-      )
-      s.load_service_from_sdl
-      s.save!
+    Dir.glob(File.join(Rails.root, 'lib', 'sdl-ng', 'examples', 'services', '**', '*.service.rb')).each do |file|
+      begin
+        s = Service.create(
+            name: file.match(/(\w+).service.rb/)[1],
+            sdl_parts: {
+                'meta' => 'status approved',
+                'main' => File.read(file)
+            }
+        )
+        s.load_service_from_sdl(file)
+        s.save!
+      rescue Exception => e
+        puts "Could not load service from #{file}: #{e.message}"
+      end
     end
   end
 
