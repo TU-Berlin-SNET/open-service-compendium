@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/Apipie/apipie-rails.git
+  revision: a47c0550e9954eb3e285bd8c1e27e1784e5a2a86
+  specs:
+    apipie-rails (0.3.4)
+      json
+
+GIT
   remote: git://github.com/asalme/radix.git
   revision: e00382cb2ca78ad5f379f39aff317c8bd323e855
   branch: master
@@ -67,8 +74,6 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.8)
-    apipie-rails (0.3.4)
-      json
     arel (6.0.0)
     awesome_print (1.6.1)
     bcp47 (0.3.3)
@@ -113,6 +118,7 @@ GEM
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
     eventmachine (1.0.7)
+    eventmachine (1.0.7-java)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     globalid (0.3.5)
@@ -386,7 +392,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
-  apipie-rails
+  apipie-rails!
   awesome_print
   capistrano (~> 3.2.0)
   capistrano-bundler
@@ -425,3 +431,6 @@ DEPENDENCIES
   verbs
   webmock
   zeus
+
+BUNDLED WITH
+   1.10.3
