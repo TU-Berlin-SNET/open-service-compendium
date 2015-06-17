@@ -15,7 +15,10 @@ angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.route
     ).state('services',
       url: "/services"
       templateUrl: "services/list.html"
-    ).state('services.detail',
-      url: "/:id"
-      templateUrl: "services/detail.html"
+    ).state('detail',
+      url: "/detail/:dserviceName"
+      templateUrl: "detail.html"
+    ).state('compare',
+      url: "/compare/:services"
+      templateUrl: "compare.html"
     )

@@ -1,5 +1,27 @@
-angular.module('frontendApp').controller 'ServicesController', ['$scope', 'Services', '$http', ($scope, Services, $http) ->
-  $http.defaults.headers.common['Accept']= 'application/json'
+`angular.module('frontendApp').controller('ServicesController', [
+  '$scope', 'Services', '$http','shareData', function($scope, Services, $http,shareData) {
+    $http.defaults.headers.common['Accept'] = 'application/json';
+    $scope.services = Services.query();
+    shareData.setSharedData($scope.services);
+  }
+]);
 
-  $scope.services = Services.query()
-]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+`

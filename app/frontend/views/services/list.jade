@@ -1,10 +1,25 @@
-div(ng-controller="ServicesController")
+:verbatim
+   <html>
+   <body>
+   <a href="#/compare/selectedservices">Compare</a>
+   <br><br><b> todo1: Create the faceted seach, <br>look at fabian's work or ask the vocabulary<br> group about the propertys. Maybe something like the left grid in<br> the officiel angular website https://docs.angularjs.org/api .<br>  Create a first filter who filter<br> the data with properties given in home.<br>jade and a second filter with the properties selected here.<br>Maybe you will need just one filter.</b>
+   <br><br> some propertie<input type="checkbox" name="test" value="dvgh" id="check">
+   <br>other properties<input type="checkbox" name="test" value="dvgh" id="check">
+   <center>
+   <div ng-controller="ServicesController">
+   <h1>Services list</h1>
+   <ul ng-model="services">
 
-    h1 Services list
-
-    ul(ng-model="services")
-        li(ng-repeat="service in services")
-            a
-                | {{ service.service_name }}
-
-    div(ui-view)
+   <p ng-repeat="service in services">
+   <input type="checkbox" name="test" value="serviceNameOrNumber" id="check">
+   <b><a href="#/detail/{{ service.service_name}}">{{ service.service_name }}</a></b> 
+   {{ service.cloud_service_model }}
+   {{ service.is_billed }}
+   
+   </p>
+   </ul>
+   <div ui-view="ui-view"></div>
+   </div>
+   </center>
+   </body>
+   </html> 
