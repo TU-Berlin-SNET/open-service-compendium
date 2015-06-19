@@ -14,11 +14,12 @@ angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.route
       templateUrl: "home.html"
     ).state('services',
       url: "/services"
-      templateUrl: "services/list.html"
-    ).state('detail',
-      url: "/detail/:dserviceName"
+      templateUrl: "services/services.html"
+    ).state('services.detail',
+      url: "/:id"
       templateUrl: "detail.html"
-    ).state('compare',
-      url: "/compare/:services"
+    ).state('services.compare',
+      url: "/:id/compare_with/:other_id"
       templateUrl: "compare.html"
     )
+    

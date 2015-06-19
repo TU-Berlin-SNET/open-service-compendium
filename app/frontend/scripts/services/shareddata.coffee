@@ -1,6 +1,4 @@
-`
-
-angular.module('frontendApp').factory('shareData', function() {
+`angular.module('frontendApp').factory('shareData', function() {
   var data = '';
 
         return {
@@ -12,8 +10,4 @@ angular.module('frontendApp').factory('shareData', function() {
             }
         };
     });
-
-
-
-
 `
