@@ -2,8 +2,14 @@
    <html>
    <body>
    <center>
-   <div ng-controller="compareCtrl"><b>{{ test }} <b> and the view compare.jade</div><br>
+   <div ng-controller="compareCtrl">
+    <b>Comparison between {{ firstServiceName }} and {{ secondServiceName }}
+   </div>
+   <div ng-controller="compareCtrl">
+   <ul>
+    <div ng-repeat="service in services | filter: isSelected">
+      <li>{{ service }}</li>
+    </div>
+   </ul>
 
-   <!-- TODO2: Get the list of the selected services and make a kind of table where you compare the checked services. the variable "data" contain the json file. You can check the work of fabian and maybe use his bootstrap.-->
-
-   <div ng-controller="compareCtrl">{{ data}}</div>
+   </div>
