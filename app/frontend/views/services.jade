@@ -1,5 +1,6 @@
 :verbatim
    <div ng-controller="ServicesController">
+   <!-- ui-view will load the selected view, detail.html or compare.html -->   
       <div ui-view></div>
       <a ui-sref="services.compare({ id: 'FirstSelectedService' , other_id: 'SecondSelectedService' })">Compare</a><br>
       <b>Faceted Search</b><br>

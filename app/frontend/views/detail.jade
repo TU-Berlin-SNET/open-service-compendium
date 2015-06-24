@@ -4,7 +4,7 @@
    <body>
    <center>
    	<div ng-controller="detailCtrl">
-   	{{SelectedService}}
+   	<b>{{SelectedService}}</b>
      <ul>
       <div ng-repeat="service in services | filter: isSelected">
         <li>{{ service }}</li>
