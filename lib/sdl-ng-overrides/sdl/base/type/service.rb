@@ -7,9 +7,8 @@ class SDL::Base::Type::Service < SDL::Base::Type
   include Mongoid::Timestamps
 
   # THIS IS THE VERSION ID, NOT THE SERVICE ID !
-  field :_id, type: String, default: -> { SecureRandom.uuid }
-
-  field :service_id, type: String, default: -> { SecureRandom.uuid }
+  field :_id, type: String, default: -> { self.class.new_slug }
+  field :service_id, type: String, default: -> { self.class.new_slug }
 
   field :service_deleted, type: Boolean, default: false
 
@@ -17,6 +16,14 @@ class SDL::Base::Type::Service < SDL::Base::Type
 
   field :name, type: Symbol
   field :sdl_parts, type: Hash, default: {}
+
+  def self.slug_base
+    Radix::Base.new(Radix::BASE::B62 + ['-', '_'])
+  end
+
+  def self.new_slug
+    slug_base.convert(rand(2**48), 10)
+  end
 
   %w[draft approved].each do |status|
     self.define_singleton_method "latest_#{status}" do |service_id|
@@ -104,7 +111,7 @@ class SDL::Base::Type::Service < SDL::Base::Type
 
     receiver = SDL::Receivers::TypeInstanceReceiver.new(self)
 
-    receiver.instance_eval(to_service_sdl, filename || 'service_sdl')
+    receiver.instance_eval(to_service_sdl, filename || 'service_sdl', 0)
 
     self
   end
