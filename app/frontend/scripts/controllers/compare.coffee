@@ -1,11 +1,7 @@
 `//This is the controller for the compare.jade view that is responsible for comparing two services
 
-angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$stateParams', 'shareData',
-    function($scope, $filter, $stateParams, shareData) {
-
-       // Get the JSON list of all services
-       $scope.services = shareData.getSharedData();
-
+angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$stateParams',
+    function($scope, $filter, $stateParams) {
        // Function to filter JSON file for comparable services
        $scope.isSelected = function(service) {
          return (service.service_name === $stateParams.id ||

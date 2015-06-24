@@ -1,15 +1,13 @@
 :verbatim
-   <html>
-   <body>
-   <center>
-   <div ng-controller="compareCtrl">
-    <b>Comparison between {{ firstServiceName }} and {{ secondServiceName }}
-   </div>
-   <div ng-controller="compareCtrl">
-   <ul>
-    <div ng-repeat="service in services | filter: isSelected">
-      <li>{{ service }}</li>
+    <center>
+    <div ng-controller="compareCtrl">
+      <b>Comparison between {{ firstServiceName }} and {{ secondServiceName }}
+     </div>
+     <div ng-controller="compareCtrl">
+     <ul>
+      <div ng-repeat="service in services | filter: isSelected">
+        <li>{{ service }}</li>
+      </div>
+     </ul>
     </div>
-   </ul>
-
-   </div>
+    </center>

@@ -1,20 +1,20 @@
-.jumbotron Choose A Category
-    .wrap(ng-controller='MainCtrl')
-        select(ng-model='selectedValue', ng-change='loadData()')
-            option(value='1') Category 1
-            option(value='2') Category 2
-            option(value='3') Category 3
-            option(value='4') Category 4
-            option(value='5') Category 5
-
-        .main(ng-show='selectedValue != null')
-            center
-                h2 Results For Category  {{ selectedValue }}
-
-        .main
-            ul.cloudlist
-                li.service(ng-repeat='service in services', ng-click='select(service)')
-                    .info
-                        h3 {{service.service_name}}
-                        b {{service.status_page}}
-                        b Is Billed : {{service.is_billed.billing_term._identifier}}
+:verbatim
+   <div ng-controller="ServicesController">
+      <div ui-view></div>
+      <a ui-sref="services.compare({ id: 'FirstSelectedService' , other_id: 'SecondSelectedService' })">Compare</a><br>
+      <b>Faceted Search</b><br>
+      some propertie<input type="checkbox" name="test" value="dvgh" id="check">
+      <br>other properties<input type="checkbox" name="test" value="dvgh" id="check"></td>
+      <center>
+         <h1>Services list</h1>
+         <ul ng-model="services">
+            <p ng-repeat="service in services">
+            <input type="checkbox" name="test" value="serviceNameOrNumber" id="check">
+            <b><a ui-sref="services.detail({ id: service.service_name })">{{ service.service_name }}</a></b> 
+            {{ service.cloud_service_model }}
+            {{ service.is_billed }}
+            </p>
+         </ul>
+      </center>
+   </div>
+      <!-- todo1: Create the faceted seach, look at fabian's work or ask the vocabulary group about the propertys. Maybe something like the left grid in the officiel angular website https://docs.angularjs.org/api .Create a first filter who filter the data with properties given in home.jade and a second filter with the properties selected here.Maybe you will need just one filter.-->

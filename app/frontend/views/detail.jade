@@ -3,5 +3,9 @@
    <html>
    <body>
    <center>
-   <div ng-controller="detailCtrl"><b>this is the {{ id }} and the view detail.jade <b></div><br>
-   <div ng-controller="detailCtrl">{{data}}</div>
+   	<div ng-controller="detailCtrl">
+   	{{SelectedService}}
+     <ul>
+      <div ng-repeat="service in services | filter: isSelected">
+        <li>{{ service }}</li>
+      </div>

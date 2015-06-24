@@ -1,25 +1,22 @@
+`
 'use strict';
+angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ngSanitize', 'ngTouch']).config(function($stateProvider) {
+  return $stateProvider.state('home', {
+    url: "/",
+    templateUrl: "home.html"
+  }).state('services', {
+    url: "/services",
+    templateUrl: "services.html"
+  }).state('services.detail', {
+    url: "/:id",
+    templateUrl: "detail.html"
+  }).state('services.compare', {
+    url: "/:id/compare_with/:other_id",
+    templateUrl: "compare.html"
+  }).state("test", {
+    url: "/test",
+    templateUrl: "test.html"
+  });
+});
 
-###
-@ngdoc overview
-@name frontendApp
-@description frontendApp
-
-Main module of the application.
-###
-
-angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ngSanitize', 'ngTouch']).config ($stateProvider) ->
-    $stateProvider.state('home',
-      url: "/"
-      templateUrl: "home.html"
-    ).state('services',
-      url: "/services"
-      templateUrl: "services/services.html"
-    ).state('services.detail',
-      url: "/:id"
-      templateUrl: "detail.html"
-    ).state('services.compare',
-      url: "/:id/compare_with/:other_id"
-      templateUrl: "compare.html"
-    )
-    
+`
