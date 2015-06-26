@@ -1,21 +1,63 @@
 :verbatim
-   <div ng-controller="ServicesController">
-   <!-- ui-view will load the selected view, detail.html or compare.html -->   
-      <div ui-view></div>
-      <a ui-sref="services.compare({ id: 'FirstSelectedService' , other_id: 'SecondSelectedService' })">Compare</a><br>
-      <b>Faceted Search</b><br>
-      some propertie<input type="checkbox" name="test" value="dvgh" id="check">
-      <br>other properties<input type="checkbox" name="test" value="dvgh" id="check"></td>
-      <center>
-         <h1>Services list</h1>
-         <ul ng-model="services">
-            <p ng-repeat="service in services">
-            <input type="checkbox" name="test" value="serviceNameOrNumber" id="check">
-            <b><a ui-sref="services.detail({ id: service.service_name })">{{ service.service_name }}</a></b> 
-            {{ service.cloud_service_model }}
-            {{ service.is_billed }}
-            </p>
-         </ul>
-      </center>
-   </div>
-      <!-- todo1: Create the faceted seach, look at fabian's work or ask the vocabulary group about the propertys. Maybe something like the left grid in the officiel angular website https://docs.angularjs.org/api .Create a first filter who filter the data with properties given in home.jade and a second filter with the properties selected here.Maybe you will need just one filter.-->
+	<div ng-controller="ServicesController">
+	<!-- ui-view will load the selected view, detail.html or compare.html -->   
+		<div ui-view></div>
+			<div class="container-fluid">
+				<div class="col-md-4">
+					<table class="table">
+						<tr>
+							<th style="text-align: right;">Cloud Service Model:</th>
+							<td>
+								<label class="radio-inline"><input type="radio" name="model" value="" id="check">IAAS</label>
+								<label class="radio-inline"><input type="radio" name="model" value="" id="check">SAAS</label>
+							</td>
+						</tr>
+						<tr>
+							<th style="text-align: right;">Operating System:</th>
+							<td>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Windows</label>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Linux</label>
+							</td>
+						</tr>
+						<tr>
+							<th style="text-align: right;">Interfaces:</th>
+							<td>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">REST</label>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">SOAP</label>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">XMLRPC</label>
+							</td>
+						</tr>
+						<tr>
+							<th style="text-align: right;">Payment:</th>
+							<td>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Credit Card</label>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">PayPal</label>
+							</td>
+						</tr>
+						<tr>
+							<th style="text-align: right;">Billing Type:</th>
+							<td>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Prepaid</label>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Postpaid</label>
+							</td>
+						</tr>
+						<tr>
+							<th style="text-align: right;">Billing Period:</th>
+							<td>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Monthly</label>
+								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Annualy</label>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="col-md-8" style="border-left: 1px solid #E7E7E7">
+				<a ui-sref="services.compare({ id: 'FirstSelectedService' , other_id: 'SecondSelectedService' })">Compare</a>
+					<ul ng-model="services" class="list-unstyled">
+						<li ng-repeat="service in services">
+							<label class="checkbox-inline"><input type="checkbox" name="" value="serviceNameOrNumber" id="check">
+							<a ui-sref="services.detail({ id: service.service_name })">{{ service.service_name }}</a></label>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
