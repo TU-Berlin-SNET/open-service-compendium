@@ -1,11 +1,11 @@
 `
 'use strict';
 angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ngSanitize', 'ngTouch']).config(function($stateProvider) {
-  return $stateProvider.state('home', {
+  $stateProvider.state('home', {
     url: "/",
     templateUrl: "home.html"
   }).state('services', {
-    url: "/services",
+    url: "/services/:type",
     templateUrl: "services.html"
   }).state('services.detail', {
     url: "/:id",

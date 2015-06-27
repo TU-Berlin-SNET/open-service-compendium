@@ -4,12 +4,21 @@
 		<div ui-view></div>
 			<div class="container-fluid">
 				<div class="col-md-4">
+
+				<div ng-show="checkboxList[0]!= null">
+					<a ui-sref="services.compare({ id: checkboxList[0] , other_id: checkboxList[1] })">
+					<button class="btn btn-default pull-left" ng-disabled="canNotCompare()">Compare  {{checkboxList[0]}} and {{checkboxList[1] }}<span class="glyphicon"></span></button>
+					</a><br>
+					</div>
+
 					<table class="table">
 						<tr>
 							<th style="text-align: right;">Cloud Service Model:</th>
 							<td>
-								<label class="radio-inline"><input type="radio" name="model" value="" id="check">IAAS</label>
-								<label class="radio-inline"><input type="radio" name="model" value="" id="check">SAAS</label>
+							  <div>
+								<label class="radio-inline"><input ng-model="type" type="radio" name="model" value="iaas" id="check">IAAS</label>
+								<label class="radio-inline"><input ng-model="type" type="radio" name="model" value="saas" id="check">SAAS</label>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -49,12 +58,18 @@
 							</td>
 						</tr>
 					</table>
+
+					
+
 				</div>
+
 				<div class="col-md-8" style="border-left: 1px solid #E7E7E7">
-				<a ui-sref="services.compare({ id: 'FirstSelectedService' , other_id: 'SecondSelectedService' })">Compare</a>
+				
+	   				<b>{{serviceType}}</b>
 					<ul ng-model="services" class="list-unstyled">
 						<li ng-repeat="service in services">
-							<label class="checkbox-inline"><input type="checkbox" name="" value="serviceNameOrNumber" id="check">
+							<label class="checkbox-inline">
+							<input type="checkbox" ng-disabled="canNotSelect(service.service_name)" value={{service.service_name}} id={{service.service_name}} ng-click="toggleSelection(service.service_name)"/>
 							<a ui-sref="services.detail({ id: service.service_name })">{{ service.service_name }}</a></label>
 						</li>
 					</ul>

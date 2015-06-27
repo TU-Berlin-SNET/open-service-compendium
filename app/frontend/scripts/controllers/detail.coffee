@@ -10,7 +10,7 @@ angular.module('frontendApp').controller('detailCtrl', ['$scope','$stateParams',
        };
 
        // Save requested names in $scope
-       $scope.SelectedService = $stateParams.id;
+       $scope.selectedService = $stateParams.id;
        
 }]);
 `
