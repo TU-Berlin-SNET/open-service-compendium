@@ -1,13 +1,52 @@
 :verbatim
-    <center>
-    <div ng-controller="compareCtrl">
-      <b>Comparison between {{ firstServiceName }} and {{ secondServiceName }}
-     </div>
-     <div ng-controller="compareCtrl">
-     <ul>
-      <div ng-repeat="service in services | filter: isSelected">
-        <li>{{ service }}</li>
+  <div class="container-fluid" ng-controller="compareCtrl">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <h1>Compare services</h1>
+          <div ng-show="error_message" class="alert alert-warning" role="alert">Warning: {{ error_message }}</div>
       </div>
-     </ul>
     </div>
-    </center>
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+          <tr>
+            <th class="col-md-4"></th>
+            <th ng-repeat="service in services | filter: isSelected" class="col-md-4">
+              {{ service.service_name }}
+            </th>
+          </tr>
+          <tr>
+            <td class="col-md-4">Service model</td>
+            <td ng-repeat="service in services | filter: isSelected" class="col-md-4">
+              {{ service.cloud_service_model }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-md-4">Name</td>
+            <td ng-repeat="service in services | filter: isSelected" class="col-md-4">
+              {{ service.service_name }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-md-4">Billing</td>
+            <td ng-repeat="service in services | filter: isSelected" class="col-md-4">
+              {{ service.is_billed }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-md-4">Status</td>
+            <td ng-repeat="service in services | filter: isSelected" class="col-md-4">
+              {{ service.status }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-md-2">Available Offline</td>
+            <td ng-repeat="service in services | filter: isSelected" class="col-md-5">
+              {{service.can_be_used_offline === true ? "yes" : "no"}}
+            </td>
+          </tr>
+          <!-- service attributes can be added here, maybe dynamically? -->
+        </table>
+      </div>
+    </div>
+  </div>

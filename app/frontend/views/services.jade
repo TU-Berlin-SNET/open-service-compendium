@@ -1,15 +1,9 @@
 :verbatim
 	<div ng-controller="ServicesController">
-	<!-- ui-view will load the selected view, detail.html or compare.html -->   
+	<!-- ui-view will load the selected view, detail.html or compare.html -->
 		<div ui-view></div>
 			<div class="container-fluid">
-				<div class="col-md-4">
-
-				<div ng-show="checkboxList[0]!= null">
-					<a ui-sref="services.compare({ id: checkboxList[0] , other_id: checkboxList[1] })">
-					<button class="btn btn-default pull-left" ng-disabled="canNotCompare()">Compare  {{checkboxList[0]}} and {{checkboxList[1] }}<span class="glyphicon"></span></button>
-					</a><br>
-					</div>
+				<div class="col-md-4 col-md-offset-1">
 
 					<table class="table">
 						<tr>
@@ -59,12 +53,18 @@
 						</tr>
 					</table>
 
-					
+					<div ng-show="checkboxList[0]!= null">
+						<a ui-sref="services.compare({ id: checkboxList[0] , other_id: checkboxList[1] })">
+						<button class="btn btn-default pull-left" ng-disabled="canNotCompare()">Compare  {{checkboxList[0]}} and {{checkboxList[1] }}<span class="glyphicon"></span></button>
+						</a><br>
+					</div>
+
+
 
 				</div>
 
-				<div class="col-md-8" style="border-left: 1px solid #E7E7E7">
-				
+				<div class="col-md-6" style="border-left: 1px solid #E7E7E7">
+
 	   				<b>{{serviceType}}</b>
 					<ul ng-model="services" class="list-unstyled">
 						<li ng-repeat="service in services">
