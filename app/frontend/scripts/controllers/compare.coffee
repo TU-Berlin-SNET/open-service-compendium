@@ -20,11 +20,18 @@ angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$
           //redirect to home
          }
 
+         // dynamic property selection
+         $scope.selectedProperties = [];
+         $scope.properties = [];
+         // get all possible property keys
+         for(var key in $scope.checkboxList[0]) {
+           $scope.properties.push(key);
+         }
+         // add selected property to properties selection
+         $scope.addProperty = function() {
+           $scope.selectedProperties.push($scope.select);
+         }
 
-
-
-
-
-
-}]);
+       }
+]);
 `

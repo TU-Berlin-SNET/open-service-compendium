@@ -7,45 +7,28 @@
       </div>
     </div>
     <div class="row">
+      <div class="form-group col-md-3 col-md-offset-1">
+        <label for="sel1">Select a property:</label>
+        <select class="form-control" id="sel1" ng-model="select" ng-change="addProperty()">
+          <option ng-repeat="property in properties">{{ property }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <table class="table table-striped">
           <tr>
-            <th class="col-md-4"></th>
-            <th ng-repeat="service in checkboxList" class="col-md-4">
+            <th class="col-md-4">Property</th>
+            <th class="col-md-4" ng-repeat="service in checkboxList" class="col-md-4">
               {{ service.service_name }}
             </th>
           </tr>
-          <tr>
-            <td class="col-md-4">Service model</td>
+          <tr ng-repeat="property in selectedProperties">
+            <td class="col-md-4">{{ property }}</td>
             <td ng-repeat="service in checkboxList" class="col-md-4">
-              {{ service.cloud_service_model }}
+              {{ service[property] }}
             </td>
           </tr>
-          <tr>
-            <td class="col-md-4">Name</td>
-            <td ng-repeat="service in checkboxList" class="col-md-4">
-              {{ service.service_name }}
-            </td>
-          </tr>
-          <tr>
-            <td class="col-md-4">Billing</td>
-            <td ng-repeat="service in checkboxList" class="col-md-4">
-              {{ service.is_billed }}
-            </td>
-          </tr>
-          <tr>
-            <td class="col-md-4">Status</td>
-            <td ng-repeat="service in checkboxList" class="col-md-4">
-              {{ service.status }}
-            </td>
-          </tr>
-          <tr>
-            <td class="col-md-2">Available Offline</td>
-            <td ng-repeat="service in checkboxList" class="col-md-4">
-              {{service.can_be_used_offline === true ? "yes" : "no"}}
-            </td>
-          </tr>
-          <!-- service attributes can be added here, maybe dynamically? -->
         </table>
       </div>
     </div>
