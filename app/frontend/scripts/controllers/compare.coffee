@@ -3,6 +3,7 @@
 angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$stateParams',
     function($scope, $filter, $stateParams) {
 
+       /* @HENNING :I THINK WE DON'T NEED THIS ANYMORE ? 
        // Function to filter JSON file for comparable services
        $scope.isSelected = function(service) {
          return (service.service_name === $stateParams.id ||
@@ -10,34 +11,43 @@ angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$
        };
 
        // Check for errors
-       $scope.error_message = null;
+    
        var selectedServices = [];
        // iterate services and find first selected service
        for(var i=0; i<$scope.services.length; i++) {
-         if($scope.services[i].service_name == $stateParams.id) {
+         if($scope.services[i].service_name == $stateParams.id || $scope.services[i].service_name == $stateParams.other_id ) {
            selectedServices.push($scope.services[i]);
-         }
-       }
-       // iterate services and find second selected service
-       for(var i=0; i<$scope.services.length; i++) {
-         if($scope.services[i].service_name == $stateParams.other_id) {
-           selectedServices.push($scope.services[i]);
-         }
-       }
-       // Check if we found two services
-       if (selectedServices.length != 2) {
-         $scope.error_message = "Only one service is selected. Please select another one.";
-       }
-       else {
-         // Check if both services are compatible
-         if (selectedServices[0].cloud_service_model != selectedServices[1].cloud_service_model) {
-          $scope.error_message = "You are comparing two different service models!";
          }
        }
 
-       // Save requested names in $scope
+              // Save requested names in $scope
        $scope.firstServiceName = $stateParams.id;
        $scope.secondServiceName = $stateParams.other_id;
+       */
+
+        //$scope.checkboxList contain the json of the two selected services
+
+       $scope.error_message = null;
+       // Check if we found two services
+       if ($scope.checkboxList.length != 2) {
+         $scope.error_message = "Only one service is selected. Please select another one.";
+       }
+       else 
+         // Check if both services are compatible
+         if ($scope.checkboxList[0].cloud_service_model != $scope.checkboxList[1].cloud_service_model) {
+          $scope.error_message = "You are comparing two different service models!";
+         }
+         else if ($scope.checkboxList[0].service_name != $stateParams.id || $scope.checkboxList[1].service_name != $stateParams.other_id)
+         {
+          $scope.error_message = "ERROR !";
+          //redirect to home
+         }
+
+       
+
+
+
+
 
 }]);
 `

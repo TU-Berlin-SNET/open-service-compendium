@@ -9,8 +9,8 @@ angular.module('frontendApp').controller('detailCtrl', ['$scope','$stateParams',
          return (service.service_name === $stateParams.id)
        };
 
-       // Save requested names in $scope
-       $scope.selectedService = $stateParams.id;
+       //$scope.selectedService is inherited from services and contain the json file of the selected service 
+     
        
 }]);
 `

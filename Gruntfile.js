@@ -26,6 +26,9 @@ module.exports = function(grunt) {
             '<%= paths.bower %>/angular-ui-router/release/angular-ui-router.js',
             '<%= paths.bower %>/angular-sanitize/angular-sanitize.js',
             '<%= paths.bower %>/angular-touch/angular-touch.js',
+	    '<%= paths.bower %>/checklist-model/checklist-model.js',
+	    '<%= paths.bower %>/ng-breadcrumbs/dist/ng-breadcrumbs.js',
+	    '<%= paths.bower %>/angular-utils-ui-breadcrumbs/dist/uiBreadcrumbs.js',
 
             // Bootstrap components
             '<%= paths.bower %>/bootstrap-sass/assets/javascripts/bootstrap/{button,collapse,dropdown}.js',

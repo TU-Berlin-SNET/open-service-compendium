@@ -11,37 +11,37 @@
         <table class="table table-striped">
           <tr>
             <th class="col-md-4"></th>
-            <th ng-repeat="service in services | filter: isSelected" class="col-md-4">
+            <th ng-repeat="service in checkboxList" class="col-md-4">
               {{ service.service_name }}
             </th>
           </tr>
           <tr>
             <td class="col-md-4">Service model</td>
-            <td ng-repeat="service in services | filter: isSelected" class="col-md-4">
+            <td ng-repeat="service in checkboxList" class="col-md-4">
               {{ service.cloud_service_model }}
             </td>
           </tr>
           <tr>
             <td class="col-md-4">Name</td>
-            <td ng-repeat="service in services | filter: isSelected" class="col-md-4">
+            <td ng-repeat="service in checkboxList" class="col-md-4">
               {{ service.service_name }}
             </td>
           </tr>
           <tr>
             <td class="col-md-4">Billing</td>
-            <td ng-repeat="service in services | filter: isSelected" class="col-md-4">
+            <td ng-repeat="service in checkboxList" class="col-md-4">
               {{ service.is_billed }}
             </td>
           </tr>
           <tr>
             <td class="col-md-4">Status</td>
-            <td ng-repeat="service in services | filter: isSelected" class="col-md-4">
+            <td ng-repeat="service in checkboxList" class="col-md-4">
               {{ service.status }}
             </td>
           </tr>
           <tr>
             <td class="col-md-2">Available Offline</td>
-            <td ng-repeat="service in services | filter: isSelected" class="col-md-5">
+            <td ng-repeat="service in checkboxList" class="col-md-5">
               {{service.can_be_used_offline === true ? "yes" : "no"}}
             </td>
           </tr>

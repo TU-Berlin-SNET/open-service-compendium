@@ -2,6 +2,7 @@
 	<div ng-controller="ServicesController">
 	<!-- ui-view will load the selected view, detail.html or compare.html -->
 		<div ui-view></div>
+	<div ng-show="state.current.name == 'services'">	
 			<div class="container-fluid">
 				<div class="col-md-4 col-md-offset-1">
 
@@ -53,26 +54,28 @@
 						</tr>
 					</table>
 
-					<div ng-show="checkboxList[0]!= null">
-						<a ui-sref="services.compare({ id: checkboxList[0] , other_id: checkboxList[1] })">
-						<button class="btn btn-default pull-left" ng-disabled="canNotCompare()">Compare  {{checkboxList[0]}} and {{checkboxList[1] }}<span class="glyphicon"></span></button>
-						</a><br>
-					</div>
-
-
 
 				</div>
 
 				<div class="col-md-6" style="border-left: 1px solid #E7E7E7">
+				
+						<a ui-sref="services.compare({ id: checkboxList[0].service_name , other_id: checkboxList[1].service_name })">
+						<button class="btn btn-default pull-left" ng-disabled="canNotCompare()">
+						<div ng-show="checkboxList[1]== null">Select two services for comparison</div>
+						<div ng-show="checkboxList[1]!= null">Compare</div>
+						<span class="glyphicon"></span></button>
+						</a>
+					<br><br><br>
 
 	   				<b>{{serviceType}}</b>
 					<ul ng-model="services" class="list-unstyled">
 						<li ng-repeat="service in services">
 							<label class="checkbox-inline">
-							<input type="checkbox" ng-disabled="canNotSelect(service.service_name)" value={{service.service_name}} id={{service.service_name}} ng-click="toggleSelection(service.service_name)"/>
-							<a ui-sref="services.detail({ id: service.service_name })">{{ service.service_name }}</a></label>
+							<input type="checkbox" ng-disabled="canNotSelect(service.uri)" value={{service.service_name}} id={{service.service_name}} checklist-model="checkboxList" checklist-value="service"/>
+							<a ui-sref="services.detail({ id: service.service_name })" ng-click="selectService(service)">{{ service.service_name }}</a></label>
 						</li>
 					</ul>
 				</div>
 			</div>
+	</div>	
 		</div>
