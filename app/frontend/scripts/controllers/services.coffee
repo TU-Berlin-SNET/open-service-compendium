@@ -14,7 +14,17 @@ angular.module('frontendApp').controller('ServicesController', [
 
 $scope.state=$state; // contain the current state
 
-
+$scope.extractId = function extractId(uri) // extract the service_id from uri
+{
+     if(uri)
+    {
+    console.log(uri.substr(uri.indexOf('/',1)+1,uri.indexOf('/',1)-1));
+    return (uri.substr(uri.indexOf('/',1)+1,uri.indexOf('/',1)-1));
+    }else{
+      return ("");
+      //TODO handle the error
+     }
+};
 
 $scope.canNotCompare = function canNotCompare() //if true will disable the compare button
 {

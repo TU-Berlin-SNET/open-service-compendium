@@ -14,7 +14,7 @@ angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$
          if ($scope.checkboxList[0].cloud_service_model != $scope.checkboxList[1].cloud_service_model) {
           $scope.error_message = "You are comparing two different service models!";
          }
-         else if ($scope.checkboxList[0].service_name != $stateParams.id || $scope.checkboxList[1].service_name != $stateParams.other_id)
+         else if ($scope.extractId($scope.checkboxList[0].uri) != $stateParams.id || $scope.extractId($scope.checkboxList[1].uri) != $stateParams.other_id)
          {
           $scope.error_message = "ERROR !";
           //redirect to home
