@@ -7,7 +7,23 @@ angular.module('frontendApp').controller('detailCtrl', ['$scope','$stateParams',
         
 
        //$scope.selectedService is inherited from services and contain the json file of the selected service 
-     
+
+
+
+    //function for showmore or showless on click
+
+        $scope.Var = true;
+       $scope.toggleText='ShowMore';
+    $scope.toggle = function() {
+    
+        $scope.Var = !$scope.Var;
+        $scope.toggleText = $scope.Var ? 'ShowMore' : 'ShowLess';
+
+    };
        
 }]);
 `
+
+
+
+

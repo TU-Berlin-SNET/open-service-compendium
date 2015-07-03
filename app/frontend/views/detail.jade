@@ -10,6 +10,7 @@
           <div ng-show="error_message" class="alert alert-warning" role="alert">Warning: {{ error_message }}</div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <table class="table table-striped">
@@ -19,38 +20,127 @@
               {{ selectedService.service_name }}
             </th>
           </tr>
-          <tr>
-            <td class="col-md-4">Service model</td>
-            <td>
-              {{ selectedService.cloud_service_model }}
-            </td>
-          </tr>
+
           <tr>
             <td class="col-md-4">Name</td>
             <td>
               {{ selectedService.service_name }}
             </td>
           </tr>
+
           <tr>
-            <td class="col-md-4">Billing</td>
+            <td class="col-md-4">Service model</td>
             <td>
-              {{ selectedService.is_billed }}
+              {{ selectedService.cloud_service_model }}
             </td>
           </tr>
-          <tr>
-            <td class="col-md-4">Status</td>
+
+          <tr >
+            <td class="col-md-4">Service Category</td>
             <td>
-              {{ selectedService.status }}
+              {{ selectedService.service_category }}
             </td>
           </tr>
-          <tr>
+          <tr >
             <td class="col-md-2">Available Offline</td>
             <td>
               {{selectedService.can_be_used_offline === true ? "yes" : "no"}}
             </td>
           </tr>
-          <!-- service attributes can be added here, maybe dynamically? -->
+
+          <tr >
+            <td class="col-md-4">is_billed</td>
+            <td>
+              {{ selectedService.is_billed }}
+            </td>
+          </tr>
+
+          <tr >
+            <td class="col-md-4">payment_options</td>
+            <td>
+              {{ selectedService.payment_options }}
+            </td>
+          </tr>
+
+          <tr >
+            <td class="col-md-4">compatible_browsers</td>
+            <td>
+              {{ selectedService.compatible_browsers }}
+            </td>
+          </tr>
+
+          <tr >
+            <td class="col-md-4">established_in</td>
+            <td>
+              {{ selectedService.established_in }}
+            </td>
+          </tr>
+
+          <tr >
+            <td class="col-md-4">status</td>
+            <td>
+              {{ selectedService.status }}
+            </td>
+          </tr>
+
+          <tr ng-hide="Var">
+            <td class="col-md-4">is_charged_by</td>
+            <td>
+              {{ selectedService.is_charged_by }}
+            </td>
+          </tr>
+
+          <tr ng-hide="Var">
+            <td class="col-md-4">documentation</td>
+            <td>
+              {{ selectedService.documentation }}
+            </td>
+          </tr>
+
+          <tr ng-hide="Var">
+            <td class="col-md-4">past_release_notes</td>
+            <td>
+              {{ selectedService.past_release_notes }}
+            </td>
+          </tr>
+          
+          <tr ng-hide="Var">
+            <td class="col-md-4">feedback_page</td>
+            <td>
+              {{ selectedService.feedback_page }}
+            </td>
+          </tr>
+
+          <tr ng-hide="Var">
+            <td class="col-md-4">is_protected_by</td>
+            <td>
+              {{ selectedService.is_protected_by }}
+            </td>
+          </tr>
+          
+          <tr ng-hide="Var">
+            <td class="col-md-4">storage_features</td>
+            <td>
+              {{ selectedService.storage_features }}
+            </td>
+          </tr>
+
+          <tr ng-hide="Var">
+            <td class="col-md-4">storage_properties</td>
+            <td>
+              {{ selectedService.storage_properties }}
+            </td>
+          </tr>
+
+          <tr ng-hide="Var">
+            <td class="col-md-4">security</td>
+            <td>
+              {{ selectedService.security }}
+            </td>
+          </tr>
+
         </table>
+        <button  ng-click="toggle()" >{{toggleText}}</button>
       </div>
     </div>
   </div>
