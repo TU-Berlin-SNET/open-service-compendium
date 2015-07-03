@@ -1,9 +1,9 @@
 :verbatim
   <center>
-    <div class="jumbotron">
+    <div class="jumbotron" ng-controller="homeCtrl">
       <h1>Welcome to the OSC.</h1>
       <p class="lead">Please select the cloud service model you are looking for</p>
-      <a class="btn btn-lg btn-primary" href="#/services/iaas/">IaaS</a>
-      <a class="btn btn-lg btn-primary" href="#/services/saas/">SaaS</a>
+      <a class="btn btn-lg btn-primary" href="#/services/" ng-click="setData('iaas')">IaaS</a>
+      <a class="btn btn-lg btn-primary" href="#/services/" ng-click="setData('saas')">SaaS</a>
     </div>
   </center>
