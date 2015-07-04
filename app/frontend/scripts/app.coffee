@@ -1,8 +1,8 @@
 `
 'use strict';
-angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ngSanitize', 'ngTouch','checklist-model']).config(function($stateProvider) {
+angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ngSanitize', 'ngTouch','checklist-model','angularUtils.directives.uiBreadcrumbs']).config(function($stateProvider) {
   $stateProvider.state('home', {
-    url: "/",
+    url: "",
     templateUrl: "home.html"
   }).state('services', {
     url: "/services/:type/",

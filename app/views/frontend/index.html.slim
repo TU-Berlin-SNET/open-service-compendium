@@ -1,1 +1,8 @@
-ng-include[src="'root.html'"]
+//- Put the navbar on top
+ng-include[src="'partials/navbar.html'"]
+
+//- Render UI views
+div[ui-view=""]
+
+//- Put navbar on bottom
+ng-include[src="'partials/footer.html'"]
