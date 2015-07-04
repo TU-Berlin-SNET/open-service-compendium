@@ -5,7 +5,7 @@ angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.route
     url: "/",
     templateUrl: "home.html"
   }).state('services', {
-    url: "/services/",
+    url: "/services/:type/",
     templateUrl: "services.html"
   }).state('services.detail', {
     url: ":id",
