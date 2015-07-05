@@ -21,7 +21,7 @@ angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$
          }
 
          // dynamic property selection
-         $scope.selectedProperties = [];
+         $scope.selectedProperties = ['uri', 'cloud_service_model', 'is_billed'];
          $scope.properties = [];
          // get all possible property keys
          for(var key in $scope.checkboxList[0]) {
