@@ -3,6 +3,12 @@
 angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$stateParams',
     function($scope, $filter, $stateParams) {
 
+    $scope.getUriFromUrl = function getUriFromUrl(url) // get the service uri from the url
+      {
+          console.log(url.substr(url.indexOf('-',1)+1,url.length));
+          return(url.substr(url.indexOf('-',1)+1,url.length));
+      };
+
        // Check for errors
        $scope.error_message = null;
        // Check if we found two services
@@ -14,7 +20,7 @@ angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$
          if ($scope.checkboxList[0].cloud_service_model != $scope.checkboxList[1].cloud_service_model) {
           $scope.error_message = "You are comparing two different service models!";
          }
-         else if ($scope.extractId($scope.checkboxList[0].uri) != $stateParams.id || $scope.extractId($scope.checkboxList[1].uri) != $stateParams.other_id)
+         else if ($scope.extractId($scope.checkboxList[0].uri) != $scope.getUriFromUrl($stateParams.id) || $scope.extractId($scope.checkboxList[1].uri) != $scope.getUriFromUrl($stateParams.other_id))
          {
           $scope.error_message = "ERROR !";
           //redirect to home
@@ -31,6 +37,7 @@ angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$
          $scope.addProperty = function() {
            $scope.selectedProperties.push($scope.select);
          }
+
 
        }
 ]);

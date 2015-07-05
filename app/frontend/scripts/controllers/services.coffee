@@ -10,6 +10,8 @@ angular.module('frontendApp').controller('ServicesController', [
     //serviceType contain the selected radio button ex: iaas or saas
     $scope.type=$stateParams.type;
 	$scope.checkboxList = [];  //List of selected checkbox
+
+
   $scope.selectedService=''; //contail the selected service for the detail view
 
 $scope.state=$state; // contain the current state
@@ -18,7 +20,7 @@ $scope.extractId = function extractId(uri) // extract the service_id from uri
 {
      if(uri)
     {
-    console.log(uri.substr(uri.indexOf('/',1)+1,uri.indexOf('/',1)-1));
+    //console.log(uri.substr(uri.indexOf('/',1)+1,uri.indexOf('/',1)-1));
     return (uri.substr(uri.indexOf('/',1)+1,uri.indexOf('/',1)-1));
     }else{
       return ("");
@@ -45,6 +47,21 @@ if(!$scope.type) // Check if a service model is selected
 {
   window.alert("No service model selected");
 }
+
+$scope.seoUrl = function seoUrl(name,uri) // Create url parameters from service name and uri
+{
+if(name && uri){
+  
+
+ var lowercase = name.toLowerCase();
+ var replaced = lowercase.replace(/ /g, '_');
+   replaced = replaced.replace(/-/g, '_');
+  return (replaced+'-'+$scope.extractId(uri));
+ }
+ return ('ERROR');
+ 
+};
+
 
   }
 ]);

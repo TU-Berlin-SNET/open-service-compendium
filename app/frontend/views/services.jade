@@ -59,7 +59,8 @@
 
 				<div class="col-md-6" style="border-left: 1px solid #E7E7E7">
 
-						<a ui-sref="services.compare({ id: extractId(checkboxList[0].uri) , other_id: extractId(checkboxList[1].uri) })">
+
+						<a ui-sref="services.compare({ id: seoUrl(checkboxList[0].service_name,checkboxList[0].uri) , other_id: seoUrl(checkboxList[1].service_name,checkboxList[1].uri) })">
 						<button class="btn btn-default pull-left" ng-disabled="canNotCompare()">
 						<div ng-show="checkboxList[1]== null">Select two services for comparison</div>
 						<div ng-show="checkboxList[1]!= null">Compare</div>
@@ -72,7 +73,7 @@
 						<li ng-repeat="service in services">
 							<label class="checkbox-inline">
 							<input type="checkbox" ng-disabled="canNotSelect(service.uri)" value={{service.service_name}} id={{service.service_name}} checklist-model="checkboxList" checklist-value="service"/>
-							<a ui-sref="services.detail({ id: extractId(service.uri) })" ng-click="selectService(service)">{{ service.service_name }}</a></label>
+							<a ui-sref="services.detail({ id: seoUrl(service.service_name,service.uri) })" ng-click="selectService(service)">{{ service.service_name }}</a></label>
 						</li>
 					</ul>
 				</div>
