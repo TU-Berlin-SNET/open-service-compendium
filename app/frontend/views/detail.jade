@@ -1,14 +1,12 @@
 :verbatim
  <!--TODO3: In detail.cofee get the name of the selected service. Than create a filter ( google anglularjs filter) and show all the details of the service. "data" variable contain all the json data, you can us http://jsonviewer.stack.hu/ it will make a clear view.<br> You can also check  the work of fabian it can maybe help you or his bootstrap -->
 
-     
-
       <div class="container-fluid" ng-controller="detailCtrl" >
       <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <h1>{{ selectedService.service_name }}</h1>
           <div ng-show="error_message" class="alert alert-warning" role="alert">Warning: {{ error_message }}</div>
-        
+
       </div>
     </div>
     <div class="row">
@@ -110,7 +108,7 @@
               {{ selectedService.past_release_notes }}
             </td>
           </tr>
-          
+
           <tr ng-hide="Var">
             <td class="col-md-4">feedback_page</td>
             <td>
@@ -124,7 +122,7 @@
               {{ selectedService.is_protected_by }}
             </td>
           </tr>
-          
+
           <tr >
             <td class="col-md-4">storage_features</td>
             <td>
@@ -158,47 +156,3 @@
       </div>
     </div>
   </div>
-
-
-
-
-    <div class="navbar navbar-inverse navbar-bottom" role="navigation">
-      <div class="container-fluid">
-        
-        <div class="navbar-text pull-left">
-          <button type="button" class="btn btn-medium btn-primary"  onClick="history.go(-1)"><b>Go Back</b></button>
-        </div>
-
-        <div class="navbar-text pull-center">
-          <b>@ Open Service Compandium</b> 
-        </div>
-
-        <div class=" navbar pull-right">
-          <b>Share On:</b>
-          <a href="http://www.facebook.com/sharer.php?u=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
-          <img title="Facebook" alt="Facebook" src="https://simplesharebuttons.com/images/somacro/facebook.png" width="35" height="35" />
-          </a>
-
-          <a  href="https://twitter.com/intent/tweet?url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
-          <img title="Twitter" alt="Twitter" src="https://simplesharebuttons.com/images/somacro/twitter.png" width="35" height="35" />
-          </a>
-
-          <a  href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
-          <img title="LinkedIn" alt="LinkedIn"  src="https://simplesharebuttons.com/images/somacro/linkedin.png" width="35" height="35" />
-          </a>
-
-          <a href="https://plus.google.com/share?url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
-          <img alt="Google Plus" title="Google Plus"src="https://simplesharebuttons.com/images/somacro/google.png" width="35" height="35" />
-          </a>
-
-          <a href="javascript:;" onclick="window.print()">
-          <img alt="Print" title="Print" src="https://simplesharebuttons.com/images/somacro/print.png"  width="35" height="35" />
-          </a>
-
-          <a href="mailto:?subject=<Awesome Service &Body=<https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium>" target="_blank">
-          <img alt="Email" src="https://simplesharebuttons.com/images/somacro/email.png" width="35" height="35"/>
-          </a>
-
-        </div>
-      </div>
-    </div>
