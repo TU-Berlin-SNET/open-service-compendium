@@ -3,22 +3,20 @@
 
      
 
-      <div class="container-fluid" ng-controller="detailCtrl">
-    <div class="row">
+      <div class="container-fluid" ng-controller="detailCtrl" >
+      <div class="row">
       <div class="col-md-10 col-md-offset-1">
-        <h1>Detail service</h1>
+        <h1>{{ selectedService.service_name }}</h1>
           <div ng-show="error_message" class="alert alert-warning" role="alert">Warning: {{ error_message }}</div>
+        
       </div>
     </div>
-
     <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <table class="table table-striped">
           <tr>
-            <th class="col-md-4"></th>
-            <th>
-              {{ selectedService.service_name }}
-            </th>
+            <th class="col-md-4">property</th>
+            <th>Details</th>
           </tr>
 
           <tr>
@@ -62,10 +60,19 @@
             </td>
           </tr>
 
-          <tr >
-            <td class="col-md-4">compatible_browsers</td>
-            <td>
-              {{ selectedService.compatible_browsers }}
+          <tr class="accordion-toggle"  data-toggle="collapse" data-target="#collapseOne">
+            <td class="col-md-4" >compatible_browser</td>
+            <td class="col-md-8" >Options</td>
+            </tr>
+            <tr >
+            <td colspan="6" class="hiddenRow">
+            <div id="collapseOne" class="accordian-body collapse">
+            <ul >
+              <li ng-repeat="x  in selectedService.compatible_browsers">
+              {{'browser:' +x.browser }}<br>{{'version:' + x.min_version }}
+              </li>
+            </ul>
+              </div>
             </td>
           </tr>
 
@@ -118,10 +125,16 @@
             </td>
           </tr>
           
-          <tr ng-hide="Var">
+          <tr >
             <td class="col-md-4">storage_features</td>
             <td>
-              {{ selectedService.storage_features }}
+              {{ selectedService.storage_features.platform_compatibility.compatible_operating_systems[0].operating_system }}<br>
+            <ul >
+                <li ng-repeat="y in selectedService.storage_features.platform_compatibility.mobile_devices">
+              {{ y}}<br>
+              </li>
+              </ul>
+
             </td>
           </tr>
 
@@ -141,6 +154,51 @@
 
         </table>
         <button  ng-click="toggle()" >{{toggleText}}</button>
+
       </div>
     </div>
   </div>
+
+
+
+
+    <div class="navbar navbar-inverse navbar-bottom" role="navigation">
+      <div class="container-fluid">
+        
+        <div class="navbar-text pull-left">
+          <button type="button" class="btn btn-medium btn-primary"  onClick="history.go(-1)"><b>Go Back</b></button>
+        </div>
+
+        <div class="navbar-text pull-center">
+          <b>@ Open Service Compandium</b> 
+        </div>
+
+        <div class=" navbar pull-right">
+          <b>Share On:</b>
+          <a href="http://www.facebook.com/sharer.php?u=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
+          <img title="Facebook" alt="Facebook" src="https://simplesharebuttons.com/images/somacro/facebook.png" width="35" height="35" />
+          </a>
+
+          <a  href="https://twitter.com/intent/tweet?url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
+          <img title="Twitter" alt="Twitter" src="https://simplesharebuttons.com/images/somacro/twitter.png" width="35" height="35" />
+          </a>
+
+          <a  href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
+          <img title="LinkedIn" alt="LinkedIn"  src="https://simplesharebuttons.com/images/somacro/linkedin.png" width="35" height="35" />
+          </a>
+
+          <a href="https://plus.google.com/share?url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
+          <img alt="Google Plus" title="Google Plus"src="https://simplesharebuttons.com/images/somacro/google.png" width="35" height="35" />
+          </a>
+
+          <a href="javascript:;" onclick="window.print()">
+          <img alt="Print" title="Print" src="https://simplesharebuttons.com/images/somacro/print.png"  width="35" height="35" />
+          </a>
+
+          <a href="mailto:?subject=<Awesome Service &Body=<https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium>" target="_blank">
+          <img alt="Email" src="https://simplesharebuttons.com/images/somacro/email.png" width="35" height="35"/>
+          </a>
+
+        </div>
+      </div>
+    </div>
