@@ -4,63 +4,51 @@
 	<div ui-view></div>
 	<div ng-show="state.current.name == 'services'">
 			<div class="container-fluid">
-				<div class="col-md-4 col-md-offset-1">
-
+				<div class="col-md-6">
 					<table class="table">
 						<tr>
 							<th style="text-align: right;">Cloud Service Model:</th>
 							<td>
 							  <div>
-								<label class="radio-inline"><input ng-model="type" type="radio" name="model" value="iaas" id="check">IAAS</label>
-								<label class="radio-inline"><input ng-model="type" type="radio" name="model" value="saas" id="check">SAAS</label>
+								<label class="checkbox-inline"><input ng-model="filter['cloud_service_model']['iaas']" value="iaas" type="checkbox" name="cloud_service_model">IAAS</label>
+								<label class="checkbox-inline"><input ng-model="filter['cloud_service_model']['saas']" value="saas" type="checkbox" name="cloud_service_model">SAAS</label>
+								<label class="checkbox-inline"><input ng-model="filter['cloud_service_model']['paas']" value="paas" type="checkbox" name="cloud_service_model">PAAS</label>
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<th style="text-align: right;">Operating System:</th>
+							<th style="text-align: right;">Payment Options:</th>
 							<td>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Windows</label>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Linux</label>
+								<label class="checkbox-inline"><input ng-model="filter.payment_options.credit_card" type="checkbox">Credit Card</label>
+								<label class="checkbox-inline"><input ng-model="filter.payment_options.paypal" type="checkbox">PayPal</label>
+								<label class="checkbox-inline"><input ng-model="filter.payment_options.cheque" type="checkbox">Cheque</label>
+								<label class="checkbox-inline"><input ng-model="filter.payment_options.invoice" type="checkbox">Invoice</label>
 							</td>
 						</tr>
 						<tr>
-							<th style="text-align: right;">Interfaces:</th>
+							<th style="text-align: right;">Is Billed:</th>
 							<td>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">REST</label>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">SOAP</label>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">XMLRPC</label>
+								<label class="checkbox-inline"><input ng-model="filter.is_billed.monthly" type="checkbox">Monthly</label>
+								<label class="checkbox-inline"><input ng-model="filter.is_billed.annually" type="checkbox">Annually</label>
 							</td>
 						</tr>
 						<tr>
-							<th style="text-align: right;">Payment:</th>
+							<th style="text-align: right;">Offline Availability:</th>
 							<td>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Credit Card</label>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">PayPal</label>
+								<label class="checkbox-inline"><input ng-model="filter.can_be_used_offline.true" type="checkbox">Yes</label>
 							</td>
 						</tr>
 						<tr>
-							<th style="text-align: right;">Billing Type:</th>
+							<th style="text-align: right;">Protection by:</th>
 							<td>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Prepaid</label>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Postpaid</label>
-							</td>
-						</tr>
-						<tr>
-							<th style="text-align: right;">Billing Period:</th>
-							<td>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Monthly</label>
-								<label class="checkbox-inline"><input type="checkbox" name="" value="" id="check">Annualy</label>
+								<label class="checkbox-inline"><input ng-model="filter.is_protected_by.https" type="checkbox">HTTPS</label>
 							</td>
 						</tr>
 					</table>
-
-
 				</div>
-
 				<div class="col-md-6" style="border-left: 1px solid #E7E7E7">
 
-
-						<a ui-sref="services.compare({ id: seoUrl(checkboxList[0].service_name,checkboxList[0].uri) , other_id: seoUrl(checkboxList[1].service_name,checkboxList[1].uri) })">
+						<a ui-sref="services.compare({ id: extractId(checkboxList[0].uri) , other_id: extractId(checkboxList[1].uri) })">
 						<button class="btn btn-default pull-left" ng-disabled="canNotCompare()">
 						<div ng-show="checkboxList[1]== null">Select two services for comparison</div>
 						<div ng-show="checkboxList[1]!= null">Compare</div>
@@ -70,10 +58,11 @@
 
 	   				<b>{{serviceType}}</b>
 					<ul ng-model="services" class="list-unstyled">
-						<li ng-repeat="service in services">
+						{{filtered.length}} service(s) found
+						<li ng-repeat="service in filtered=(services | filter:filterByProperties)">
 							<label class="checkbox-inline">
 							<input type="checkbox" ng-disabled="canNotSelect(service.uri)" value={{service.service_name}} id={{service.service_name}} checklist-model="checkboxList" checklist-value="service"/>
-							<a ui-sref="services.detail({ id: seoUrl(service.service_name,service.uri) })" ng-click="selectService(service)">{{ service.service_name }}</a></label>
+							<a ui-sref="services.detail({ id: extractId(service.uri) })" ng-click="selectService(service)">{{ service.service_name }}</a></label>
 						</li>
 					</ul>
 				</div>

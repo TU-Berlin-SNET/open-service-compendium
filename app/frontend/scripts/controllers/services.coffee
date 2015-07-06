@@ -62,6 +62,27 @@ if(name && uri){
  
 };
 
+$scope.filter = {}; //current properties for faceted search
+
+$scope.filterByProperties = function(service) {
+	var matches = true;
+	for (var prop in $scope.filter) {
+		if (noSubFilter($scope.filter[prop])) continue;
+		if (!$scope.filter[prop][service[prop]]) {
+			matches = false;
+			break;
+		}
+	}
+	return matches;
+};
+
+function noSubFilter(subFilterObj) {
+        for (var key in subFilterObj) {
+            if (subFilterObj[key]) return false;
+        }
+        return true;
+    }
+
 
   }
 ]);
