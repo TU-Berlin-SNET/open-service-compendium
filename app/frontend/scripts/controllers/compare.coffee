@@ -2,12 +2,9 @@
 
 angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$stateParams',
     function($scope, $filter, $stateParams) {
+    
 
-    $scope.getUriFromUrl = function getUriFromUrl(url) // get the service uri from the url
-      {
-          console.log(url.substr(url.indexOf('-',1)+1,url.length));
-          return(url.substr(url.indexOf('-',1)+1,url.length));
-      };
+    
 
        // Check for errors
        $scope.error_message = null;

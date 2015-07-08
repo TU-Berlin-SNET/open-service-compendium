@@ -3,7 +3,6 @@
 angular.module('frontendApp').controller('ServicesController', [
   '$scope', 'Services', '$http','$stateParams','$state', function($scope, Services, $http,$stateParams,$state) {
     
-
     $http.defaults.headers.common['Accept'] = 'application/json';
     $scope.services = Services.query();
     //$scope.services contain the requested json file from the broker.
@@ -15,6 +14,12 @@ angular.module('frontendApp').controller('ServicesController', [
   $scope.selectedService=''; //contail the selected service for the detail view
 
 $scope.state=$state; // contain the current state
+
+$scope.getUriFromUrl = function getUriFromUrl(url) // get the service uri from the url
+      {
+          console.log(url.substr(url.indexOf('-',1)+1,url.length));
+          return(url.substr(url.indexOf('-',1)+1,url.length));
+      };
 
 $scope.extractId = function extractId(uri) // extract the service_id from uri
 {

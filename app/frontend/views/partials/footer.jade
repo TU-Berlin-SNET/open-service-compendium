@@ -1,32 +1,32 @@
 :verbatim
-  <div class="navbar navbar-inverse navbar-fixed-bottom">
+  <div class="navbar navbar-inverse navbar-fixed-bottom" ng-controller="footerCtrl">
     <div class="container">
+          <div class="navbar-text pull-center">
+        <strong>&copy; 2015 Open Service Compendium</strong>
+      </div>
 
+  <div ng-show="state.current.name && state.current.name != 'home'">
       <div class="navbar-text pull-left">
         <button type="button" class="btn btn-medium btn-primary" onClick="history.go(-1)">
           <strong>Go Back</strong>
         </button>
       </div>
-
-      <div class="navbar-text pull-center">
-        <strong>&copy; 2015 Open Service Compendium</strong>
-      </div>
-
+  </div>
       <div class="navbar-text pull-right">
           <strong>Share On:</strong>
-          <a href="http://www.facebook.com/sharer.php?u=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
+          <a href="http://www.facebook.com/sharer.php?u={{state.href(state.current.name,state.params,{absolute: true}) }}" target="_blank">
           <img title="Facebook" alt="Facebook" src="https://simplesharebuttons.com/images/somacro/facebook.png" width="35" height="35" />
           </a>
 
-          <a  href="https://twitter.com/intent/tweet?url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
+          <a  href="https://twitter.com/intent/tweet?url={{state.href(state.current.name,state.params,{absolute: true}) }}" target="_blank">
           <img title="Twitter" alt="Twitter" src="https://simplesharebuttons.com/images/somacro/twitter.png" width="35" height="35" />
           </a>
 
-          <a  href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
+          <a  href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{state.href(state.current.name,state.params,{absolute: true}) }}" target="_blank">
           <img title="LinkedIn" alt="LinkedIn"  src="https://simplesharebuttons.com/images/somacro/linkedin.png" width="35" height="35" />
           </a>
 
-          <a href="https://plus.google.com/share?url=https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium" target="_blank">
+          <a href="https://plus.google.com/share?url={{state.href(state.current.name,state.params,{absolute: true}) }}" target="_blank">
           <img alt="Google Plus" title="Google Plus"src="https://simplesharebuttons.com/images/somacro/google.png" width="35" height="35" />
           </a>
 
@@ -34,7 +34,7 @@
           <img alt="Print" title="Print" src="https://simplesharebuttons.com/images/somacro/print.png"  width="35" height="35" />
           </a>
 
-          <a href="mailto:?subject=<Awesome Service &Body=<https://github.com/TU-Berlin-SNET/tresor-broker/tree/open_service_compendium>" target="_blank">
+          <a href="mailto:?subject=<Awesome Service &Body=<{{state.href(state.current.name,state.params,{absolute: true}) }}>" target="_blank">
           <img alt="Email" src="https://simplesharebuttons.com/images/somacro/email.png" width="35" height="35"/>
           </a>
         </div>
