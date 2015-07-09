@@ -17,7 +17,7 @@ $scope.state=$state; // contain the current state
 
 $scope.getUriFromUrl = function getUriFromUrl(url) // get the service uri from the url
       {
-          console.log(url.substr(url.indexOf('-',1)+1,url.length));
+          //console.log(url.substr(url.indexOf('-',1)+1,url.length));
           return(url.substr(url.indexOf('-',1)+1,url.length));
       };
 

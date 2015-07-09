@@ -10,7 +10,7 @@ angular.module('frontendApp').controller('compareCtrl', ['$scope', '$filter', '$
        $scope.error_message = null;
        // Check if we found two services
        if ($scope.checkboxList.length != 2) {
-         $scope.error_message = "Only one service is selected. Please select another one.";
+         $scope.error_message = "You have to select two services";
        }
        else
          // Check if both services are compatible

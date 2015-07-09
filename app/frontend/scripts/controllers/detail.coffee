@@ -20,22 +20,17 @@ angular.module('frontendApp').controller('detailCtrl', ['$scope','$stateParams',
      $scope.id=$scope.getUriFromUrl($stateParams.id);
 
 
-	// TODO find out why $scope.services.length == 0 when refreshing 
-	console.log("data : " + $scope.services);
-	console.log($scope.services.length);
-	if(!$scope.selectedService) // if rehresh or direct access, mus be desactivated to see the difference in $scope.services
-	{
-		for(var i=0; i<$scope.services.length; i++)
-		{
-	       if($scope.extractId($scope.services[i].uri) == $scope.id) 
-	       {
-	        selectedService=$scope.services[i];
-	        console.log("id found: "+ $scope.id);
 
+      $scope.isSelected = function(service) {
+          return ($scope.extractId(service.uri) === $scope.id);
+        };
 
-	        }
-	    }
-	}
+      // Temporary solution to allow refresh and direct access. The problem is that it's not possible to access $scope.services in case of refresh, probably due to delay caused by the request to the server, but it's possible to do it in the view.
+      $scope.select = function(service) { 
+          $scope.selectedService=service;
+        };
+
+	
    
 }]);
 `
