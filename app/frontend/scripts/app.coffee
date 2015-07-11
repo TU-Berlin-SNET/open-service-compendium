@@ -13,9 +13,6 @@ angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.route
   }).state('services.compare', {
     url: ":id/compare_with/:other_id",
     templateUrl: "compare.html"
-  }).state("test", {
-    url: "test/",
-    templateUrl: "test.html"
   });
 });
 

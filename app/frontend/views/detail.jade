@@ -1,11 +1,10 @@
 :verbatim
  <!--TODO3: In detail.cofee get the name of the selected service. Than create a filter ( google anglularjs filter) and show all the details of the service. "data" variable contain all the json data, you can us http://jsonviewer.stack.hu/ it will make a clear view.<br> You can also check  the work of fabian it can maybe help you or his bootstrap -->
-      <div class="container-fluid" ng-controller="detailCtrl" >
-      <div class="row">
+   <div class="container-fluid" ng-controller="detailCtrl" >
+    <div class="row">
       <div class="col-md-10 col-md-offset-1">
         <h1>{{ selectedService.service_name }}</h1>
-          <div ng-show="error_message" class="alert alert-warning" role="alert">Warning: {{ error_message }}</div>
-
+        <div ng-show="error_message" class="alert alert-warning" role="alert">Warning: {{ error_message }}</div>
       </div>
     </div>
     <div class="row">
@@ -15,21 +14,18 @@
             <th class="col-md-4">property</th>
             <th>Details</th>
           </tr>
-
           <tr>
             <td class="col-md-4">Name</td>
             <td>
               {{ selectedService.service_name }}
             </td>
           </tr>
-
           <tr>
             <td class="col-md-4">Service model</td>
             <td>
               {{ selectedService.cloud_service_model }}
             </td>
           </tr>
-
           <tr >
             <td class="col-md-4">Service Category</td>
             <td>
@@ -42,116 +38,100 @@
               {{selectedService.can_be_used_offline === true ? "yes" : "no"}}
             </td>
           </tr>
-
           <tr >
             <td class="col-md-4">is_billed</td>
             <td>
               {{ selectedService.is_billed }}
             </td>
           </tr>
-
           <tr >
             <td class="col-md-4">payment_options</td>
             <td>
               {{ selectedService.payment_options }}
             </td>
           </tr>
-
           <tr class="accordion-toggle"  data-toggle="collapse" data-target="#collapseOne">
             <td class="col-md-4" >compatible_browser</td>
             <td class="col-md-8" >Options</td>
-            </tr>
-            <tr >
+          </tr>
+          <tr >
             <td colspan="6" class="hiddenRow">
-            <div id="collapseOne" class="accordian-body collapse">
-            <ul >
-              <li ng-repeat="x  in selectedService.compatible_browsers">
-              {{'browser:' +x.browser }}<br>{{'version:' + x.min_version }}
-              </li>
-            </ul>
+              <div id="collapseOne" class="accordian-body collapse">
+                <ul >
+                  <li ng-repeat="x  in selectedService.compatible_browsers">
+                    {{'browser:' +x.browser }}<br>{{'version:' + x.min_version }}
+                  </li>
+                </ul>
               </div>
             </td>
           </tr>
-
           <tr >
             <td class="col-md-4">established_in</td>
             <td>
               {{ selectedService.established_in }}
             </td>
           </tr>
-
           <tr >
             <td class="col-md-4">status</td>
             <td>
               {{ selectedService.status }}
             </td>
           </tr>
-
           <tr ng-hide="Var">
             <td class="col-md-4">is_charged_by</td>
             <td>
               {{ selectedService.is_charged_by }}
             </td>
           </tr>
-
           <tr ng-hide="Var">
             <td class="col-md-4">documentation</td>
             <td>
               {{ selectedService.documentation }}
             </td>
           </tr>
-
           <tr ng-hide="Var">
             <td class="col-md-4">past_release_notes</td>
             <td>
               {{ selectedService.past_release_notes }}
             </td>
           </tr>
-
           <tr ng-hide="Var">
             <td class="col-md-4">feedback_page</td>
             <td>
               {{ selectedService.feedback_page }}
             </td>
           </tr>
-
           <tr ng-hide="Var">
             <td class="col-md-4">is_protected_by</td>
             <td>
               {{ selectedService.is_protected_by }}
             </td>
           </tr>
-
           <tr >
             <td class="col-md-4">storage_features</td>
             <td>
               {{ selectedService.storage_features.platform_compatibility.compatible_operating_systems[0].operating_system }}<br>
-            <ul >
+              <ul >
                 <li ng-repeat="y in selectedService.storage_features.platform_compatibility.mobile_devices">
-              {{ y}}<br>
-              </li>
+                  {{ y}}<br>
+                </li>
               </ul>
-
             </td>
           </tr>
-
           <tr ng-hide="Var">
             <td class="col-md-4">storage_properties</td>
             <td>
               {{ selectedService.storage_properties }}
             </td>
           </tr>
-
           <tr ng-hide="Var">
             <td class="col-md-4">security</td>
             <td>
               {{ selectedService.security }}
             </td>
           </tr>
-
         </table>
         <button  ng-click="toggle()" >{{toggleText}}</button>
-
       </div>
     </div>
-  </div>
+   </div>
