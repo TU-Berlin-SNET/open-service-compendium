@@ -1,6 +1,6 @@
 `
 'use strict';
-angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ngSanitize', 'ngTouch','checklist-model','angularUtils.directives.uiBreadcrumbs']).config(function($stateProvider) {
+angular.module('frontendApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ui.router', 'ngSanitize', 'ngTouch','checklist-model']).config(function($stateProvider) {
   $stateProvider.state('home', {
     url: "",
     templateUrl: "home.html"
