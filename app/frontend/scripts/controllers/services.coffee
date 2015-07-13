@@ -11,6 +11,8 @@
       $scope.checkboxList = [];  //List of selected checkbox
 
 
+
+
       $scope.selectedService=''; //contail the selected service for the detail view
 
     $scope.state=$state; // contain the current state
@@ -68,9 +70,32 @@
    };
 
     $scope.filter = {}; //current properties for faceted search
+    if(!$scope.filter['model']) // Add the service model found in the url to the filter
+    {
+      if($scope.type=='paas')
+      {
+        $scope.filter['cloud_service_model'] = {};
+        $scope.filter['cloud_service_model']['paas']=true;
+      }
+      else
+      if($scope.type=='iaas')
+      {
+      $scope.filter['cloud_service_model'] = {};
+        $scope.filter['cloud_service_model']['iaas']=true;
+      }
+      else
+      if($scope.type=='saas')
+      {
+      $scope.filter['cloud_service_model'] = {};
+        $scope.filter['cloud_service_model']['saas']=true;
+      }
+    }
+
+
 
     $scope.filterByProperties = function(service) {
       var matches = true;
+      console.log($scope.filter);
       for (var prop in $scope.filter) {
         if (noSubFilter($scope.filter[prop])) continue;
         if (!$scope.filter[prop][service[prop]]) {

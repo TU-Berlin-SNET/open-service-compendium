@@ -53,9 +53,9 @@
          }
         else if ($scope.extractId($scope.checkboxList[0].uri) != $scope.getUriFromUrl($scope.id) || $scope.extractId($scope.checkboxList[1].uri) != $scope.getUriFromUrl($scope.other_id))
           {
-           /* This does not work properly
+          
               $scope.error_message = "ERROR !";
-              // redirect to home */
+              // redirect to home 
           }
 
            // dynamic property selection
