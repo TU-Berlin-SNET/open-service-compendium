@@ -1,0 +1,35 @@
+:verbatim
+    <div class="container-fluid" ng-controller="compareCtrl">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <h1>Compare services</h1>
+            <div ng-show="error_message" class="alert alert-warning" role="alert">Warning: {{ error_message }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-3 col-md-offset-1">
+            <label for="sel1">Select a property:</label>
+            <select class="form-control" id="sel1" ng-model="select" ng-change="addProperty()">
+              <option ng-repeat="property in properties">{{ property }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <table class="table table-striped">
+              <tr>
+                <th class="col-md-4">Property</th>
+                <th class="col-md-4" ng-repeat="service in checkboxList" class="col-md-4">
+                  {{ service.service_name }}
+                </th>
+              </tr>
+              <tr ng-repeat="property in selectedProperties">
+                <td class="col-md-4">{{ property }}</td>
+                <td ng-repeat="service in checkboxList" class="col-md-4">
+                  {{ service[property] }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>

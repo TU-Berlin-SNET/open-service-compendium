@@ -64,7 +64,7 @@ end
 
 gem 'active_model_serializers'
 
-gem 'apipie-rails'
+gem 'apipie-rails', github: 'Apipie/apipie-rails'
 
 gem 'kramdown'
 gem 'coderay'

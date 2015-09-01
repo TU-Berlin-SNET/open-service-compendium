@@ -26,6 +26,7 @@ module.exports = function(grunt) {
             '<%= paths.bower %>/angular-ui-router/release/angular-ui-router.js',
             '<%= paths.bower %>/angular-sanitize/angular-sanitize.js',
             '<%= paths.bower %>/angular-touch/angular-touch.js',
+	    '<%= paths.bower %>/checklist-model/checklist-model.js',
 
             // Bootstrap components
             '<%= paths.bower %>/bootstrap-sass/assets/javascripts/bootstrap/{button,collapse,dropdown}.js',
@@ -307,22 +308,22 @@ module.exports = function(grunt) {
         scss: {
             files: ['<%= paths.src.frontend %>/styles/**/*.scss'],
             tasks: ['sass', 'autoprefixer:application_css'],
-            options: {livereload: true}
+            options: {livereload: true, spawn: false}
         },
         images: {
             files: ['<%= paths.vendor %>/**/images/{,**}/*.{png,jpg,gif,svg}'],
             tasks: ['imagemin', 'svgmin'],
-            options: {livereload: true}
+            options: {livereload: true, spawn: false}
         },
         coffee: {
             files: ['<%= paths.src.frontend %>/{,**/}*.coffee'],
             tasks: ['coffee', 'combine-js-dist'],
-            options: {livereload: true}
+            options: {livereload: true, spawn: false}
         },
         jade: {
             files: ['<%= paths.src.frontend %>/views/**/*.jade'],
             tasks: ['jade', 'ngtemplates', 'combine-js-dist'],
-            options: {livereload: true}
+            options: {livereload: true, spawn: false}
         }
     };
 

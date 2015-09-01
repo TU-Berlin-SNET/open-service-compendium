@@ -125,7 +125,7 @@ class ClientProfile
             @query_statements << args[0].call(prefix.gsub('+', '.') + property.name)
           end unless method_defined?("#{prefix.gsub('+', '_')}#{property.name}")
 
-          if property.type.respond_to? :properties
+          if property.type.respond_to?(:properties) && !(property.type < type)
             define_property_methods(property.type, "#{property.name}+")
           end
         end
