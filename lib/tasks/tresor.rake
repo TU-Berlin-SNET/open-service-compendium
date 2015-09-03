@@ -14,7 +14,14 @@ namespace :tresor do
 
     Service.delete_all
 
-    Dir.glob(File.join(Rails.root, 'lib', 'sdl-ng', 'examples', 'services', '**', '*.service.rb')).each do |file|
+    service_files = Dir.glob(File.join(Rails.root, 'lib', 'sdl-ng', 'examples', 'services', '**', '*.service.rb'))
+
+    Rails.logger.info("Loading #{service_files.count} services")
+
+    this_path = Pathname(Dir.pwd)
+
+    service_files.each_with_index do |file, index|
+      Rails.logger.info("Loading #{index + 1} / #{service_files.count}: #{Pathname(file).relative_path_from(this_path)}")
       begin
         s = Service.create(
             name: file.match(/(\w+).service.rb/)[1],
