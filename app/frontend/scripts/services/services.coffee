@@ -1,2 +1,2 @@
 angular.module('frontendApp').factory 'Services', ($resource) ->
-  $resource '/services/:serviceId', { serviceId: '@_id' }, {}
+  $resource '/services.json/:serviceId', { serviceId: '@_id' }, {}

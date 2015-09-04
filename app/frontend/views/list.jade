@@ -1,0 +1,14 @@
+.container(ng-controller="ListController")
+    .row
+        h1
+            | Filters&nbsp;
+            a.btn.btn-success(data-ng-click='addFilter()')
+                i.glyphicon.glyphicon-plus
+
+    .row
+        h1 Services
+
+    .row
+        div.col-lg-2.col-md-3.col-sm-4.col-xs-6(ng-repeat='service in services')
+            .service-list-item
+                span {{ service.service_name }}

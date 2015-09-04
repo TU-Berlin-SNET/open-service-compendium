@@ -1,7 +1,7 @@
 center
   .jumbotron
-    h1 Welcome to the OSC.
-    p.lead Please select the cloud service model you are looking for
-    a.btn.btn-lg.btn-primary(href='#/services/iaas/') IaaS
-    a.btn.btn-lg.btn-primary(href='#/services/saas/') SaaS
-    a.btn.btn-lg.btn-primary(href='#/services/paas/') PaaS
+      h1 Open Service Compendium
+      p.lead Get cloud service information
+      a.btn.btn-lg.btn-primary(ui-sref="services.list({category: 'vms'})") VMs
+      | &nbsp;
+      a.btn.btn-lg.btn-primary(ui-sref="services.list({category: 'storage'})") Storage
