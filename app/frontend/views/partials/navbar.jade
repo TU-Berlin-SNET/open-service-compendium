@@ -5,5 +5,7 @@ nav.navbar.navbar-default
 
         ul.nav.navbar-nav
             li
-                a(ui-sref="home") Home
+                a(ui-sref="services.list({filters: 'service_categories:vm'})") VMs
+            li
+                a(ui-sref="services.list({filters: 'service_categories:storage'})") Storage
 

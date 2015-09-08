@@ -56,6 +56,10 @@ footer.footer {
   }
 }
 
+.filter-row {
+  margin-bottom: 1em;
+}
+
 div.service-list-item {
   background-color: #FAFAFA;
   height: 100px;
@@ -65,9 +69,18 @@ div.service-list-item {
   width: 100%;
   margin-bottom: 1em;
   padding: 0.5em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #DDD;
+  }
 
   span {
     display: table-cell;
     vertical-align: middle;
+  }
+
+  &.filtered {
+    text-decoration: line-through;
   }
 }

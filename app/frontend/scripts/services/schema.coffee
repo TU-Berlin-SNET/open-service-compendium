@@ -1,2 +1,7 @@
 angular.module('frontendApp').factory 'Schema', ($resource) ->
-  $resource '/schema.json', {}, {}
+  $resource '/schema.json', {}, {
+    get: {
+      method: "get"
+      cache: true
+    }
+  }

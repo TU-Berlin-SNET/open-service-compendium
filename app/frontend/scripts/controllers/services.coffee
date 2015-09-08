@@ -1,4 +1,4 @@
-angular.module("frontendApp").controller "ServicesController", [ "$scope", "Services", "Schema", "$http", "$stateParams", "$state", ($scope, Services, Schema, $http, $stateParams, $state) ->
+angular.module("frontendApp").controller "ServicesController", [ "$scope", "Services", "$http", "$stateParams", "$state", "Schema", ($scope, Services, $http, $stateParams, $state, Schema) ->
   $scope.services = Services.query()
   $scope.schema = Schema.get()
 ]

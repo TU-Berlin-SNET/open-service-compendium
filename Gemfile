@@ -35,6 +35,7 @@ gem 'linkeddata'
 gem 'uuid'
 gem 'money'
 gem 'monetize'
+gem 'json-schema'
 
 # Rails config
 gem 'rails_config'

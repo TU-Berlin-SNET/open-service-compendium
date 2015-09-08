@@ -135,6 +135,8 @@ GEM
     json (1.8.2-java)
     json-ld (1.1.8)
       rdf (~> 1.1, >= 1.1.7)
+    json-schema (2.5.1)
+      addressable (~> 2.3.7)
     kramdown (1.7.0)
     link_header (0.0.8)
     linkeddata (1.1.11)
@@ -405,6 +407,7 @@ DEPENDENCIES
   factory_girl
   humanize
   jbuilder (~> 1.2)
+  json-schema
   kramdown
   linkeddata
   logstash-logger
