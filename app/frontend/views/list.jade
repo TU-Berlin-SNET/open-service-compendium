@@ -7,7 +7,7 @@
 
     .row(ng-repeat="filter in filters | orderBy : filter.property" ng-include="filter.filterView" ng-model="filter" class="filter-row")
 
-    div(ng-repeat='(filtered, services) in services | groupBy: isFiltered ' ng-if='filters')
+    div(ng-repeat='(filtered, services) in categorizedServices | groupBy: isFiltered ' ng-if='filters')
         .row
             h1(ng-if='filtered === "false"') Matching Services
             h1(ng-if='filtered === "true"') Incompatible Services

@@ -41,13 +41,16 @@ angular.module('frontendApp').factory 'Filters', ['$stateParams', '$state', 'lod
       $q((resolve, reject) ->
         Schema.get().$promise.then((schema, error) ->
           resolve(
-            _.map([].concat($stateParams.query), (filterString) ->
-              [property, filterValue] = filterString.split(":")
+            if $stateParams.query == undefined
+              []
+            else
+              _.map([].concat($stateParams.query), (filterString) ->
+                [property, filterValue] = filterString.split(":")
 
-              convertToFilter(schema, property, _.reject(filterValue.split(','), (v) -> v == ""))
+                convertToFilter(schema, property, _.reject(filterValue.split(','), (v) -> (v == "")))
+              )
           )
         )
       )
-    )
   }
 ]

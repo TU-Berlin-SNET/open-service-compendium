@@ -2,6 +2,7 @@ angular.module('frontendApp').factory 'Services', ['$resource', 'lodash', ($reso
   $resource '/services.json/:serviceId', { serviceId: '@_id' }, {
     'query' : {
       method: 'GET',
+      cache: true,
       isArray: true,
       interceptor : {
         response : (r) ->
