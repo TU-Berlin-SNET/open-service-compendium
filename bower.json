@@ -11,11 +11,15 @@
     "angular-touch": "~1.4",
     "angular-ui-router": "~0.2",
     "bootstrap-sass": "~3.3",
-    "checklist-model": "~0.5"
+    "checklist-model": "~0.5",
+    "ng-lodash": "~0.3.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4"
   },
   "appPath": "app/frontend",
-  "moduleName": "frontendApp"
+  "moduleName": "frontendApp",
+  "resolutions": {
+    "ng-lodash": "~0.3.0"
+  }
 }
