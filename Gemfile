@@ -38,7 +38,7 @@ gem 'monetize'
 gem 'json-schema'
 
 # Rails config
-gem 'rails_config'
+gem 'config'
 
 gem 'radix', github: 'asalme/radix', branch: 'master'
 
@@ -48,7 +48,7 @@ gem 'mongoid', '~> 4.0'
 gem 'mongoid-enum', github: 'thetron/mongoid-enum'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.2'
+  gem 'rspec-rails', '~> 3.3'
   gem 'rspec-collection_matchers'
 end
 

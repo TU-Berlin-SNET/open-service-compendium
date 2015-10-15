@@ -8,6 +8,9 @@ to_prepare = Proc.new do
     load file
   end
 
+  #Set default host
+  Rails.application.routes.default_url_options = {:host => 'http://www.open-service-compendium.org'}
+
   register_uri_mapper = lambda do
     require_dependency File.join(Rails.root, 'app', 'models', 'OSBURIMapper.rb')
 
@@ -55,13 +58,20 @@ to_prepare = Proc.new do
 
   compendium = SDL::Base::ServiceCompendium.new
 
-  sdl_example_dir = Rails.root.join('lib', 'sdl-ng', 'examples').to_s
+  sdl_example_dir = Rails.root.join('lib', 'sdl-ng', 'examples')
 
   # Load example SDL
-  compendium.load_vocabulary_from_path sdl_example_dir
+  compendium.load_vocabulary_from_path sdl_example_dir.join('vocabulary').to_s
 
   # Load broker vocabulary
   compendium.load_vocabulary_from_path Rails.root.join('lib', 'vocabulary').to_s
+
+  # Load RDF mappings
+  Dir[sdl_example_dir.join('rdf_mappers', '*.rb').to_s].each do |file|
+    load file
+
+    Rails.logger.info "Loaded RDF mapper from #{file}"
+  end
 
   Rails.logger.info "Loaded compendium."
 
