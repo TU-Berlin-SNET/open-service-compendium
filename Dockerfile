@@ -9,7 +9,7 @@ RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3 &&\
 ADD . /root/tresor-broker
 WORKDIR /root/tresor-broker
 
-# Install gems of broker and make docker-broker.sh executable
+# Install gems of broker
 RUN /bin/bash -c "source /usr/local/rvm/scripts/rvm && bundle install && rake assets:precompile"
 
 # Run the Broker

@@ -30,7 +30,7 @@ module OpenServiceBroker
     config.autoload_paths += %W(#{config.root}/lib/sdl-ng/lib)
 
     # assign remote logger
-    config.remote_logger = LogStashLogger.new(:uri => Settings.logstash_uri) if Settings.logstash_uri
+    # config.remote_logger = LogStashLogger.new(:uri => Settings.logstash_uri) if Settings.logstash_uri
 
     # Disable Sprockets as we'll use Grunt for asset compilation
     config.assets.enabled = false

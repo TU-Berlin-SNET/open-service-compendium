@@ -56,4 +56,8 @@ class SDL::Base::Type
   def get_sdl_value(property)
     send property.name
   end
+
+  def parent_object
+    _parent
+  end
 end
