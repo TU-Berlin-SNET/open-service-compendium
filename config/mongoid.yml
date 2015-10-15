@@ -21,4 +21,4 @@ production:
     default:
       database: broker
       hosts:
-        - localhost:27017
+        - mongodb:27017
