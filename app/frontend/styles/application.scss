@@ -28,6 +28,10 @@ body {
   }
 }
 
+nav.navbar {
+  margin-bottom: 0;
+}
+
 table {
   max-width: 100%;
 }
@@ -60,27 +64,77 @@ footer.footer {
   margin-bottom: 1em;
 }
 
-div.service-list-item {
-  background-color: #FAFAFA;
-  height: 100px;
-  border: 1px solid #DDD;
-  display: table;
-  text-align: center;
-  width: 100%;
-  margin-bottom: 1em;
-  padding: 0.5em;
-  cursor: pointer;
+.service-list {
+  .row {
+    margin-top: 1em;
+  }
 
-  &:hover {
-    background-color: #DDD;
+  .service-filters {
+    select {
+      font-size: 1.5em;
+    }
+
+    button {
+      width: 100%;
+      text-align: left;
+      @media (max-width: $screen-xs-max) {
+        text-align: center;
+      }
+    }
+
+    .filter-row .col-xs-10 {
+      padding: 0.5em 0 0 0;
+    }
   }
 
   span {
-    display: table-cell;
-    vertical-align: middle;
+    color: #FFF;
   }
 
-  &.filtered {
-    text-decoration: line-through;
+  .matching {
+    .service-item {
+      background-color: $btn-success-bg;
+
+      &:hover {
+        background-color: darken($btn-success-bg, 25%)
+      }
+    }
+  }
+
+  .nonmatching {
+    span {
+      text-decoration: line-through;
+    }
+
+    .service-item {
+      background-color: $btn-danger-bg;
+
+      &:hover {
+        background-color: darken($btn-danger-bg, 25%)
+      }
+    }
+  }
+
+  .service-item {
+    height: 100px;
+    border: 1px solid #DDD;
+    display: table;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1em;
+    padding: 0.5em;
+    cursor: pointer;
+
+    span {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+}
+
+.service-detail {
+  .category-header {
+    font-weight: bold;
+    margin-top: 1em;
   }
 }

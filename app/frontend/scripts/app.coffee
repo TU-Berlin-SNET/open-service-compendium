@@ -16,4 +16,5 @@ angular.module('frontendApp', [
     .state('services', url: '/services/', templateUrl: 'services.html', controller: 'ServicesController')
     .state('services.list', url: ':category?query', templateUrl: 'list.html', controller: 'ListController')
     .state('services.detail', url: ':id/:version/:name', templateUrl: 'detail.html', controller: 'DetailController')
+    .state('services.detailWithoutName', url: ':id/:version', templateUrl: 'detail.html', controller: 'DetailController')
     .state('services.compare', url: ':id/compare_with/:other_id', templateUrl: 'compare.html')

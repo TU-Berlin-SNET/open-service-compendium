@@ -16,4 +16,7 @@ angular.module("frontendApp").controller "ListController", [ "$scope", "Services
       not _.any($scope.filters, (filter) ->
         filter.predicate(service)
       )
+
+  $scope.addFilter = () ->
+    Filters.add($scope.propertyToAdd)
 ]

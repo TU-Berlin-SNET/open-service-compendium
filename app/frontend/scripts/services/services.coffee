@@ -11,8 +11,8 @@ angular.module('frontendApp').factory 'Services', ['$resource', 'lodash', ($reso
               pathParams = service.uri.split('/')
 
               service.uiRouterParams = {
-                id: pathParams[2],
-                version: pathParams[4],
+                id: pathParams[4],
+                version: pathParams[6],
                 name: service.service_name.replace(/[ ]/g, "-")
               }
             )

@@ -1,6 +1,16 @@
-.container
-    h1 {{ service.service_name }}
+.container.service-detail
+    .row.category-header(ng-if="service")
+        a(ui-sref="services.list({category: service.service_categories[0]})")
+            | Back to {{ service.service_categories[0] }} list
 
-    pre {{ service }}
+    .row.service-name
+        h1 {{ service.service_name }}
 
-    .row(ng-repeat="property in service_properties")
+    .div(ng-if="schema")
+        .property-category(ng-repeat="(name, category) in schema.propertyCategories")
+            div(ng-if="hasPropertyValues(category)")
+                .row.category-header {{ category.description }}
+
+                .row(ng-repeat="(name, property) in category.properties")
+                    div(ng-if="service[name] !== undefined")
+                        div(ng-include="templateName(name, property)")
