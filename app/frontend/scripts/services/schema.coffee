@@ -6,6 +6,10 @@ angular.module('frontendApp').factory 'Schema', ["$resource", "lodash", ($resour
       interceptor : {
         response : (r) ->
           _.tap(r, (response) ->
+            # Simulate provider properties as Service properties
+            _.merge(response.resource.definitions.Service.properties, response.resource.definitions.Provider.properties)
+            delete response.resource.definitions.Service.properties.provider
+
             serviceProperties = response.resource.definitions.Service.properties
             categories = _.uniq(_.map(serviceProperties, (prop) -> prop.category))
 
@@ -18,7 +22,7 @@ angular.module('frontendApp').factory 'Schema', ["$resource", "lodash", ($resour
 
               if propertyCategoryPairs.length > 0
                 [c, {
-                  description: "Category description of " + c,
+                  description: response.resource.translations.category[c],
                   properties: _.zipObject(propertyCategoryPairs)
                 }]
               else

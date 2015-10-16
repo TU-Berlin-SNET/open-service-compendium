@@ -8,6 +8,9 @@ angular.module('frontendApp').factory 'Services', ['$resource', 'lodash', ($reso
         response : (r) ->
           _.tap(r, (response) ->
             _.forEach(response.resource, (service) ->
+              # Simulate provider properties as Service properties
+              _.merge(service, service.provider)
+
               pathParams = service.uri.split('/')
 
               service.uiRouterParams = {

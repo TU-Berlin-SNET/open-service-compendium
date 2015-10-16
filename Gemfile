@@ -29,13 +29,7 @@ gem 'slim', github: 'slim-template/slim'
 
 # SDL-NG is included as a 'library' to support development class reloading
 # That means, that we need to require its gems for the broker
-gem 'nokogiri'
-gem 'verbs'
-gem 'linkeddata'
-gem 'uuid'
-gem 'money'
-gem 'monetize'
-gem 'json-schema'
+gemspec path: 'lib/sdl-ng'
 
 # Rails config
 gem 'config'
