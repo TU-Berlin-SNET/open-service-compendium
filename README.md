@@ -35,7 +35,7 @@ You then have to install required Ruby Gems, Node modules, and bower components:
 DB Setup
 --------
 
-The rake task `tresor:reset_and_load_examples` resets the DB and loads the examples from the bundled SDL-NG. To run OSC, `bundle exec rake tresor:reset_and_load_examples`. This creates the database if it does not exist. 
+The rake task `tresor:reset_and_load_examples` resets the DB and loads the examples from the bundled SDL-NG. To run OSC, `bundle exec rake tresor:reset_and_load_examples`. This creates the database and the collection if they do not exist as well. `bundle exec ruby bin/rails server` starts the server.
 
 More
 ====
