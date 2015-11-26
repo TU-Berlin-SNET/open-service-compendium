@@ -12,6 +12,8 @@ RUN apt-get update &&\
 
 # Copy bundler files
 COPY Gemfile* /root/osc/
+COPY lib/sdl-ng/sdl-ng.gemspec lib/sdl-ng/Gemfile* /root/osc/lib/sdl-ng/
+COPY lib/sdl-ng/lib/sdl/version.rb /root/osc/lib/sdl-ng/lib/sdl/version.rb
 
 # Work in osc
 WORKDIR /root/osc
