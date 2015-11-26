@@ -30,11 +30,12 @@ You then have to install required Ruby Gems, Node modules, and bower components:
 * `bundle install` installs all required Ruby Gems
 * `npm install` installs all required Node modules into `node_modules`
 * `bower install` installs all bower components (frontend assets) into `vendor/bower_components`
+* `grunt watch-dev` builds the frontend assets into `assets/scripts`
 
 DB Setup
 --------
 
-The rake task `tresor:reset_and_load_examples` resets the DB and loads the examples from the bundled SDL-NG.
+The rake task `tresor:reset_and_load_examples` resets the DB and loads the examples from the bundled SDL-NG. To run OSC, `bundle exec rake tresor:reset_and_load_examples`. This creates the database if it does not exist. 
 
 More
 ====
