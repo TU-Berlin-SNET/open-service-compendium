@@ -347,7 +347,7 @@ DEPENDENCIES
   active_model_serializers
   apipie-rails!
   awesome_print
-  bundler (~> 1.9)
+  bundler (~> 1.7)
   capistrano (~> 3.2.0)
   capistrano-bundler
   capistrano-rails
