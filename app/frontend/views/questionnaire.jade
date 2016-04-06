@@ -1,0 +1,13 @@
+center
+    .jumbotron(style='padding-top:0px', id='questionnnaire')
+        div(align='right')
+            md-button.md-icon-button.md-primary(aria-label='Settings', ng-click='showInfo()')
+                i.material-icons info
+        h2 How do you want to choose your cloud service?
+        //p.lead Get cloud service information
+        br
+        a.btn.btn-lg.btn-primary(ui-sref='services.info.questionnaire.dynamic', style='width: 150px') Dynamically
+        | &nbsp;
+        a.btn.btn-lg.btn-primary(ui-sref='services.info.questionnaire.static', style='width: 150px') Statically
+
+div(ui-view='')

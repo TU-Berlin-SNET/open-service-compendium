@@ -1,0 +1,36 @@
+h1 Statistics Page
+md-content(layout-fill, style='min-height:800px;')
+    
+    div(layout='row')
+        md-content(flex='', layout-padding='')
+            div(layout='column', layout-fill='', layout-align='top center')
+                div
+                    md-button.md-primary(ng-click='toggleLeft()', ng-hide='isOpenLeft()')
+                        | Toggle Left
+            
+            div(flex='')
+            div(google-chart='', chart='chartObject', style='height:600px; width:100%;')
+            div(style="margin-left:10%")
+                div(ng-show="enumChecked", ng-repeat="(info, value) in statisticsInfo") {{ info }}: {{ value }}
+                br
+                p(ng-show="!enumChecked") * Properties, which no service currenty provide, are directly deleted from the charts
+
+        div(layout="column", sticky)
+            md-sidenav.md-sidenav-left.md-whiteframe-z2(md-component-id='left', style='height=100%')
+                md-toolbar.md-theme-light
+                    h1.md-toolbar-tools Statistics Options
+
+                md-list(ng-cloak='')
+                    md-subheader Single Action Checkboxes
+                    md-radio-group(ng-model="detailed")
+                        md-radio-button(value="Properties Categories", ng-click="onChange('Properties Categories')") Properties Categories
+                        md-checkbox(value="Detailed Properties", ng-disabled="enumChecked", style="margin-left:10%", ng-model="detailed", ng-change="onChange('Detailed Properties')") Detailed Properties
+                        md-radio-button(value="Enumerations", ng-click="onChange('Enumerations')") Enumerations
+                    hr(ng-show="enumChecked")
+                    md-radio-group(ng-show="enumChecked")
+                        md-radio-button(ng-repeat='option in statisticsOptions', ng-value="option", ng-click="toggleEnum(option)") {{ option }}
+                    md-divider
+
+                md-content(ayout-padding='')
+                    md-button.md-primary(ng-click='closeLeft()')
+                        | Close Sidenav Left
