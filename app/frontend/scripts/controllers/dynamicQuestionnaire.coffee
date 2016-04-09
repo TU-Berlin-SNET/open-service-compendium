@@ -2,9 +2,8 @@ angular.module("frontendApp").controller "DynamicQuestionnaireController",
 ["$scope", "Services", "lodash", "$stateParams", "$log", "$mdDialog"
 ($scope, Services, _, $stateParams, $log, $mdDialog) ->
 
-    $scope.color = {}
-    $scope.color.red = 0.5
     $scope.propertyPercentage = 50
+    $scope.uniDistributionRatio = 0.5
 
     $scope.minYear = parseInt($scope.enumerations["Established In"].values[0])
     $scope.maxYear = parseInt(new Date().getFullYear())
@@ -12,33 +11,63 @@ angular.module("frontendApp").controller "DynamicQuestionnaireController",
 
     $scope.questionnaireProperties = []
 
-    # Change displayed properties according to the property percentage value
+    # Initialize the complete array of properties
     # 1. "Established in" property is execluded since it is one of the 3 questionnaire sliders
-    # 2. if property is enumeration and has <= 4 items (e.g. not property of exportable data formats)
-    #    then create items array for the property containing its enumerations values
+    # 2. if property is enumeration and has <= 4 items (e.g. not property of exportable data formats) then
+    #   2.1. calculate the uniform distribution ratio from statistics info
+    #   2.2. create items array for the property containing its enumerations values
+    # 3. otherwise create a property item with its value and selected flag
+    $scope.initPropertiesArray = () ->
+        $scope.propertiesArray = []
+        for key, property of $scope.rows.details.fine
+            if (property.c[0].v != "Established In")
+                if (($scope.rows.enumRows[property.c[0].v]) && ($scope.rows.enumRows[property.c[0].v].length <= 4))
+                    uniDistributionRatio = 1 - $scope.enumerations[property.c[0].v].statisticsInfo["Average Deviation from Uniform Distribution"]
+                    uniDistributionRatio = Math.round(uniDistributionRatio * 100) / 100
+                    items = []
+                    for value in $scope.rows.enumRows[property.c[0].v]
+                        items.push({
+                            name: value.c[0].v,
+                            value: Number(value.c[1].v).toFixed(2)
+                            selected: true
+                        })
+                    $scope.propertiesArray.push({
+                        "name": property.c[0].v
+                        "value": property.c[1].v
+                        "uniDistributionRatio": uniDistributionRatio
+                        "items": items
+                        "selected": false
+                    })
+                else
+                    $scope.propertiesArray.push({
+                        "name": property.c[0].v
+                        "value": property.c[1].v
+                        "selected": false
+                    })
+
+    # Call of the property array initialization method
+    $scope.initPropertiesArray()
+
+    # Change displayed properties according to the property percentage value
     $scope.$watch 'propertyPercentage', (newValue, oldValue) ->
         if ((newValue != oldValue) || (newValue))
-            $scope.questionnaireProperties = []
-            for key, property of $scope.rows.details.fine
-                if ((property.c[1].v >= newValue) && (property.c[0].v != "Established In"))
-                    if (($scope.rows.enumRows[property.c[0].v]) && ($scope.rows.enumRows[property.c[0].v].length <= 4))
-                        items = []
-                        for value in $scope.rows.enumRows[property.c[0].v]
-                            items.push({
-                                name: value.c[0].v,
-                                value: Number(value.c[1].v).toFixed(2)
-                                selected: true
-                            })
-                        $scope.questionnaireProperties.push({
-                            "value": property.c[0].v
-                            "selected": false
-                            "items": items
-                        })
-                    else
-                        $scope.questionnaireProperties.push({
-                            "value": property.c[0].v
-                            "selected": false
-                        })
+            $scope.getQuestionnaireProperties(newValue, $scope.uniDistributionRatio)
+
+    # Change displayed properties according to the uniform distribution ratio
+    $scope.$watch 'uniDistributionRatio', (newValue, oldValue) ->
+        if ((newValue != oldValue) || (newValue))
+            $scope.getQuestionnaireProperties($scope.propertyPercentage, newValue)
+
+    # Get filtered properties to be displayed in the questionnaire
+    # If the value of the property is >= the property percentage value
+    #   1. if property doesn't have uniDistributionRatio, then it can be added directly
+    #   2. if it does have, check if it's >= uniform distribution ratio of slider
+    $scope.getQuestionnaireProperties = (propertyPercentage, uniDistributionRatio) ->
+        $scope.questionnaireProperties = []
+        for property in $scope.propertiesArray
+            if (property.value >= propertyPercentage) 
+                if (!property.uniDistributionRatio) || ((property.uniDistributionRatio) && (property.uniDistributionRatio >= uniDistributionRatio))
+                    $scope.questionnaireProperties.push(property)
 
     # Check if service has all properties filtered by the dynamic questionnaire
     # 1. if there is a property selected:
@@ -54,7 +83,7 @@ angular.module("frontendApp").controller "DynamicQuestionnaireController",
                 if (property.selected)
                     propertySelected = true
                     # convert property string to service property format
-                    _property = property.value.replace(/ /g, "_")
+                    _property = property.name.replace(/ /g, "_")
                     # check if property is provided by service
                     if (service[_property.toLowerCase()] == undefined)
                         return false
@@ -96,8 +125,9 @@ angular.module("frontendApp").controller "DynamicQuestionnaireController",
                 parent: angular.element(document.body)
                 targetEvent: ev
                 locals: {
+                    uniDistributionRatio: property.uniDistributionRatio
                     propertyItems: property.items
-                    property: property.value
+                    property: property.name
                 }
                 clickOutsideToClose: true)
             .then ((propertyItems) ->
@@ -110,7 +140,9 @@ angular.module("frontendApp").controller "DynamicQuestionnaireController",
 ]
 
 # Controller for the dialog of the property values
-DialogController = ($scope, $mdDialog, propertyItems, property) ->
+DialogController = ($scope, $mdDialog, uniDistributionRatio, propertyItems, property) ->
+    $scope.uniDistributionRatio = uniDistributionRatio
+    $scope.property = property
     $scope.propertyItems = []
     for item in propertyItems
         $scope.propertyItems.push({
@@ -118,8 +150,6 @@ DialogController = ($scope, $mdDialog, propertyItems, property) ->
             value: item.value
             selected: true
         })
-    #$scope.propertyValues = propertyValues
-    $scope.property = property
 
     $scope.hide = () ->
         $mdDialog.hide()
