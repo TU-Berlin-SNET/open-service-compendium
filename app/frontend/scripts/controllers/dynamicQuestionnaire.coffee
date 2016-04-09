@@ -143,12 +143,20 @@ angular.module("frontendApp").controller "DynamicQuestionnaireController",
 DialogController = ($scope, $mdDialog, uniDistributionRatio, propertyItems, property) ->
     $scope.uniDistributionRatio = uniDistributionRatio
     $scope.property = property
+
+    # temporary variable to get selected value from propertyItems
+    # direct assignment causes changes in the main view before confirmation
+    items = []
+    for item in propertyItems
+        items.push(item.selected)
+
     $scope.propertyItems = []
     for item in propertyItems
+        i = propertyItems.indexOf(item)
         $scope.propertyItems.push({
             name: item.name
             value: item.value
-            selected: true
+            selected: items[i]
         })
 
     $scope.hide = () ->
