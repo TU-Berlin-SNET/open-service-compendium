@@ -36,5 +36,5 @@ div(layout="column", style="margin-bottom:50px;")
 
     div.service-list.row(layout="row", layout-wrap="", style="padding: 0 5%;")
         div.col-lg-2.col-md-3.col-sm-4.col-xs-6(ng-repeat="service in services | filter: matchToProperties")
-            div.service-item(style="background-color: #5cb85c;")
+            div.service-item(ui-sref='services.detail(service.uiRouterParams)', style="background-color: #5cb85c;")
                 span {{ service.service_name }}
