@@ -1,1 +1,5 @@
-h1 Test from static
+h3 Choose the cloud service model
+
+div(style="width: 100%;")
+    div.csModel-item(ng-repeat="CSModel in cloudServiceModels", ui-sref='services.info.staticDetails({ csmKey: CSModel.key })')
+        span {{ CSModel.value }}

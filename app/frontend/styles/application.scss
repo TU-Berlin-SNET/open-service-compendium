@@ -139,3 +139,30 @@ footer.footer {
   }
 }
 
+.csModel-item {
+  width: 15%;
+  height: 100px;
+  float: left;
+  text-align: center;
+  margin: 50px calc(20% / 6) 1em;
+  padding: 0.5em;
+  cursor: pointer;
+  display: table;
+  border: 1px solid #DDD;
+  color: #FFF;
+  background-color: rgb(63,81,181);
+}
+
+.csModel-item:first-child {
+  margin-left: 10%;
+}
+
+.csModel-item:last-child {
+  margin-right: 10%;
+}
+
+.csModel-item > span {
+  display: table-cell;
+  vertical-align: middle;
+}
+
