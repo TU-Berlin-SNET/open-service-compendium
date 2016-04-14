@@ -166,3 +166,29 @@ footer.footer {
   vertical-align: middle;
 }
 
+.category-item {
+  width: 20%;
+  height: 100px;
+  float: left;
+  text-align: center;
+  padding: 0.5em;
+  cursor: pointer;
+  display: table;
+  border: 1px solid #DDD;
+  color: #FFF;
+  background-color: rgb(63,81,181);
+}
+
+.category-item:first-child {
+  margin: 50px 5% 1em 25%
+}
+
+.category-item:last-child {
+  margin: 50px 25% 1em 5%
+}
+
+.category-item > span {
+  display: table-cell;
+  vertical-align: middle;
+}
+
