@@ -1,4 +1,4 @@
-center
+center(ng-if="!(static || dynamic)")
     .jumbotron(style='padding-top:0px', id='questionnnaire')
         div(align='right')
             md-button.md-icon-button.md-primary(aria-label='Settings', ng-click='showInfo()')
@@ -6,8 +6,14 @@ center
         h2 How do you want to choose your cloud service?
         //p.lead Get cloud service information
         br
-        a.btn.btn-lg.btn-primary(ui-sref='services.info.dynamic', style='width: 150px') Dynamically
+        a.btn.btn-lg.btn-primary(ng-click="showQuestionnaire('dynamic')", style='width: 150px') Dynamically
         | &nbsp;
-        a.btn.btn-lg.btn-primary(ui-sref='services.info.static', style='width: 150px') Statically
+        a.btn.btn-lg.btn-primary(ng-click="showQuestionnaire('static')", style='width: 150px') Statically
 
-div(ui-view='')
+div(ng-if="static || dynamic")
+    h2 Static Questionnaire
+
+    div(ng-hide="filterShown", ng-repeat="question in questions", ng-if="currentQuestion == question.key")
+        div(ng-include="'question.html'")
+
+    div(ng-include="'filterOverview.html'")

@@ -1,23 +1,6 @@
-div(ng-show="questions.csm.show", style="width: 100%;")
-    h3 Choose the cloud service model
-    div(style="width: 100%;")
-        div.csModel-item(ng-repeat="CSModel in cloudServiceModels", ng-click="showNext(CSModel.key)")
-            span {{ CSModel.value }}
-    div(style="width: 100%")
-        md-button(ng-click="showNext(null)", style="float:right;") Skip
+h2 Static Questionnaire
 
-div(ng-show="questions.category.show", style="width: 100%")
-    h3 Choose cloud service category
-    div(style="width:100%;")
-        div.category-item(ng-repeat="category in serviceCategories", ng-click="showNext(category.key)")
-            span {{ category.value }}
-    div(style="width:100%")
-        md-button(ng-click="showPrev(null)", style="float:left;") Back
-        md-button(ng-click="showNext(null)", style="float:right;") Skip
+div(ng-repeat="question in questions", ng-if="currentQuestion == question.key")
+    div(ng-include="'question.html'")
 
-div(ng-show="questions.rest.show", style="width: 100%;")
-    h3 Your cloud service
-    div(style="width: 100%;")
-        // TODO
-    div(style="width: 100%")
-        md-button(ng-click="showPrev(null)") Back
+div(ng-include="'filterOverview.html'")

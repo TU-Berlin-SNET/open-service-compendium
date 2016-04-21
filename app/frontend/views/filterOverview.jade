@@ -1,0 +1,20 @@
+div(ng-hide="filterShown", layout="row", layout-align="center center", layout-wrap)
+    md-button.md-raised.md-primary(ng-click="showFilter()") Show Services
+
+
+div(ng-show="filterShown")
+    md-button(ng-click="showPrev(questions.length)") &laquo; Back
+
+    table
+        tr
+            th Properties
+            th Values
+        tr(ng-repeat="property in filterProperties")
+            td {{ property.key }}
+
+    md-divider
+
+    div.service-list.row(layout="row", layout-wrap="", style="padding: 0 5%;")
+        div.col-lg-2.col-md-3.col-sm-4.col-xs-6(ng-repeat="service in filteredServices | filter: matchServices")
+            div.service-item(ui-sref='services.detail(service.uiRouterParams)', style="background-color: rgb(63,81,181);")
+                span {{ service.service_name }}

@@ -1,88 +1,61 @@
 angular.module("frontendApp").controller "StaticQuestionnaireController",
-["$scope"
-($scope) ->
+["$scope", "lodash"
+($scope, _) ->
 
-    $scope.cloudServiceModels = [
+    $scope.currentQuestion = "Service Categories"
+
+    $scope.questions = [
         {
-            key: "SaaS"
-            value: "Software as a Service",
-            description: ""
+            key: "Service Categories"
+            q: "Choose service category"
+            uniqueAnswer: true
+            values: {}
         },
         {
-            key: "PaaS"
-            value: "Platform as a Service",
-            description: ""
+            key: "Cloud Service Model"
+            q: "Choose the cloud service model"
+            uniqueAnswer: true
+            values: {}
         },
         {
-            key: "IaaS"
-            value: "Infrastructure as a Service",
-            description: ""
+            key: "Payment Options"
+            q: "Which payment option should the service provide?"
+            uniqueAnswer: false
+            values: {}
         },
         {
-            key: "HaaS"
-            value: "Hardware as a Service",
-            description: ""
+            key: "Can be used offline"
+            q: "Should the cloud service provide offline usage?"
+            uniqueAnswer: true
+            values: {}
+        },
+        {
+            key: "Free Trial"
+            q: "Should the cloud service provide free trial?"
+            uniqueAnswer: true
+            values: {}
+        },
+        {
+            key: "Storage Properties"
+            q: "What is the maximum storage capacity needed?"
+            uniqueAnswer: true
+            values: {}
         }
     ]
 
-    $scope.serviceCategories = [
-        {
-            key: "storage",
-            value: "Storage",
-            description: ""
-        },
-        {
-            key: "vm",
-            value: "Virtual Machine",
-            description: ""
-        }
-    ]
+    # Function call as init
+    $scope.getQuestionsValues($scope.questions)
 
-    $scope.currentquestion = "csm"
+    
+    # Navigate to the next question (or skip)
+    $scope.showNext = (index) ->
+        if (index < $scope.questions.length - 1)
+            $scope.currentQuestion = $scope.questions[index + 1].key
 
-    $scope.questions = {
-        "csm" : {
-            "show": true,
-            "chosenVal": null
-        },
-        "category": {
-            "show": false,
-            "chosenVal": null
-        },
-        "rest": {
-            "show": false,
-            "chosenVal": null
-        }
-    }
-
-    $scope.showNext = (chosenVal) ->
-        if ($scope.currentquestion == "csm")
-            $scope.questions.csm.show = false
-            $scope.questions.csm.chosenVal = chosenVal
-            $scope.questions.category.show = true
-            $scope.currentquestion = "category"
-            return
-        if ($scope.currentquestion = "category")
-            $scope.questions.category.show = false
-            $scope.questions.category.chosenVal = chosenVal
-            $scope.questions.rest.show = true
-            $scope.currentquestion = "rest"
-        return
-
-    $scope.showPrev = () ->
-        if ($scope.currentquestion == "category")
-            $scope.currentquestion = "csm"
-            $scope.questions.csm.show = true
-            $scope.questions.csm.chosenVal = null
-            $scope.questions.category.show = false
-            $scope.questions.category.chosenVal = null
-            return
-        if ($scope.currentquestion == "rest")
-            $scope.currentquestion = "category"
-            $scope.questions.category.show = true
-            $scope.questions.category.chosenVal = null
-            $scope.questions.rest.show = false
-            $scope.questions.rest.chosenVal = null
-        return
+    # Navigate back to the previous question
+    # Going back should deselect the value of current and previous question
+    $scope.showPrev = (index) ->
+        if (index > 0)
+            $scope.currentQuestion = $scope.questions[index - 1].key
             
 ]

@@ -187,23 +187,33 @@ angular.module("frontendApp").controller "InfoController",
             if ((category.checked == undefined) || (category.checked))
                 category.checked = false
 
+    # Set the enumeration object which contains all enumerations of properties
+    # Loop over all properties
+    # 1. If property object has "enum" or "items" property with "items.enum", then it's an enumeration
+    # 1.1. Add the values to the enumerations object
+    # 2. If property value is number, then an enumeration is to be later created
+    # 3. Add necessary properties to enumerations object
     setEnumerations = (properties) ->
         isEnum = false
         if (properties)
             for key, value of properties
                 servicesPerProperty[toTitleCase(key)] = 0
+                # 1
                 if ((value.enum) || ((value.items) && (value.items.enum)))
                     isEnum = true
+                    # 1.1
                     if (value.enum)
                         $scope.enumerations[toTitleCase(key)] = value.enum
                     else if ((value.items) && (value.items.enum))
                         $scope.enumerations[toTitleCase(key)] = value.items.enum
+                # 2
                 else if (value.type == "number")
                     isEnum = true
                     $scope.enumerations[toTitleCase(key)] = {}
                     $scope.enumerations[toTitleCase(key)].values = []
                 if (isEnum)
                     isEnum = false
+                    # 3
                     $scope.enumerations[toTitleCase(key)].numOfServices = 0
                     $scope.enumerations[toTitleCase(key)].description = value.description
                     $scope.enumerations[toTitleCase(key)].statisticsInfo = {}
