@@ -5,7 +5,7 @@ div(ng-hide="filterShown", layout="row", layout-align="center center", layout-wr
 div(ng-show="filterShown")
     md-button(ng-click="showPrev(questions.length)") &laquo; Back
 
-    table
+    table.filterTable
         tr
             th Properties
             th Values
@@ -13,15 +13,15 @@ div(ng-show="filterShown")
             td {{ property.key }}
             td(ng-if="property.uniqueAnswer")
                 md-radio-group(layout="row", ng-model="property.selectedValue")
-                    md-radio-button(ng-repeat="(key, value) in property.values", ng-value="value.description", 
-                        ng-click="addSelection(filterProperties, property, key)") {{ value.description }}
+                    md-radio-button(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", 
+                        ng-value="value.description", ng-click="addSelection(filterProperties, property, key)") {{ value.description }}
             td(ng-if="!property.uniqueAnswer", layout="row", layout-wrap)
-                md-checkbox(flex="20", ng-repeat="(key, value) in property.values", ng-model="value.selected") {{ value.description }}
+                md-checkbox(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", 
+                    ng-model="value.selected") {{ value.description }}
         tr(style="text-align: center;")
             td(colspan="2")
                 md-button.md-icon-button(ng-click="toggleDropdown()")
                     i.material-icons {{ dropdownIcon }}
-
 
     md-divider
 

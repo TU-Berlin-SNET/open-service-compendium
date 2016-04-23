@@ -12,44 +12,6 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.filterDroppeddown = false
     $scope.dropdownIcon = "keyboard_arrow_down"
     $scope.currentQuestion = ""
-    $scope.staticQuestions = [
-        {
-            key: "Service Categories"
-            q: "Choose service category"
-            uniqueAnswer: true
-            values: {}
-        },
-        {
-            key: "Cloud Service Model"
-            q: "Choose the cloud service model"
-            uniqueAnswer: true
-            values: {}
-        },
-        {
-            key: "Payment Options"
-            q: "Which payment option should the service provide?"
-            uniqueAnswer: false
-            values: {}
-        },
-        {
-            key: "Can be used offline"
-            q: "Should the cloud service provide offline usage?"
-            uniqueAnswer: true
-            values: {}
-        },
-        {
-            key: "Free Trial"
-            q: "Should the cloud service provide free trial?"
-            uniqueAnswer: true
-            values: {}
-        },
-        {
-            key: "Storage Properties"
-            q: "What is the maximum storage capacity needed?"
-            uniqueAnswer: true
-            values: {}
-        }
-    ]
 
     # Dialog of info button in the main questionnaire view
     $scope.showInfo = () ->
@@ -70,11 +32,71 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.showQuestionnaire = (qType) ->
         if (qType == "dynamic")
             $scope.dynamic = true
+            $scope.questions = $scope.getDynamicQuestions()
         else if (qType == "static")
             $scope.static = true
-            $scope.questions = $scope.staticQuestions
+            $scope.questions = $scope.getStaticQuestions()
         $scope.getQuestionsValues($scope.questions)
         $scope.currentQuestion = $scope.questions[0].key
+
+    # Initialize the list of static questions
+    $scope.getStaticQuestions = () ->
+        staticQuestions = [
+            {
+                key: "Service Categories"
+                q: "Choose service category"
+                uniqueAnswer: true
+                values: {}
+            },
+            {
+                key: "Cloud Service Model"
+                q: "Choose the cloud service model"
+                uniqueAnswer: true
+                values: {}
+            },
+            {
+                key: "Payment Options"
+                q: "Which payment option should the service provide?"
+                uniqueAnswer: false
+                values: {}
+            },
+            {
+                key: "Can be used offline"
+                q: "Should the cloud service provide offline usage?"
+                uniqueAnswer: true
+                values: {}
+            },
+            {
+                key: "Free Trial"
+                q: "Should the cloud service provide free trial?"
+                uniqueAnswer: true
+                values: {}
+            },
+            {
+                key: "Storage Properties"
+                q: "What is the maximum storage capacity needed?"
+                uniqueAnswer: true
+                values: {}
+            }
+        ]
+        return staticQuestions
+
+    $scope.getDynamicQuestions = () ->
+        dynamicQuestions = []
+        for key, property of $scope.enumerations
+            if (property.statisticsInfo["Average Deviation from Uniform Distribution"])
+                uniDistributionRatio = 1 - property.statisticsInfo["Average Deviation from Uniform Distribution"]
+                uniqueAnswer = $scope.checkIfUniqueValue(key)
+                dynamicQuestions.push({
+                    key: key
+                    q: property.description
+                    uniqueAnswer: uniqueAnswer
+                    uniDistributionRatio: uniDistributionRatio
+                    values: {}
+                })
+        dynamicQuestions.sort((q1, q2) -> q2.uniDistributionRatio - q1.uniDistributionRatio)
+        console.log (dynamicQuestions)
+        return dynamicQuestions
 
     # Get the values of each question
     # 1. If the question key (property) is an enumeration
