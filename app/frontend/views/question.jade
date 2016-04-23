@@ -3,7 +3,7 @@ h3 {{ question.q }}
 div(ng-if="question.uniqueAnswer")
     md-radio-group
         md-radio-button(ng-repeat="(key, value) in question.values", ng-value="value.description", 
-            ng-click="addSelection(question, key)") {{ value.description }}
+            ng-click="addSelection(questions, question, key)") {{ value.description }}
 
 div(ng-if="!question.uniqueAnswer")
     md-checkbox(ng-repeat="(key, value) in question.values", ng-model="value.selected") {{ value.description }}

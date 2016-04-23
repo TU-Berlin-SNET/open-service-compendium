@@ -8,6 +8,9 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.selectedValues = []
     $scope.questions = []
     $scope.filterProperties = []
+    $scope.shownProperties = []
+    $scope.filterDroppeddown = false
+    $scope.dropdownIcon = "keyboard_arrow_down"
     $scope.currentQuestion = ""
     $scope.staticQuestions = [
         {
@@ -60,13 +63,6 @@ angular.module("frontendApp").controller "QuestionnaireController",
             ariaLabel: "Alert Dialog Demo"
             ok: "Got it!"
         }).parent(angular.element(document.querySelector("#questionnnaire")))
-
-    # On top of the final filter should be the questions with selected vlaues
-    # Therefore the properties of the filter should be changed with the questions' changes
-    # When navigating to the filter view, the rest properties are to be added
-    $scope.$watch 'questions', (newValue, oldValue) ->
-        if ((newValue) && (newValue != oldValue))
-            $scope.filterProperties = newValue
 
     # When the type of questionnaire is shown
     # 1. Show this questionnaire
@@ -130,18 +126,19 @@ angular.module("frontendApp").controller "QuestionnaireController",
                     "Yes": {
                         "selected": false,
                         "description": "Yes"
-                    }, 
+                    },
                     "No": {
                         "selected": false,
                         "description": "No"
                     }
                 }
 
-    # For questions with unique selection option (radio button),
+    # For questions/filterProperties with unique selection option(radio button),
     # set selected property of the value to true
-    $scope.addSelection = (question, valueKey) ->
-        i = $scope.questions.indexOf(question)
-        $scope.questions[i].values[valueKey].selected = true
+    $scope.addSelection = (properties, property, valueKey) ->
+        i = properties.indexOf(property)
+        properties[i].values[valueKey].selected = true
+        $scope.getShownProperties()
 
     # Find matching services to selected values of questions
     # 1. if no value is selected (question skipped)
@@ -161,7 +158,6 @@ angular.module("frontendApp").controller "QuestionnaireController",
                     property = question.key.replace(/ /g, "_")
                     property = property.toLowerCase()
                     # check if property is provided by service
-                    console.log ("entered 0")
                     if (service[property] == undefined)
                         return false
                     else
@@ -204,12 +200,32 @@ angular.module("frontendApp").controller "QuestionnaireController",
             for key, value of $scope.questions[index - 1].values
                 value.selected = false
 
-    # Show filter with filtered cloud services
+    # Show filter with shown filter properties & filtered cloud services
     $scope.showFilter = () ->
         $scope.filterShown = true
-        $scope.completeFilterProperties()
+        $scope.getFilterProperties()
+        $scope.getShownProperties()
 
-    $scope.completeFilterProperties = () ->
+    # Initialize the properties with their values of the filter
+    # 1. Add all questions to the filter with their selected values
+    # 2. Loop over all enumeration properties
+    # 2.1. If enumeration is already a question, skip
+    # 2.2. Else, create new filter property with unselected values
+    $scope.getFilterProperties = () ->
+        $scope.filterProperties = []
+        for question in $scope.questions
+            selectedValue = ""
+            if (question.uniqueAnswer)
+                for key, value of question.values
+                    if (value.selected)
+                        selectedValue = value.description
+                        break
+            $scope.filterProperties.push({
+                "key": question.key
+                "uniqueAnswer": question.uniqueAnswer
+                "selectedValue": selectedValue
+                "values": question.values
+            })
         propertyExists = false
         for key, property of $scope.enumerations
             for question in $scope.questions
@@ -249,4 +265,54 @@ angular.module("frontendApp").controller "QuestionnaireController",
             return false
         return true
 
+    # Check if property should be shown or hidden
+    # If dropdown button is clicked, all properties should be shown
+    # Else, show it if it is in the array of properties to show
+    $scope.isInShownProperties = (property) ->
+        if ($scope.filterDroppeddown)
+            return true
+        for shownProperty in $scope.shownProperties
+            if (property.key == shownProperty)
+                return true
+        return false
+
+    # Check which properties should be shown or hidden
+    # In the filter, no more 6 properties should be shown,
+    # unless property has selected value(s), or dropdown icon pressed
+    # 1. If property has selected values, show it directly
+    # 2. Else check if property is a question, if yes, add it to temp. array
+    # 3. If there are less than 6 properties shown, add the original questions
+    $scope.getShownProperties = () ->
+        $scope.shownProperties = []
+        questionsAndUnselected = []
+        hasPropertySelected = false
+        for property in $scope.filterProperties
+            for key, value of property.values
+                if (value.selected)
+                    $scope.shownProperties.push(property.key)
+                    hasPropertySelected = true
+                    break
+            if (hasPropertySelected)
+                hasPropertySelected = false
+                continue
+            else
+                for question in $scope.questions
+                    if (property.key == question.key)
+                        questionsAndUnselected.push(property.key)
+                        break
+        for question in questionsAndUnselected
+            if ($scope.shownProperties.length < 6)
+                $scope.shownProperties.push(question)
+            else
+                break
+
+    # Toggle show/hide of filter properties
+    # 1. Toggle the show/hide boolean
+    # 2. Toggle the icon to be up/down
+    $scope.toggleDropdown = () ->
+        $scope.filterDroppeddown = !$scope.filterDroppeddown
+        if ($scope.dropdownIcon == "keyboard_arrow_down")
+            $scope.dropdownIcon = "keyboard_arrow_up"
+        else if ($scope.dropdownIcon == "keyboard_arrow_up")
+            $scope.dropdownIcon = "keyboard_arrow_down"
 ]
