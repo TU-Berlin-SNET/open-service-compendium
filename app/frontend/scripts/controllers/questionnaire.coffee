@@ -39,6 +39,35 @@ angular.module("frontendApp").controller "QuestionnaireController",
         $scope.getQuestionsValues($scope.questions)
         $scope.currentQuestion = $scope.questions[0].key
 
+    $scope.updateFilteredServices = () ->
+        $scope.filteredServices = []
+        for service in $scope.services
+            addService = true
+            for selectedValue in $scope.selectedValues
+                # convert property key string to service property format
+                property = (selectedValue.property.replace(/ /g, "_")).toLowerCase()
+                if (!service[property])
+                    addService = false
+                    break
+                else
+                    if (selectedValue.uniqueAnswer)
+                        if (!$scope.isServiceMatching(service, selectedValue.property, selectedValue.value))
+                            addService = false
+                            break
+                    else
+                        if (!$scope.isServiceMatching(service, selectedValue.property, selectedValue.value))
+                            addService = false
+                        else
+                            addService = true
+                            break
+            if (addService)
+                $scope.filteredServices.push(service)
+
+    $scope.initFilteredServices = () ->
+        $scope.filteredServices = []
+        for service in $scope.services
+            $scope.filteredServices.push(service)
+
     # Initialize the list of static questions
     $scope.getStaticQuestions = () ->
         staticQuestions = [
@@ -81,6 +110,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
         ]
         return staticQuestions
 
+    # Initialize the list of dynamic questions
     $scope.getDynamicQuestions = () ->
         dynamicQuestions = []
         for key, property of $scope.enumerations
@@ -155,54 +185,109 @@ angular.module("frontendApp").controller "QuestionnaireController",
                     }
                 }
 
-    # For questions/filterProperties with unique selection option(radio button),
-    # set selected property of the value to true
-    $scope.addSelection = (properties, property, valueKey) ->
-        i = properties.indexOf(property)
-        properties[i].values[valueKey].selected = true
-        $scope.getShownProperties()
-
-    # Find matching services to selected values of questions
-    # 1. if no value is selected (question skipped)
-    # 1.1. keep all services
-    # 2. if some value is selected
-    # 2.1. if the service doesn't provide the property, remove it
-    # 2.2. if property is "storage properties", check sub-property "max_storage_capacity"
-    # 2.2.1. if selection is infinity and service is not, remove it
-    # 2.2.2. if service value is infinity, it won't be deleted at any case
-    # 2.2.3. if service value is less than selected, remove it (parseInt values)
-    # 2.3. if service has the property, but with different value than selected, remove it
-    $scope.matchServices = (service) ->
-        for question in $scope.questions
-            for key, value of question.values
+    # When the selection of values for a question/filter property changes,
+    # 1. If this question/filter property has unique selection option
+    # 1.1. If exists, set previously selected value to false,
+    # 1.2. and remove it from the selectedValues array
+    # 1.3. Set selected property of the value to true
+    # 2. If the property can have multipe values (checkbox)
+    # 2.1. If the value is unchecked, remove it from the selectedValues array
+    # 3. If a value is selected in any case
+    # 3.1.  Add the newly selected value to the selectedValues array
+    # 4. Update the array of shown properties in the filter
+    $scope.updateSelection = (properties, property, valueKey) ->
+        selected = true
+        if (property.uniqueAnswer)
+            i = properties.indexOf(property)
+            for key, value of properties[i].values
                 if (value.selected)
-                    # convert question key string to service property format
-                    property = question.key.replace(/ /g, "_")
-                    property = property.toLowerCase()
-                    # check if property is provided by service
-                    if (service[property] == undefined)
+                    value.selected = false
+                    j = _.findIndex($scope.selectedValues, {
+                        property: property.key
+                        value: key
+                        uniqueAnswer: property.uniqueAnswer
+                    })
+                    $scope.selectedValues.splice(j, 1)
+            properties[i].values[valueKey].selected = true
+        else
+            if (!property.values[valueKey].selected)
+                selected = false
+                j = _.findIndex($scope.selectedValues, {
+                    property: property.key
+                    value: valueKey
+                    uniqueAnswer: property.uniqueAnswer
+                })
+                $scope.selectedValues.splice(j, 1)
+        if (selected)
+            $scope.selectedValues.push ({
+                property: property.key
+                value: valueKey
+                uniqueAnswer: property.uniqueAnswer
+            })
+        $scope.updateFilteredServices()
+        $scope.updateShownProperties()
+
+    # Check if service matches value of given property
+    # 1. if the property is not an enumeration
+    # 1.1. if property is "storage properties", check sub-property "max_storage_capacity"
+    # 1.1.1. if selection is infinity and service is not, remove it
+    # 1.1.2. if service value is infinity, it won't be deleted at any case
+    # 1.1.3. if service value is less than selected, remove it (parseInt values)
+    # 1.2. Else check for yes or no answers
+    # 1.2.1. "free trial" property is checked through sub-property "has_free_trial"
+    # 1.2.2. If yes, property should be provided with true value
+    # 1.2.3. If no, property should be either null, false, or not provided at all
+    # 2. If service is an enumeration property
+    # 2.1. if the service doesn't provide the property, remove it
+    # 2.1. if service has the property, but with different value than selected, remove it
+    $scope.isServiceMatching = (service, propertyKey, value) ->
+        # convert question key string to service property format
+        property = (propertyKey.replace(/ /g, "_")).toLowerCase()
+        if (!$scope.enumerations[propertyKey])
+            if (property == "storage_properties")
+                if (service[property] == undefined)
+                    return false
+                else
+                    serviceValue = service[property].max_storage_capacity
+                    if (serviceValue == undefined)
+                        return false
+                    else if ((value == "∞") && (String(serviceValue) != value))
                         return false
                     else
-                        if (property == "storage_properties")
-                            serviceValue = service[property].max_storage_capacity
-                            if (serviceValue == undefined)
+                        if (String(serviceValue) != "∞")
+                            serviceMaxStorage = (String(serviceValue).split(" "))
+                            iServiceMaxStorage = parseInt(serviceMaxStorage[0])
+                            if (serviceMaxStorage[1] == "TB")
+                                iServiceMaxStorage = iServiceMaxStorage * 1000
+                            selectedMaxStorage = value.split(" ")
+                            iSelectedMaxStorage = parseInt(selectedMaxStorage[0])
+                            if (selectedMaxStorage[1] == "TB")
+                                iSelectedMaxStorage = iSelectedMaxStorage * 1000
+                            if (iSelectedMaxStorage < iSelectedMaxStorage)
                                 return false
-                            else if ((key == "∞") && (String(serviceValue) != key))
-                                return false
-                            else
-                                if (String(serviceValue) != "∞")
-                                    serviceMaxStorage = (String(serviceValue).split(" "))
-                                    iServiceMaxStorage = parseInt(serviceMaxStorage[0])
-                                    if (serviceMaxStorage[1] == "TB")
-                                        iServiceMaxStorage = iServiceMaxStorage * 1000
-                                    selectedMaxStorage = key.split(" ")
-                                    iSelectedMaxStorage = parseInt(selectedMaxStorage[0])
-                                    if (selectedMaxStorage[1] == "TB")
-                                        iSelectedMaxStorage = iSelectedMaxStorage * 1000
-                                    if (iSelectedMaxStorage < iSelectedMaxStorage)
-                                        return false
-                        else if (String(service[property]) != key.toLowerCase())
+            else
+                if (value == "Yes")
+                    if (service[property])
+                        if ((property == "free_trial") && (service[property]["has_free_trial"]))
+                            return true
+                        else if ((property != "free_trial") && (service[property]))
+                            return true
+                    else
+                        return false
+                else # selected answer is "No"
+                    if (!service[property])
+                        return true
+                    else
+                        if ((property == "free_trial") && (service[property]["has_free_trial"]))
                             return false
+                        else if ((property != "free_trial") && (service[property]))
+                            return false
+        else
+            # check if property is provided by service
+            if (service[property] == undefined)
+                return false
+            else if (String(service[property]) != value.toLowerCase())
+                return false
         return true
 
     # Navigate to the next question (or skip)
@@ -226,7 +311,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.showFilter = () ->
         $scope.filterShown = true
         $scope.getFilterProperties()
-        $scope.getShownProperties()
+        $scope.updateShownProperties()
 
     # Initialize the properties with their values of the filter
     # 1. Add all questions to the filter with their selected values
@@ -304,7 +389,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
     # 1. If property has selected values, show it directly
     # 2. Else check if property is a question, if yes, add it to temp. array
     # 3. If there are less than 6 properties shown, add the original questions
-    $scope.getShownProperties = () ->
+    $scope.updateShownProperties = () ->
         $scope.shownProperties = []
         questionsAndUnselected = []
         hasPropertySelected = false
@@ -337,4 +422,5 @@ angular.module("frontendApp").controller "QuestionnaireController",
             $scope.dropdownIcon = "keyboard_arrow_up"
         else if ($scope.dropdownIcon == "keyboard_arrow_up")
             $scope.dropdownIcon = "keyboard_arrow_down"
+
 ]
