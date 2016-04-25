@@ -1,13 +1,14 @@
 h3 {{ question.q }}
 
 div(ng-if="question.uniqueAnswer")
-    md-radio-group
+    md-radio-group(ng-model="question.selectedValue")
         md-radio-button(ng-repeat="(key, value) in question.values", ng-value="value.description", 
             ng-click="updateSelection(questions, question, key)") {{ value.description }}
+    md-button(ng-click="clearSelection(question)") Clear
 
 div(ng-if="!question.uniqueAnswer")
     md-checkbox(ng-repeat="(key, value) in question.values", ng-model="value.selected",
-    	ng-change="updateSelection(questions, question, key)") {{ value.description }}
+        ng-change="updateSelection(questions, question, key)") {{ value.description }}
 
 div(style="width: 100%")  
     md-button(ng-hide="question.key == 'Service Categories'", 

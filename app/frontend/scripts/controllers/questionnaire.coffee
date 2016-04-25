@@ -7,6 +7,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.filteredServices = $scope.services
     $scope.selectedValues = []
     $scope.questions = []
+    $scope.dynamicQuestions = []
     $scope.filterProperties = []
     $scope.shownProperties = []
     $scope.filterDroppeddown = false
@@ -39,11 +40,18 @@ angular.module("frontendApp").controller "QuestionnaireController",
         $scope.getQuestionsValues($scope.questions)
         $scope.currentQuestion = $scope.questions[0].key
 
-    $scope.updateFilteredServices = () ->
-        $scope.filteredServices = []
+    # Update the array of filtered Serices
+    # Loop over all available services
+    # 1. If no values are selected for any property, services would be added directly
+    # 2. Else, check if service provide all properties that have selected values
+    # 3. If property provides unique answers, check the service value
+    # 4. Else, wait for the whole loop of selectedValues array to be done,
+    # 5. If one at least is equal to the service's value, add it
+    $scope.updateFilteredServices = (selectedValues) ->
+        filteredServices = []
         for service in $scope.services
             addService = true
-            for selectedValue in $scope.selectedValues
+            for selectedValue in selectedValues
                 # convert property key string to service property format
                 property = (selectedValue.property.replace(/ /g, "_")).toLowerCase()
                 if (!service[property])
@@ -51,22 +59,18 @@ angular.module("frontendApp").controller "QuestionnaireController",
                     break
                 else
                     if (selectedValue.uniqueAnswer)
-                        if (!$scope.isServiceMatching(service, selectedValue.property, selectedValue.value))
+                        if (!$scope.isServiceMatching(service, selectedValue))
                             addService = false
                             break
                     else
-                        if (!$scope.isServiceMatching(service, selectedValue.property, selectedValue.value))
+                        if (!$scope.isServiceMatching(service, selectedValue))
                             addService = false
                         else
                             addService = true
                             break
             if (addService)
-                $scope.filteredServices.push(service)
-
-    $scope.initFilteredServices = () ->
-        $scope.filteredServices = []
-        for service in $scope.services
-            $scope.filteredServices.push(service)
+                filteredServices.push(service)
+        return filteredServices
 
     # Initialize the list of static questions
     $scope.getStaticQuestions = () ->
@@ -75,36 +79,42 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 key: "Service Categories"
                 q: "Choose service category"
                 uniqueAnswer: true
+                selectedValue: ""
                 values: {}
             },
             {
                 key: "Cloud Service Model"
                 q: "Choose the cloud service model"
                 uniqueAnswer: true
+                selectedValue: ""
                 values: {}
             },
             {
                 key: "Payment Options"
                 q: "Which payment option should the service provide?"
                 uniqueAnswer: false
+                selectedValue: ""
                 values: {}
             },
             {
                 key: "Can be used offline"
                 q: "Should the cloud service provide offline usage?"
                 uniqueAnswer: true
+                selectedValue: ""
                 values: {}
             },
             {
                 key: "Free Trial"
                 q: "Should the cloud service provide free trial?"
                 uniqueAnswer: true
+                selectedValue: ""
                 values: {}
             },
             {
                 key: "Storage Properties"
                 q: "What is the maximum storage capacity needed?"
                 uniqueAnswer: true
+                selectedValue: ""
                 values: {}
             }
         ]
@@ -112,21 +122,28 @@ angular.module("frontendApp").controller "QuestionnaireController",
 
     # Initialize the list of dynamic questions
     $scope.getDynamicQuestions = () ->
-        dynamicQuestions = []
+        $scope.dynamicQuestions = []
         for key, property of $scope.enumerations
             if (property.statisticsInfo["Average Deviation from Uniform Distribution"])
-                uniDistributionRatio = 1 - property.statisticsInfo["Average Deviation from Uniform Distribution"]
                 uniqueAnswer = $scope.checkIfUniqueValue(key)
-                dynamicQuestions.push({
+                uniDistributionRatio = 1 - property.statisticsInfo["Average Deviation from Uniform Distribution"]
+                providenceRatio = property.numOfServices / $scope.services.length
+                rating = (uniDistributionRatio / 2) + (providenceRatio / 2)
+                $scope.dynamicQuestions.push({
                     key: key
                     q: property.description
+                    selectedValue: ""
                     uniqueAnswer: uniqueAnswer
+                    rating: rating
                     uniDistributionRatio: uniDistributionRatio
+                    providenceRatio: providenceRatio
                     values: {}
                 })
-        dynamicQuestions.sort((q1, q2) -> q2.uniDistributionRatio - q1.uniDistributionRatio)
-        console.log (dynamicQuestions)
-        return dynamicQuestions
+        # Sort the questions in descending order according to the rating value
+        $scope.dynamicQuestions.sort((q1, q2) ->
+            q2.rating - q1.rating)
+        console.log ($scope.dynamicQuestions)
+        return $scope.dynamicQuestions
 
     # Get the values of each question
     # 1. If the question key (property) is an enumeration
@@ -185,6 +202,48 @@ angular.module("frontendApp").controller "QuestionnaireController",
                     }
                 }
 
+    # Update the list of questions to be shown based on values' selection
+    # 1. If no values are selected, start with the initialized array of dynamic questions
+    # 2. Else, loop over the array of dynamic questions
+    # 2.1. Loop over the array of selected values
+    # 2.2. If the question is already in the selected values array, 
+    # 2.2.1. add this question to the list, because it's a previous question
+    # 2.3. If the question is not in the selected values array,
+    # 2.3.1. break the loop as this is the question to considered (save index)
+    # 3. Loop over dynamic questions starting from index, while index is < 7,
+    # and no service provide the property of the considered question
+    # 4. If all filtered services provide the question property, add question to the list
+    # 5. Else, dismiss it and check the next
+    $scope.updateDynamicQuestions = () ->
+        questions = []
+        questionSelected = false
+        qIndex = 0
+        if ($scope.selectedValues.length == 0)
+            return $scope.dynamicQuestions
+        for question in $scope.dynamicQuestions
+            for selectedValue in $scope.selectedValues
+                if (question.key == selectedValue.property)
+                    questionSelected = true
+                    break
+            if (questionSelected)
+                questions.push(question)
+                questionSelected = false
+                qIndex++
+            else
+                break
+        propertyProvided = false
+        while ((qIndex < $scope.dynamicQuestions.length - 1) && (qIndex < 7) && (!propertyProvided))
+            question = $scope.dynamicQuestions[qIndex]
+            # convert question key string to service property format
+            property = (question.key.replace(/ /g, "_")).toLowerCase()
+            for service in $scope.filteredServices
+                if (service[property])
+                    questions.push(question)
+                    propertyProvided = true
+                    break
+            qIndex++
+        return questions
+
     # When the selection of values for a question/filter property changes,
     # 1. If this question/filter property has unique selection option
     # 1.1. If exists, set previously selected value to false,
@@ -194,7 +253,10 @@ angular.module("frontendApp").controller "QuestionnaireController",
     # 2.1. If the value is unchecked, remove it from the selectedValues array
     # 3. If a value is selected in any case
     # 3.1.  Add the newly selected value to the selectedValues array
-    # 4. Update the array of shown properties in the filter
+    # 4. Update the number of filtered (rest) services for each value in each property
+    # 5. If dynmaic questionnaire, update the list of questions
+    # 6. Update the array of filtered services
+    # 7. Update the array of shown properties in the filter
     $scope.updateSelection = (properties, property, valueKey) ->
         selected = true
         if (property.uniqueAnswer)
@@ -224,7 +286,12 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 value: valueKey
                 uniqueAnswer: property.uniqueAnswer
             })
-        $scope.updateFilteredServices()
+        for property in properties
+            for key, value of property.values
+                value.restServices = $scope.getRestServices(property, key)
+        if ($scope.dynamic)
+            $scope.questions = $scope.updateDynamicQuestions()
+        $scope.filteredServices = $scope.updateFilteredServices($scope.selectedValues)
         $scope.updateShownProperties()
 
     # Check if service matches value of given property
@@ -239,8 +306,14 @@ angular.module("frontendApp").controller "QuestionnaireController",
     # 1.2.3. If no, property should be either null, false, or not provided at all
     # 2. If service is an enumeration property
     # 2.1. if the service doesn't provide the property, remove it
-    # 2.1. if service has the property, but with different value than selected, remove it
-    $scope.isServiceMatching = (service, propertyKey, value) ->
+    # 2.2. If service can have only unique value
+    # 2.2.1. check if service value is equal to the selected
+    # 2.3. If service can have multiple values
+    # 2.3.1. Loop over all service values of the property
+    # 2.3.2. Check if one value value at least is equal to the selected
+    $scope.isServiceMatching = (service, selectedValue) ->
+        propertyKey = selectedValue.property
+        value = selectedValue.value
         # convert question key string to service property format
         property = (propertyKey.replace(/ /g, "_")).toLowerCase()
         if (!$scope.enumerations[propertyKey])
@@ -286,26 +359,41 @@ angular.module("frontendApp").controller "QuestionnaireController",
             # check if property is provided by service
             if (service[property] == undefined)
                 return false
-            else if (String(service[property]) != value.toLowerCase())
-                return false
+            else
+                if (selectedValue.uniqueAnswer)
+                    if (String(service[property]) != value.toLowerCase())
+                        return false
+                else
+                    for key, item of service[property]
+                        if (item == value.toLowerCase())
+                            return true
+                    return false
+                    # if (typeof(service[property]) == "Array")
         return true
 
     # Navigate to the next question (or skip)
     $scope.showNext = (index) ->
-        if (index < $scope.questions.length - 1)
+        if ((index < $scope.questions.length - 1) && (index < 6))
             $scope.currentQuestion = $scope.questions[index + 1].key
 
     # Navigate back to the previous question
-    # Going back should deselect the value of current and previous question
+    # 1. Change the value of the current question
+    # 2. Going back should deselect the selected value of previous question
+    # 3. If questionnaire is static, deselct values of current question as well
+    # 4. If questionnaire is dynamic, remove current question from list
     $scope.showPrev = (index) ->
         if (index > 0)
             $scope.filterShown = false
             $scope.currentQuestion = $scope.questions[index - 1].key
-            if (index < $scope.questions.length)
-                for key, value of $scope.questions[index].values
-                    value.selected = false
             for key, value of $scope.questions[index - 1].values
                 value.selected = false
+            if (index < $scope.questions.length)
+                if ($scope.static)
+                    for key, value of $scope.questions[index].values
+                        value.selected = false
+                if ($scope.dynamic)
+                    $scope.questions.splice(index, 1)
+
 
     # Show filter with shown filter properties & filtered cloud services
     $scope.showFilter = () ->
@@ -322,16 +410,21 @@ angular.module("frontendApp").controller "QuestionnaireController",
         $scope.filterProperties = []
         for question in $scope.questions
             selectedValue = ""
-            if (question.uniqueAnswer)
-                for key, value of question.values
-                    if (value.selected)
-                        selectedValue = value.description
-                        break
+            values = {}
+            for key, value of question.values
+                if (value.selected)
+                    selectedValue = value.description
+                restServices = $scope.getRestServices(question, key)
+                values[key] = {
+                    selected: value.selected
+                    description: value.description
+                    restServices : restServices
+                }
             $scope.filterProperties.push({
                 "key": question.key
                 "uniqueAnswer": question.uniqueAnswer
                 "selectedValue": selectedValue
-                "values": question.values
+                "values": values
             })
         propertyExists = false
         for key, property of $scope.enumerations
@@ -352,11 +445,16 @@ angular.module("frontendApp").controller "QuestionnaireController",
                         else if (typeof value == "object")
                             for j, item of value.description
                                 values[j]["description"] = item
+                                values[j]["restServices"] = $scope.getRestServices({
+                                    key: key
+                                    uniqueAnswer: isUnique
+                                }, j)
                 $scope.filterProperties.push({
                     "key": key
                     "uniqueAnswer": isUnique
                     "values": values
                 })
+        console.log ($scope.filterProperties)
 
     # Check if a property value is unique, or a service can have multiple values
     # For the given key of the property, check the statistics
@@ -387,11 +485,13 @@ angular.module("frontendApp").controller "QuestionnaireController",
     # In the filter, no more 6 properties should be shown,
     # unless property has selected value(s), or dropdown icon pressed
     # 1. If property has selected values, show it directly
-    # 2. Else check if property is a question, if yes, add it to temp. array
+    # 2. Else if questionnaire is static
+    # 2.1. check if property is a question, if yes, add it to temp. array
+    # 3. If questionnaire is dynamic, check the dynamic questions array
     # 3. If there are less than 6 properties shown, add the original questions
     $scope.updateShownProperties = () ->
         $scope.shownProperties = []
-        questionsAndUnselected = []
+        unselected = []
         hasPropertySelected = false
         for property in $scope.filterProperties
             for key, value of property.values
@@ -403,15 +503,20 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 hasPropertySelected = false
                 continue
             else
-                for question in $scope.questions
-                    if (property.key == question.key)
-                        questionsAndUnselected.push(property.key)
-                        break
-        for question in questionsAndUnselected
-            if ($scope.shownProperties.length < 6)
-                $scope.shownProperties.push(question)
-            else
-                break
+                if ($scope.static)
+                    for question in $scope.questions
+                        if (property.key == question.key)
+                            unselected.push(property.key)
+                            break
+                else
+                    for question in $scope.dynamicQuestions
+                        if (property.key == question.key)
+                            unselected.push(property.key)
+                            break
+        i = 0
+        while ($scope.shownProperties.length < 6)
+            $scope.shownProperties.push(unselected[i])
+            i++
 
     # Toggle show/hide of filter properties
     # 1. Toggle the show/hide boolean
@@ -423,4 +528,32 @@ angular.module("frontendApp").controller "QuestionnaireController",
         else if ($scope.dropdownIcon == "keyboard_arrow_up")
             $scope.dropdownIcon = "keyboard_arrow_down"
 
+    # For questions/properties with unique answers/values,
+    # clear selection of correspoding radio buttons
+    $scope.clearSelection = (property) ->
+        for key, value of property.values
+            value.selected = false
+        property.selectedValue = ""
+        for selectedValue in $scope.selectedValues
+            if (selectedValue.property == property.key)
+                i = $scope.selectedValues.indexOf(selectedValue)
+                $scope.selectedValues.splice(i, 1)
+        $scope.filteredServices = $scope.updateFilteredServices($scope.selectedValues)
+        $scope.updateShownProperties()
+
+    # Get number of filtered (rest) services if a value is selected
+    # 1. Add the given value to a copy of the selected values list
+    # 2. Get the list of filtered services based on the new selected values list
+    # 3. Return the number of services in the list
+    $scope.getRestServices = (property, valueKey) ->
+        virtualSelectedValues = []
+        for value in $scope.selectedValues
+            virtualSelectedValues.push(value)
+        virtualSelectedValues.push({
+            property: property.key
+            value: valueKey
+            uniqueAnswer: property.uniqueAnswer
+        })
+        virtualFilteredServices = $scope.updateFilteredServices(virtualSelectedValues)
+        return virtualFilteredServices.length
 ]

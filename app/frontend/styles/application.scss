@@ -197,3 +197,20 @@ footer.footer {
   border: none;
   margin: 20px 5%;
 }
+
+.filterTable tr {
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+.filterTable tr:last-child {
+  border-bottom: none;
+}
+
+.filterTable tr th:first-child, .filterTable tr td:first-child {
+  width: 200px;
+  border-right: 1px solid rgba(0,0,0,0.12);
+}
+
+.filterTable tr th:last-child, .filterTable tr td:last-child {
+  padding-left: 5px;
+}

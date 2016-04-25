@@ -1,5 +1,5 @@
 div(ng-hide="filterShown", layout="row", layout-align="center center", layout-wrap)
-    md-button.md-raised.md-primary(ng-click="showFilter()") Show Services
+    md-button.md-raised.md-primary(ng-click="showFilter()") Show Services ({{ filteredServices.length }})
 
 
 div(ng-show="filterShown")
@@ -11,13 +11,16 @@ div(ng-show="filterShown")
             th Values
         tr(ng-repeat="property in filterProperties", ng-if="isInShownProperties(property)")
             td {{ property.key }}
-            td(ng-if="property.uniqueAnswer")
-                md-radio-group(layout="row", ng-model="property.selectedValue")
-                    md-radio-button(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", 
-                        ng-value="value.description", ng-click="updateSelection(filterProperties, property, key)") {{ value.description }}
+            td(ng-if="property.uniqueAnswer", layout="row")
+                md-radio-group(ng-model="property.selectedValue", layout="row", layout-wrap, flex="90")
+                    md-radio-button(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", ng-value="value.description",
+                        ng-click="updateSelection(filterProperties, property, key)") {{ value.description }} ({{ value.restServices }})
+                md-button.md-icon-button(ng-if="property.selectedValue != ''", ng-click="clearSelection(property)",
+                    flex="10", style="height: 18px; width: 18px;") 
+                    i.material-icons(style="font-size: 18px;") clear
             td(ng-if="!property.uniqueAnswer", layout="row", layout-wrap)
-                md-checkbox(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", 
-                    ng-model="value.selected", ng-change="updateSelection(filterProperties, property, key)") {{ value.description }}
+                md-checkbox(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", ng-model="value.selected",
+                    ng-change="updateSelection(filterProperties, property, key)") {{ value.description }} ({{ value.restServices }})
         tr(style="text-align: center;")
             td(colspan="2")
                 md-button.md-icon-button(ng-click="toggleDropdown()")
