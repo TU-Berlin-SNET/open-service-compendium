@@ -1,0 +1,150 @@
+% v1.7 - 2014-11-18
+% - bib fixes: now using biber instead of bibtex (thanks felix)
+% - compile now with pdflatex -> biber -> pdflatex
+% v1.6 - 2013-05-13
+% - bibliography headers fixed - thanx lorenz lehmann
+% - high quality titlepage - thanx thomas graf
+% - removed separation of online and offline references -> style 1.4a
+% v1.5 - 2013-01-16
+
+\documentclass[twoside,11pt,titlepage,a4paper,english,bibliography=totocnumbered,listof=numbered]{scrbook}
+
+% Template Style
+\include{style}
+%\bibliography{main}
+\addbibresource{main.bib}
+
+% custom hyphenation					% add words to this list to prevent hyphenation
+\hyphenation{
+ASCII
+TCP
+}
+
+%make readable references
+\usepackage[pdftex,pdfpagelabels=true]{hyperref}
+\hypersetup{%
+	pdftitle={Thesis Title},
+	pdfauthor={Thesis Author},
+	pdfkeywords={key1, key2, key3},
+	pdfsubject={Thesis Subject}
+}
+
+\begin{document}
+
+%--------------------------------------------------------------
+\frontmatter
+
+%\begin{titlepage}
+%\AddToShipoutPicture*{
+%\put(0,0){
+%\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio=false]{images/titlepage.pdf}}}
+%\strut
+%\end{titlepage}
+%\thispagestyle{empty}
+
+%titlepage
+\begin{titlepage}
+	\AddToShipoutPicture*{
+		\put(0,0){
+			\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio=false]{images/titlepage.pdf}
+		}
+	}
+	\strut
+	\hfill
+	\begin{center}
+	\vspace{1cm}
+		\Huge
+		\begin{spacing}{.9}
+			\textcolor{DarkRed}{\textbf{Simple Cloud Service Selection in the Open Service Compendium Based on Dynamic Questionnaires and Property Statistics}}\\
+		\end{spacing}
+		\vspace{0.8cm}
+		\large
+		by\\
+		\vspace{0.8cm} 
+		\textbf{Luna Alrawas}\\
+		\vspace{0.8cm} 
+		\textbf{Matriculation Number 358830}\\
+		\vspace{1.8cm} 
+	 	A thesis submitted to\\
+		\vspace{0.5cm}
+		Technische Universität Berlin\\
+		School IV - Electrical Engineering and Computer Science\\
+		Department of Computer Science\\
+		Service-centric Networking\\
+		\vspace{0.5cm}
+		Bachelor Thesis\\
+		\vspace{2.0cm}
+		\today\\
+		\vspace{1.8cm}
+		\large
+		Supervised by:\\
+		Prof. Dr. Axel Küpper\\
+		\vspace{0.8cm}
+		Assistant supervisor:\\
+		Mathias Slawik, Begüm Ilke Zilci
+		\end{center}
+         		%\includegraphics[scale=1.0]{images/watermark.png}
+\end{titlepage}
+\thispagestyle{empty}
+
+\cleardoublepage
+
+\newpage
+\section*{\thispagestyle{empty}Eidestattliche Erklärung / Statutory Declaration}
+Hiermit versichere ich, dass ich diese Arbeit selbst\-ständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe. \\
+
+\noindent I hereby declare that I have created this work completely on my own and used no other sources or tools than the ones listed.
+
+\vspace{30 mm}
+\begin{flushright}
+
+\rule{90mm}{1pt}
+
+Berlin, \today \hspace{15 mm} Luna Alrawas
+\end{flushright}
+\clearpage
+
+\cleardoublepage{}
+
+\newpage
+%\input{acknowledgments}				% "I would like to thank my teddybear..." and such stuff...
+
+\input{00_abstract}
+\input{00_zusammenfassung}
+\thispagestyle{empty}
+
+\tableofcontents{\thispagestyle{empty}}
+
+%--------------------------------------------------------------
+\mainmatter
+
+%\part{}						% optional: use parts to structure your thesis
+\input{01_introduction}
+\input{02_related_work}
+\input{03_concept_and_design}
+\input{04_implementation}
+\input{05_evaluation}
+\input{06_conclusion}
+
+%--------------------------------------------------------------
+\backmatter
+
+\listoftables
+\listoffigures
+
+\setwidesite{}						% Set page to be wider for bibliography
+
+\label{cha:bibliography}
+\markboth{Bibliography}{Bibliography}
+\addcontentsline{toc}{chapter}{Bibliography}
+\printbibliography
+%\printbibliography[heading=offline,filter=offline]
+%\printbibliography[heading=online,filter=online]
+
+\begin{appendices}
+
+\input{a01_listings}
+
+\end{appendices}
+
+\end{document}

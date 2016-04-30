@@ -1,0 +1,298 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.5 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist{nty}{nty}
+    \entry{hofer_cloud_2011}{article}{}
+      \name{author}{2}{}{%
+        {{hash=0193ef2ae0d60cc0a23e89ed46c5a154}{Höfer}{H\bibinitperiod}{C.\bibnamedelimi N.}{C\bibinitperiod\bibinitdelim N\bibinitperiod}{}{}{}{}}%
+        {{hash=a26d0530ce36f55d9de8e820356becb1}{Karagiannis}{K\bibinitperiod}{G.}{G\bibinitperiod}{}{}{}{}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{3e89853cb0b430ae91d56d83b26b5d29}
+      \strng{fullhash}{3e89853cb0b430ae91d56d83b26b5d29}
+      \field{sortinit}{H}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Cloud computing is a highly discussed topic in the technical and economic world, and many of the big players of the software industry have entered the development of cloud services. Several companies what to explore the possibilities and benefits of incorporating such cloud computing services in their business, as well as the possibilities to offer own cloud services. However, with the amount of cloud computing services increasing quickly, the need for a taxonomy framework rises. This paper examines the available cloud computing services and identifies and explains their main characteristics. Next, this paper organizes these characteristics and proposes a tree-structured taxonomy. This taxonomy allows quick classifications of the different cloud computing services and makes it easier to compare them. Based on existing taxonomies, this taxonomy provides more detailed characteristics and hierarchies. Additionally, the taxonomy offers a common terminology and baseline information for easy communication. Finally, the taxonomy is explained and verified using existing cloud services as examples.}
+      \field{issn}{1867-4828, 1869-0238}
+      \field{journaltitle}{Journal of Internet Services and Applications}
+      \field{month}{06}
+      \field{number}{2}
+      \field{shorttitle}{Cloud computing services}
+      \field{title}{Cloud computing services: taxonomy and comparison}
+      \field{urlday}{29}
+      \field{urlmonth}{04}
+      \field{urlyear}{2016}
+      \field{volume}{2}
+      \field{year}{2011}
+      \field{pages}{81\bibrangedash 94}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1007/s13174-011-0027-x
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/B8GGR5Q2/Höfer and Karagiannis - 2011 - Cloud computing services taxonomy and comparison.pdf:application/pdf;Snapshot:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/A7D9DT7J/s13174-011-0027-x.html:text/html
+      \endverb
+      \verb{url}
+      \verb http://link.springer.com/article/10.1007/s13174-011-0027-x
+      \endverb
+    \endentry
+    \entry{_ibm_2016}{misc}{}
+      \field{sortinit}{I}
+      \field{sortinithash}{25e99d37ba90f7c4fb20baf4e310faf3}
+      \field{labeltitlesource}{title}
+      \field{abstract}{What is cloud computing? The delivery of on-demand computing resources over the Internet on a pay-for-use basis.}
+      \field{month}{01}
+      \field{title}{{IBM} - {What} is cloud computing?}
+      \field{urlday}{29}
+      \field{urlmonth}{04}
+      \field{urlyear}{2016}
+      \field{year}{2016}
+      \verb{file}
+      \verb Snapshot:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/N9KBZXUQ/what-is-cloud-computing.html:text/html
+      \endverb
+      \verb{url}
+      \verb https://www.ibm.com/cloud-computing/what-is-cloud-computing
+      \endverb
+    \endentry
+    \entry{lewis_basics_2010}{article}{}
+      \name{author}{1}{}{%
+        {{hash=05e1443845ae61ddc5d27b0835d2fbca}{Lewis}{L\bibinitperiod}{Grace}{G\bibinitperiod}{}{}{}{}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{05e1443845ae61ddc5d27b0835d2fbca}
+      \strng{fullhash}{05e1443845ae61ddc5d27b0835d2fbca}
+      \field{sortinit}{L}
+      \field{sortinithash}{872351f18d0f736066eda0bf18bfa4f7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{09}
+      \field{title}{Basics {About} {Cloud} {Computing}}
+      \field{year}{2010}
+      \verb{file}
+      \verb basics about cloud computing.pdf:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/DI5EFNSH/basics about cloud computing.pdf:application/pdf
+      \endverb
+      \verb{url}
+      \verb http://www.sei.cmu.edu/library/assets/whitepapers/cloudcomputingbasics.pdf
+      \endverb
+    \endentry
+    \entry{mell_nist_2011}{report}{}
+      \name{author}{2}{}{%
+        {{hash=eac098e5805fbc204d757a7083c69ac6}{Mell}{M\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
+        {{hash=f32f3f75de51838401f618755c8a6620}{Grance}{G\bibinitperiod}{Timothy}{T\bibinitperiod}{}{}{}{}}%
+      }
+      \list{institution}{2}{%
+        {National Institute of Standards}%
+        {Technology}%
+      }
+      \list{location}{1}{%
+        {Gaithersburg, MD, United States}%
+      }
+      \strng{namehash}{d1f558bbc290d0967925307c14bc2d83}
+      \strng{fullhash}{d1f558bbc290d0967925307c14bc2d83}
+      \field{sortinit}{M}
+      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Cloud computing is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (e.g., networks, servers, storage, applications, and services) that can be rapidly provisioned and released with minimal management effort or service provider interaction. This cloud model is composed of five essential characteristics, three service models, and four deployment models.}
+      \field{month}{09}
+      \field{number}{800–145}
+      \field{title}{The {NIST} {Definition} of {Cloud} {Computing}}
+      \field{type}{techreport}
+      \field{year}{2011}
+      \verb{url}
+      \verb http://faculty.winthrop.edu/domanm/csci411/Handouts/NIST.pdf
+      \endverb
+    \endentry
+    \entry{qian_cloud_2009}{incollection}{}
+      \name{author}{4}{}{%
+        {{hash=72b8110741fb0282b6330c5cb13dc9f0}{Qian}{Q\bibinitperiod}{Ling}{L\bibinitperiod}{}{}{}{}}%
+        {{hash=e3cffa49a6f632474e24bd12af432cb3}{Luo}{L\bibinitperiod}{Zhiguo}{Z\bibinitperiod}{}{}{}{}}%
+        {{hash=9e5ecda47260e54fc07e402ec08d412b}{Du}{D\bibinitperiod}{Yujian}{Y\bibinitperiod}{}{}{}{}}%
+        {{hash=44310453ccaadc6ad3fb7986304d2268}{Guo}{G\bibinitperiod}{Leitao}{L\bibinitperiod}{}{}{}{}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=a8e87cae10c25893ac28691a73fe340e}{Jaatun}{J\bibinitperiod}{Martin\bibnamedelima Gilje}{M\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+        {{hash=6128b0977ac21c043fda87cb3411bf94}{Zhao}{Z\bibinitperiod}{Gansen}{G\bibinitperiod}{}{}{}{}}%
+        {{hash=24e263eb2f7a0987b3a504c49c760130}{Rong}{R\bibinitperiod}{Chunming}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{publisher}{1}{%
+        {Springer Berlin Heidelberg}%
+      }
+      \strng{namehash}{e032a10dca0940ddf340881e53bdc5f0}
+      \strng{fullhash}{71b08aafb833afc198d2861f07bc58f7}
+      \field{sortinit}{Q}
+      \field{sortinithash}{15867262911a166ca2270ec58a0e3fe9}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{In order to support the maximum number of user and elastic service with the minimum resource, the Internet service provider invented the cloud computing. within a few years, emerging cloud computing has became the hottest technology. From the publication of core papers by Google since 2003 to the commercialization of Amazon EC2 in 2006, and to the service offering of AT\&T Synaptic Hosting, the cloud computing has been evolved from internal IT system to public service, from cost-saving tools to revenue generator, and from ISP to telecom. This paper introduces the concept, history, pros and cons of cloud computing as well as the value chain and standardization effort.}
+      \field{booktitle}{Cloud {Computing}}
+      \field{isbn}{978-3-642-10664-4 978-3-642-10665-1}
+      \field{month}{12}
+      \field{note}{DOI: 10.1007/978-3-642-10665-1\_63}
+      \field{number}{5931}
+      \field{series}{Lecture {Notes} in {Computer} {Science}}
+      \field{shorttitle}{Cloud {Computing}}
+      \field{title}{Cloud {Computing}: {An} {Overview}}
+      \field{urlday}{29}
+      \field{urlmonth}{04}
+      \field{urlyear}{2016}
+      \field{year}{2009}
+      \field{pages}{626\bibrangedash 631}
+      \range{pages}{6}
+      \verb{file}
+      \verb Snapshot:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/T7RBCJ4C/10.html:text/html
+      \endverb
+      \verb{url}
+      \verb http://link.springer.com/chapter/10.1007/978-3-642-10665-1%5C_63
+      \endverb
+      \keyw{cloud computing,Cloud Storage,Computer Communication Networks,Computer System Implementation,Computer Systems Organization and Communication Networks,Performance and Reliability,Software Engineering/Programming and Operating Systems,System Performance and Evaluation,Virtualization}
+    \endentry
+    \entry{spillner_versatile_2013}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=ead52c8bfc835b4b8ab2d9e4d1a4eba4}{Spillner}{S\bibinitperiod}{Josef}{J\bibinitperiod}{}{}{}{}}%
+        {{hash=e9356608ca3b129934d5552d1b57f3fd}{Schill}{S\bibinitperiod}{Alexander}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{location}{1}{%
+        {Germany}%
+      }
+      \strng{namehash}{654b7daf85c86535b1e3b240e61c2829}
+      \strng{fullhash}{654b7daf85c86535b1e3b240e61c2829}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Networked humans and autonomous systems rely increasingly on service-oriented architectures. Conventional systems often focus on digitally delivered web services or on business services with varying degrees of formal- isation. According to service integration principles, the service registry as the pivotal point between providers and consumers determines the types of services which can be found and delivered. With the growing impor- tance of cloud computing topics in research and industry, more generic service models, description languages and registry architectures are proposed to extend the breadth towards truly reusable Everything-as-a-Service (XaaS) registration entries. Despite the proposals, there is a shortage of capable and extensible XaaS registries. In this paper, we present such a system and share our experience in using it for service-related experiments.}
+      \field{booktitle}{Proceedings of the 3rd {International} {Conference} on {Cloud} {Computing} and {Services} {Science}}
+      \field{isbn}{978-989-8565-52-5}
+      \field{title}{A {Versatile} and {Scalable} {Everything}-as-a-{Service} {Registery} and {Discovery}.}
+      \field{year}{2013}
+      \field{pages}{175\bibrangedash 183}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.5220/0004373301750183
+      \endverb
+      \verb{file}
+      \verb xaasregistry.pdf:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/KFX487CR/xaasregistry.pdf:application/pdf
+      \endverb
+      \verb{url}
+      \verb http://www.rn.inf.tu-dresden.de/uploads/Publikationen/xaasregistry.pdf
+      \endverb
+    \endentry
+    \entry{stanik_hardware_2012}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=cc64e7c598d6e648ae684250c81a1099}{Stanik}{S\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=58c4b9da6700d99276a627c552a7872b}{Hovestadt}{H\bibinitperiod}{M.}{M\bibinitperiod}{}{}{}{}}%
+        {{hash=ea872e03f33471ec146b15f51608a513}{Kao}{K\bibinitperiod}{O.}{O\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{9e87b5533a69992fb58db188c9185ff7}
+      \strng{fullhash}{9e87b5533a69992fb58db188c9185ff7}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Cloud computing has already been adopted in a broad range of application domains. However, domains like the distributed development of embedded systems are still unable to benefit from the advancements of cloud computing. Besides general security concerns, a common obstacle often is the incompatibility between such applications and the cloud. In particular, if applications need direct access to hardware elements, cloud computing cannot be used. In this paper we describe an approach of a novel cloud layer called Hardware as a Service (HaaS), which allows for usage distinct hardware components through the Internet analogously to the cloud services. HaaS focuses the transparent integration of remote hardware that is distributed over multiple geographical locations into an operating system. Furthermore, HaaS will not only enable interconnection of physical systems, but also virtual hardware emulation. Therefore, we consider in this paper only the use of emulated hardware and the interconnection with hardware models. To demonstrate the tremendous improvement by a Haas cloud, we explain the applicability in a distributed development process by an anti blocking system and an adaptive cruise control system in the automotive industry.}
+      \field{booktitle}{2012 {IEEE} 4th {International} {Conference} on {Cloud} {Computing} {Technology} and {Science} ({CloudCom})}
+      \field{month}{12}
+      \field{shorttitle}{Hardware as a {Service} ({HaaS})}
+      \field{title}{Hardware as a {Service} ({HaaS}): {Physical} and virtual hardware on demand}
+      \field{year}{2012}
+      \field{pages}{149\bibrangedash 154}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/CloudCom.2012.6427579
+      \endverb
+      \verb{file}
+      \verb IEEE Xplore Abstract Record:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/CIU73IDQ/login.html:text/html
+      \endverb
+      \keyw{adaptive control,adaptive cruise control system,antiblocking system,automotive components,Automotive engineering,automotive industry,cloud computing,cloud layer,cloud services,Companies,direct hardware element access,distinct hardware component usage,distributed embedded system development,HaaS,Hardware,hardware as a service,Internet,operating system,operating systems (computers),physical hardware,physical system interconnection,remote hardware integration,security concerns,Testing,velocity control,virtual hardware emulation}
+    \endentry
+    \entry{what_is_haas}{misc}{}
+      \field{sortinit}{W}
+      \field{sortinithash}{99e3ba1b3f78bb6f073e7fa7ac11636b}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Hardware as a Service HaaS Definition - Hardware as a Service (HaaS) refers to managed services or grid computing, where computing power is leased from a...}
+      \field{journaltitle}{Techopedia.com}
+      \field{shorttitle}{What is {Hardware} as a {Service} ({HaaS})?}
+      \field{title}{What is {Hardware} as a {Service} ({HaaS})? - {Definition} from {Techopedia}}
+      \field{urlday}{30}
+      \field{urlmonth}{04}
+      \field{urlyear}{2016}
+      \verb{file}
+      \verb Snapshot:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/3V2M9D8D/hardware-as-a-service-haas.html:text/html
+      \endverb
+      \verb{url}
+      \verb https://www.techopedia.com/definition/13965/hardware-as-a-service-haas
+      \endverb
+    \endentry
+    \entry{zhang_cloud_2010}{article}{}
+      \name{author}{3}{}{%
+        {{hash=16a6bb056f6786baa492ae9c2e59ac22}{Zhang}{Z\bibinitperiod}{Qi}{Q\bibinitperiod}{}{}{}{}}%
+        {{hash=a8921b800076b49fb367230f89bc20d2}{Cheng}{C\bibinitperiod}{Lu}{L\bibinitperiod}{}{}{}{}}%
+        {{hash=d3d1b736ac1075a3461208441558f16d}{Boutaba}{B\bibinitperiod}{Raouf}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{3af221a79faa04ad1d50ce8a9dd558d1}
+      \strng{fullhash}{3af221a79faa04ad1d50ce8a9dd558d1}
+      \field{sortinit}{Z}
+      \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Cloud computing has recently emerged as a new paradigm for hosting and delivering services over the Internet. Cloud computing is attractive to business owners as it eliminates the requirement for users to plan ahead for provisioning, and allows enterprises to start from the small and increase resources only when there is a rise in service demand. However, despite the fact that cloud computing offers huge opportunities to the IT industry, the development of cloud computing technology is currently at its infancy, with many issues still to be addressed. In this paper, we present a survey of cloud computing, highlighting its key concepts, architectural principles, state-of-the-art implementation as well as research challenges. The aim of this paper is to provide a better understanding of the design challenges of cloud computing and identify important research directions in this increasingly important area.}
+      \field{issn}{1867-4828, 1869-0238}
+      \field{journaltitle}{Journal of Internet Services and Applications}
+      \field{month}{04}
+      \field{number}{1}
+      \field{shorttitle}{Cloud computing}
+      \field{title}{Cloud {Computing}: state-of-the-art and research challenges}
+      \field{urlday}{29}
+      \field{urlmonth}{04}
+      \field{urlyear}{2016}
+      \field{volume}{1}
+      \field{year}{2010}
+      \field{pages}{7\bibrangedash 18}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1007/s13174-010-0007-6
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/JSBHMCXH/Zhang et al. - 2010 - Cloud computing state-of-the-art and research cha.pdf:application/pdf;Snapshot:/Users/luna/Library/Application Support/Zotero/Profiles/gbg0zuqm.default/zotero/storage/Q2WN2JZP/s13174-010-0007-6.html:text/html
+      \endverb
+      \verb{url}
+      \verb http://link.springer.com/article/10.1007/s13174-010-0007-6
+      \endverb
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+
