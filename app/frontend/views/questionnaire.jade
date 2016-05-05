@@ -13,7 +13,10 @@ center(ng-if="!(static || dynamic)")
 div(ng-if="static || dynamic")
     h2 Static Questionnaire
 
-    div(ng-hide="filterShown", ng-repeat="question in questions", ng-if="currentQuestion == question.key")
+    div(ng-repeat="question in questions", ng-if="currentQuestion == question.key")
         div(ng-include="'question.html'")
 
-    div(ng-include="'filterOverview.html'")
+    div(layout="row", layout-align="center center", layout-wrap)
+        md-button.md-raised.md-primary(ui-sref="services.info.filter({questions: questions, selectedValues: selectedValues})") Show Services ({{ filteredServices.length }})
+
+    //- div(ng-include="'filterOverview.html'")

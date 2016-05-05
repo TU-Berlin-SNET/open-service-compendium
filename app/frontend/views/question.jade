@@ -1,12 +1,17 @@
 h3 {{ question.q }}
 
-div(ng-if="question.uniqueAnswer")
+div(ng-if="!categoryChosen", layout="row", layout-wrap="", style="padding: 0 calc((100% - 604px)/2);")
+    div.service-category(ng-click="setServiceCategory('storage')", style="background-color: rgb(63,81,181);")
+        span Storage
+    div.service-category(ng-click="setServiceCategory('vm')", style="background-color: rgb(63,81,181);")
+        span Virtual Machine
+
+div(ng-if="question.uniqueAnswer && categoryChosen")
     md-radio-group(ng-model="question.selectedValue")
         md-radio-button(ng-repeat="(key, value) in question.values", ng-value="value.description", 
             ng-click="updateSelection(questions, question, key)") {{ value.description }}
-    md-button(ng-click="clearSelection(question)") Clear
 
-div(ng-if="!question.uniqueAnswer")
+div(ng-if="!question.uniqueAnswer && categoryChosen")
     md-checkbox(ng-repeat="(key, value) in question.values", ng-model="value.selected",
         ng-change="updateSelection(questions, question, key)") {{ value.description }}
 

@@ -1,0 +1,28 @@
+div(ng-init="showFilter()")
+    table.filterTable
+        tr
+            th Properties
+            th Values
+        tr(ng-repeat="property in filterProperties", ng-if="isInShownProperties(property)")
+            td {{ property.key }}
+            td(ng-if="property.uniqueAnswer", layout="row")
+                md-radio-group(ng-model="property.selectedValue", layout="row", layout-wrap, flex="90")
+                    md-radio-button(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", ng-value="value.description",
+                        ng-click="updateSelection(filterProperties, property, key)") {{ value.description }} ({{ value.restServices }})
+                md-button.md-icon-button(ng-if="property.selectedValue != ''", ng-click="clearSelection(property)",
+                    flex="10", style="height: 18px; width: 18px;") 
+                    i.material-icons(style="font-size: 18px;") clear
+            td(ng-if="!property.uniqueAnswer", layout="row", layout-wrap)
+                md-checkbox(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", ng-model="value.selected",
+                    ng-change="updateSelection(filterProperties, property, key)") {{ value.description }} ({{ value.restServices }})
+        tr(style="text-align: center;")
+            td(colspan="2")
+                md-button.md-icon-button(ng-click="toggleDropdown()")
+                    i.material-icons {{ dropdownIcon }}
+
+    md-divider
+
+    div.service-list.row(layout="row", layout-wrap="", style="padding: 10px 5% 50px;")
+        div.col-lg-2.col-md-3.col-sm-4.col-xs-6(ng-repeat="service in filteredServices")
+            div.service-item(ui-sref='services.detail(service.uiRouterParams)', style="background-color: rgb(63,81,181);")
+                span {{ service.service_name }}

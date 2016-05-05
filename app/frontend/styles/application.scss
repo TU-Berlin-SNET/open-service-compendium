@@ -192,6 +192,24 @@ footer.footer {
   vertical-align: middle;
 }
 
+.service-category {
+  width: 200px;
+  height: 100px;
+  border: 1px solid #DDD;
+  display: table;
+  text-align: center;
+  padding: 0.5em;
+  cursor: pointer;
+  margin: 50px;
+}
+
+.service-category > span {
+  display: table-cell;
+  vertical-align: middle;
+  color: #FFF;
+  font-size: 18px;
+}
+
 .filterTable {
   width: 90%;
   border: none;
