@@ -34,6 +34,48 @@ angular.module('frontendApp').factory 'ServiceMatching',
                 filteredServices.push(service)
         return filteredServices
 
+    # When the selection of values for a question/filter property changes,
+    # 1. If this question/filter property has unique selection option
+    # 1.1. If exists, set previously selected value to false,
+    # 1.2. and remove it from the selectedValues array
+    # 1.3. Set selected property of the value to true
+    # 2. If the property can have multipe values (checkbox)
+    # 2.1. If the value is unchecked, remove it from the selectedValues array
+    # 3. If a value is selected in any case
+    # 3.1.  Add the newly selected value to the selectedValues array
+    factory.updateSelection = (selectedValues, properties, property, valueKey) ->
+        selected = true
+        if (property.uniqueAnswer)
+            i = properties.indexOf(property)
+            for key, value of properties[i].values
+                if (value.selected)
+                    value.selected = false
+                    j = _.findIndex(selectedValues, {
+                        property: property.key
+                        value: key
+                        uniqueAnswer: property.uniqueAnswer
+                    })
+                    selectedValues.splice(j, 1)
+            properties[i].values[valueKey].selected = true
+            if (valueKey == "None")
+                selected = false
+        else
+            if (!property.values[valueKey].selected)
+                selected = false
+                j = _.findIndex(selectedValues, {
+                    property: property.key
+                    value: valueKey
+                    uniqueAnswer: property.uniqueAnswer
+                })
+                selectedValues.splice(j, 1)
+        if (selected)
+            selectedValues.push ({
+                property: property.key
+                value: valueKey
+                uniqueAnswer: property.uniqueAnswer
+            })
+        return selectedValues
+
     # Check if service matches value of given property
     # 1. if the property is not an enumeration
     # 1.1. if property is "storage properties", check sub-property "max_storage_capacity"

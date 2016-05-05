@@ -9,7 +9,9 @@ div(ng-if="!categoryChosen", layout="row", layout-wrap="", style="padding: 0 cal
 div(ng-if="question.uniqueAnswer && categoryChosen")
     md-radio-group(ng-model="question.selectedValue")
         md-radio-button(ng-repeat="(key, value) in question.values", ng-value="value.description", 
-            ng-click="updateSelection(questions, question, key)") {{ value.description }}
+            ng-click="updateSelection(questions, question, key)") 
+            span(ng-if="key != 'None'") {{ value.description }} ({{ value.restServices }})
+            span(ng-if="key == 'None'") {{ value.description }}
 
 div(ng-if="!question.uniqueAnswer && categoryChosen")
     md-checkbox(ng-repeat="(key, value) in question.values", ng-model="value.selected",
