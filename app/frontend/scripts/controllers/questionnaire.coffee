@@ -16,10 +16,9 @@ angular.module("frontendApp").controller "QuestionnaireController",
         $mdDialog.show $mdDialog.alert({
             clickOutsideToClose: true
             title: "Info"
-            content: "A dynamic selection is a questionnnaire
-             based on the statistics of services properties.\n
-            A static selection is a questionnaire with no
-             dependency on the properties statistics."
+            content: "In a dynamic questionnnaire, questions are built dynamically based on the current status of services
+            properties and on the user's answer of each question.\n
+            A static selection is a questionnaire with no dependency on the properties statistics."
             ariaLabel: "Alert Dialog Demo"
             ok: "Got it!"
         }).parent(angular.element(document.querySelector("#questionnnaire")))
@@ -41,6 +40,10 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.setServiceCategory = (category) ->
         $scope.categoryChosen = category
         $scope.updateSelection($scope.questions, $scope.questions[0], category)
+        if (category == "storage")
+            $scope.questions[0].selectedValue = "Storage"
+        else if (category == "vm")
+            $scope.questions[0].selectedValue = "Virtual Machine"
         $scope.showNext(0)
 
     # Initialize the list of static questions
@@ -93,8 +96,16 @@ angular.module("frontendApp").controller "QuestionnaireController",
 
     # Initialize the list of dynamic questions
     $scope.getDynamicQuestions = () ->
-        $scope.dynamicQuestions = []
+        $scope.dynamicQuestions = [{
+            key: "Service Categories"
+            q: "Choose Service Category"
+            uniqueAnswer: true
+            selectedValue: ""
+            values: {}
+        }]
         for key, property of $scope.enumerations
+            if (key == "Service Categories")
+                continue
             if (property.statisticsInfo["Average Deviation from Uniform Distribution"])
                 uniqueAnswer = ServiceMatching.checkIfUniqueValue(key, $scope.rows.enumRows)
                 uniDistributionRatio = 1 - property.statisticsInfo["Average Deviation from Uniform Distribution"]
@@ -185,6 +196,8 @@ angular.module("frontendApp").controller "QuestionnaireController",
                         "description": "I don't care"
                     }
                 }
+            if (question.values.None)
+                question.selectedValue = "I don't care"
             for key, value of question.values
                 if (key != "None")
                     restServices = ServiceMatching.getRestServices(
@@ -238,18 +251,18 @@ angular.module("frontendApp").controller "QuestionnaireController",
     # 2. Update the number of filtered (rest) services for each value in each property
     # 3. If dynmaic questionnaire, update the list of questions
     # 4. Update filtered service according to selected values
-    $scope.updateSelection = (properties, property, valueKey) ->
+    $scope.updateSelection = (questions, question, valueKey) ->
         $scope.selectedValues = ServiceMatching.updateSelection(
-            $scope.selectedValues, properties, property, valueKey)
-        for property in properties
-            for key, value of property.values
-                if (key != "None")
-                    value.restServices = ServiceMatching.getRestServices(
-                        property, key, $scope.selectedValues, $scope.services, $scope.enumerations)
+            $scope.selectedValues, questions, question, valueKey)
         if ($scope.dynamic)
             $scope.questions = $scope.updateDynamicQuestions()
+        for q in $scope.questions
+            for key, value of q.values
+                if (key != "None")
+                    value.restServices = ServiceMatching.getRestServices(
+                        q, key, $scope.selectedValues, $scope.services, $scope.enumerations)
         $scope.filteredServices = ServiceMatching.updateFilteredServices(
-            $scope.selectedValues,$scope.services, $scope.enumerations)
+            $scope.selectedValues, $scope.services, $scope.enumerations)
 
     # Navigate to the next question (or skip)
     $scope.showNext = (index) ->

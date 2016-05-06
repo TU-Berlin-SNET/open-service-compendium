@@ -13,9 +13,11 @@ angular.module("frontendApp").controller "FilterController",
 
     # Show filter with shown filter properties & filtered cloud services
     $scope.showFilter = () ->
+        console.log ($scope.questions)
         $scope.getFilterProperties()
         $scope.updateShownProperties()
-        $scope.filteredServices = ServiceMatching.updateFilteredServices($scope.selectedValues, $scope.services, $scope.enumerations)
+        $scope.filteredServices = ServiceMatching.updateFilteredServices(
+            $scope.selectedValues, $scope.services, $scope.enumerations)
 
     # When the selection of values for a question property changes,
     # 1. Get the updated array of selected values by calling service method
@@ -131,7 +133,8 @@ angular.module("frontendApp").controller "FilterController",
             if (unselected[i])
                 $scope.shownProperties.push(unselected[i])
             else
-                $scope.shownProperties.push($scope.filterProperties[i].key)
+                if ($scope.shownProperties.indexOf($scope.filterProperties[i].key) < 0)
+                    $scope.shownProperties.push($scope.filterProperties[i].key)
             i++
 
     # Toggle show/hide of filter properties

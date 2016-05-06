@@ -55,7 +55,8 @@ angular.module('frontendApp').factory 'ServiceMatching',
                         value: key
                         uniqueAnswer: property.uniqueAnswer
                     })
-                    selectedValues.splice(j, 1)
+                    if (j >= 0)
+                        selectedValues.splice(j, 1)
             properties[i].values[valueKey].selected = true
             if (valueKey == "None")
                 selected = false
