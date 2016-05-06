@@ -211,17 +211,20 @@ angular.module("frontendApp").controller "QuestionnaireController",
     # 2.2. If the question is already in the selected values array, 
     # 2.2.1. add this question to the list, because it's a previous question
     # 2.3. If the question is not in the selected values array,
-    # 2.3.1. break the loop as this is the question to considered (save index)
-    # 3. Loop over dynamic questions starting from index, while index is < 7,
+    # 2.3.1. break the loop (save index)
+    # 3. Check if question is in the general questions list 
+    # 3.1. If yes, this means the question was skipped with no selected answer
+    # 3.2. Push this question to the resulting list, and increment the index
+    # 4. Loop over dynamic questions starting from index, while index is < 7,
     # and no service provide the property of the considered question
-    # 4. If all filtered services provide the question property, add question to the list
-    # 5. Else, dismiss it and check the next
+    # 5. If all filtered services provide the question property, add question to the list
+    # 6. Else, dismiss it and check the next
     $scope.updateDynamicQuestions = () ->
         questions = []
         questionSelected = false
         qIndex = 0
         if ($scope.selectedValues.length == 0)
-            return $scope.dynamicQuestions
+            return $scope.dynamicQuestions[0]
         for question in $scope.dynamicQuestions
             for selectedValue in $scope.selectedValues
                 if (question.key == selectedValue.property)
@@ -233,6 +236,9 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 qIndex++
             else
                 break
+        while ($scope.questions.indexOf($scope.dynamicQuestions[qIndex]) >= 0)
+            questions.push($scope.dynamicQuestions[qIndex])
+            qIndex++
         propertyProvided = false
         while ((qIndex < $scope.dynamicQuestions.length - 1) && (qIndex < 7) && (!propertyProvided))
             question = $scope.dynamicQuestions[qIndex]
@@ -266,6 +272,9 @@ angular.module("frontendApp").controller "QuestionnaireController",
 
     # Navigate to the next question (or skip)
     $scope.showNext = (index) ->
+        if (($scope.dynamic) && (index == $scope.questions.length - 1))
+            $scope.questions = $scope.updateDynamicQuestions()
+            console.log ($scope.questions)
         if ((index < $scope.questions.length - 1) && (index < 6))
             $scope.currentQuestion = $scope.questions[index + 1].key
 

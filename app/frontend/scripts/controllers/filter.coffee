@@ -13,7 +13,6 @@ angular.module("frontendApp").controller "FilterController",
 
     # Show filter with shown filter properties & filtered cloud services
     $scope.showFilter = () ->
-        console.log ($scope.questions)
         $scope.getFilterProperties()
         $scope.updateShownProperties()
         $scope.filteredServices = ServiceMatching.updateFilteredServices(
@@ -40,7 +39,8 @@ angular.module("frontendApp").controller "FilterController",
     # 1. Add all questions to the filter with their selected values
     # 2. Loop over all enumeration properties
     # 2.1. If enumeration is already a question, skip
-    # 2.2. Else, create new filter property with unselected values
+    # 2.2. If enumeration is "Established in", special case to create filter property
+    # 2.3. Else, create new filter property with unselected values
     $scope.getFilterProperties = () ->
         $scope.filterProperties = []
         for question in $scope.questions
@@ -61,6 +61,25 @@ angular.module("frontendApp").controller "FilterController",
             })
         propertyExists = false
         for key, property of $scope.enumerations
+            if (key == "Established In")
+                values = {}
+                for column in property.columns
+                    restServices = ServiceMatching.getRestServices({
+                        "key": key
+                        "uniqueAnswer": true
+                    }, column.title, $scope.selectedValues, $scope.services, $scope.enumerations)
+                    values[column.title] = {
+                        "description": column.title
+                        "selected": false
+                        "restServices": restServices
+                    }
+                $scope.filterProperties.push({
+                    "key": key
+                    "uniqueAnswer": true
+                    "selectedValue": ""
+                    "values": values
+                })
+                continue
             for question in $scope.questions
                 if (key == question.key)
                     propertyExists = true

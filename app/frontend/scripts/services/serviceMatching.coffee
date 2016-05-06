@@ -101,26 +101,27 @@ angular.module('frontendApp').factory 'ServiceMatching',
         property = (propertyKey.replace(/ /g, "_")).toLowerCase()
         if (!enumerations[propertyKey])
             if (property == "storage_properties")
-                if (service[property] == undefined)
-                    return false
-                else
-                    serviceValue = service[property].max_storage_capacity
-                    if (serviceValue == undefined)
-                        return false
-                    else if ((value == "∞") && (String(serviceValue) != value))
-                        return false
-                    else
-                        if (String(serviceValue) != "∞")
-                            serviceMaxStorage = (String(serviceValue).split(" "))
-                            iServiceMaxStorage = parseInt(serviceMaxStorage[0])
-                            if (serviceMaxStorage[1] == "TB")
-                                iServiceMaxStorage = iServiceMaxStorage * 1000
-                            selectedMaxStorage = value.split(" ")
-                            iSelectedMaxStorage = parseInt(selectedMaxStorage[0])
-                            if (selectedMaxStorage[1] == "TB")
-                                iSelectedMaxStorage = iSelectedMaxStorage * 1000
-                            if (iSelectedMaxStorage < iSelectedMaxStorage)
-                                return false
+                return factory.checkServiceMaxStorageCapacity(service, property, value)
+                # if (service[property] == undefined)
+                #     return false
+                # else
+                #     serviceValue = service[property].max_storage_capacity
+                #     if (serviceValue == undefined)
+                #         return false
+                #     else if ((value == "∞") && (String(serviceValue) != value))
+                #         return false
+                #     else
+                #         if (String(serviceValue) != "∞")
+                #             serviceMaxStorage = (String(serviceValue).split(" "))
+                #             iServiceMaxStorage = parseInt(serviceMaxStorage[0])
+                #             if (serviceMaxStorage[1] == "TB")
+                #                 iServiceMaxStorage = iServiceMaxStorage * 1000
+                #             selectedMaxStorage = value.split(" ")
+                #             iSelectedMaxStorage = parseInt(selectedMaxStorage[0])
+                #             if (selectedMaxStorage[1] == "TB")
+                #                 iSelectedMaxStorage = iSelectedMaxStorage * 1000
+                #             if (iSelectedMaxStorage < iSelectedMaxStorage)
+                #                 return false
             else
                 if (value == "Yes")
                     if (service[property])
@@ -139,6 +140,8 @@ angular.module('frontendApp').factory 'ServiceMatching',
                         else if ((property != "free_trial") && (service[property]))
                             return false
         else
+            if (property == "established_in")
+                return factory.checkServiceEstablishmentYear(service, property, value)
             # check if property is provided by service
             if (service[property] == undefined)
                 return false
@@ -151,8 +154,47 @@ angular.module('frontendApp').factory 'ServiceMatching',
                         if (item == value.toLowerCase())
                             return true
                     return false
-                    # if (typeof(service[property]) == "Array")
         return true
+
+    # Check if service matches the selected value of "Storage Properties" property
+    factory.checkServiceMaxStorageCapacity = (service, property, value) ->
+        if (service[property] == undefined)
+            return false
+        else
+            serviceValue = service[property].max_storage_capacity
+            if (serviceValue == undefined)
+                return false
+            else if ((value == "∞") && (String(serviceValue) != value))
+                return false
+            else
+                if (String(serviceValue) != "∞")
+                    serviceMaxStorage = (String(serviceValue).split(" "))
+                    iServiceMaxStorage = parseInt(serviceMaxStorage[0])
+                    if (serviceMaxStorage[1] == "TB")
+                        iServiceMaxStorage = iServiceMaxStorage * 1000
+                    selectedMaxStorage = value.split(" ")
+                    iSelectedMaxStorage = parseInt(selectedMaxStorage[0])
+                    if (selectedMaxStorage[1] == "TB")
+                        iSelectedMaxStorage = iSelectedMaxStorage * 1000
+                    if (iServiceMaxStorage < iSelectedMaxStorage)
+                        return false
+        return true
+
+    # Check if service matches the selected value of "Established in" property
+    factory.checkServiceEstablishmentYear = (service, property, value) ->
+        if (service[property] == undefined)
+            return false
+        valueRange = value.split(" ")
+        if (isNaN(valueRange[0]))
+            if ((valueRange[0] == "Before") && (service[property] < valueRange[1]))
+                return true
+            if ((valueRange[0] == "After") && (service[property] >= valueRange[1]))
+                return true
+        else
+            if ((service[property] >= valueRange[0]) && (service[property] < valueRange[2]))
+                return true
+        return false
+
 
     # Check if a property value is unique, or a service can have multiple values
     # For the given key of the property, check the statistics
