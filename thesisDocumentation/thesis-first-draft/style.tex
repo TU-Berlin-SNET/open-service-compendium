@@ -376,41 +376,41 @@ sensitive=false, morecomment=[s]{<!--}{-->}, morestring=[b]", morestring=[d]'}
 
 % Change page headers and footers:
 \usepackage{calc}
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhfoffset[RO,LE]{0.1cm} %{\marginparsep+\marginparwidth}
-\fancyhfoffset[RE,LO]{0.1cm}
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\fancyhfoffset[RO,LE]{0.1cm} %{\marginparsep+\marginparwidth}
+%\fancyhfoffset[RE,LO]{0.1cm}
 %\fancyheadoffset[RE,LO]{\hoffset + \oddsidemargin}
-\renewcommand{\headrule}{{\color{DarkRed}% 
-  \hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
-\fancyhf{}
-\fancyhead[RE]{\slshape \nouppercase{\leftmark}}    % Even page header: "page   chapter"
-\fancyhead[LO]{\slshape \nouppercase{\rightmark}}   % Odd  page header: "section   page"
-\fancyhead[RO,LE]{\bfseries \thepage}
+%\renewcommand{\headrule}{{\color{DarkRed}% 
+%  \hrule width\headwidth height\headrulewidth \vskip-\headrulewidth}}
+%\fancyhf{}
+%\fancyhead[RE]{\slshape \nouppercase{\leftmark}}    % Even page header: "page   chapter"
+%\fancyhead[LO]{\slshape \nouppercase{\rightmark}}   % Odd  page header: "section   page"
+%\fancyhead[RO,LE]{\bfseries \thepage}
 
 %- \fancyfoot[LE]{\STYLEleftpicture}
 %- \fancyfoot[RO]{\STYLErightpicture}
-\fancyfoot[LE]{\STYLEfootnotetext}
+%\fancyfoot[LE]{\STYLEfootnotetext}
 
-\renewcommand{\headrulewidth}{1pt}    % Underline headers
-\renewcommand{\footrulewidth}{0pt}
+%\renewcommand{\headrulewidth}{1pt}    % Underline headers
+%\renewcommand{\footrulewidth}{0pt}
 
 % Change Chapter/Section styles
 
-\usepackage{titlesec}
+%\usepackage{titlesec}
 
-\newcommand{\allsectionformat}{\color{DarkRed}\rmfamily\normalfont}
+%\newcommand{\allsectionformat}{\color{DarkRed}\rmfamily\normalfont}
 
-\titleformat{\part}{\Huge}{\thispagestyle{empty}\color{DarkRed}\rmfamily\normalfont\partname{ }\thepart}{1pc}{\center\Huge\color{DarkRed}\scshape}
+%\titleformat{\part}{\Huge}{\thispagestyle{empty}\color{DarkRed}\rmfamily\normalfont\partname{ }\thepart}{1pc}{\center\Huge\color{DarkRed}\scshape}
 
-\addtokomafont{section}{\allsectionformat}
-\addtokomafont{subsection}{\allsectionformat}
-\addtokomafont{subsubsection}{\allsectionformat}
-\addtokomafont{paragraph}{\allsectionformat}
-\addtokomafont{subparagraph}{\allsectionformat}
+%\addtokomafont{section}{\allsectionformat}
+%\addtokomafont{subsection}{\allsectionformat}
+%\addtokomafont{subsubsection}{\allsectionformat}
+%\addtokomafont{paragraph}{\allsectionformat}
+%\addtokomafont{subparagraph}{\allsectionformat}
 
-\titlespacing*{\section}{0pt}{0pt}{0pt}
-\titleformat{\chapter}{\Huge}{\color{DarkRed}\thechapter}{1pc}{\Huge\color{DarkRed}\rmfamily\normalfont}
+%\titlespacing*{\section}{0pt}{0pt}{0pt}
+%\titleformat{\chapter}{\Huge}{\color{DarkRed}\thechapter}{1pc}{\Huge\color{DarkRed}\rmfamily\normalfont}
 
 
 % =========================================================================
