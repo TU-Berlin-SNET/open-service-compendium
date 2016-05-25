@@ -106,9 +106,9 @@ angular.module("frontendApp").controller "QuestionnaireController",
         for key, property of $scope.enumerations
             if (key == "Service Categories")
                 continue
-            if (property.statisticsInfo["Average Deviation from Uniform Distribution"])
+            if (property.statisticsInfo["Uniform Distribution Ratio"])
                 uniqueAnswer = ServiceMatching.checkIfUniqueValue(key, $scope.rows.enumRows)
-                uniDistributionRatio = 1 - property.statisticsInfo["Average Deviation from Uniform Distribution"]
+                uniDistributionRatio = property.statisticsInfo["Uniform Distribution Ratio"]
                 providenceRatio = property.numOfServices / $scope.services.length
                 rating = (uniDistributionRatio / 2) + (providenceRatio / 2)
                 $scope.dynamicQuestions.push({
@@ -205,7 +205,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
                     value["restServices"] = restServices
 
     # Update the list of questions to be shown based on values' selection
-    # 1. If no values are selected, start with the initialized array of dynamic questions
+    # 1. If no values are selected, start with the first element in the linitialized array of dynamic questions
     # 2. Else, loop over the array of dynamic questions
     # 2.1. Loop over the array of selected values
     # 2.2. If the question is already in the selected values array, 
@@ -240,7 +240,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
             questions.push($scope.dynamicQuestions[qIndex])
             qIndex++
         propertyProvided = false
-        while ((qIndex < $scope.dynamicQuestions.length - 1) && (qIndex < 7) && (!propertyProvided))
+        while ((qIndex < $scope.dynamicQuestions.length - 1) && (questions.length < 6) && (!propertyProvided))
             question = $scope.dynamicQuestions[qIndex]
             # convert question key string to service property format
             property = (question.key.replace(/ /g, "_")).toLowerCase()

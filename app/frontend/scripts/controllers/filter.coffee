@@ -26,11 +26,11 @@ angular.module("frontendApp").controller "FilterController",
     $scope.updateSelection = (properties, property, valueKey) ->
         $scope.selectedValues = ServiceMatching.updateSelection(
             $scope.selectedValues, properties, property, valueKey)
-        for property in properties
-            for key, value of property.values
+        for p in properties
+            for key, value of p.values
                 if (key != "None")
                     value.restServices = ServiceMatching.getRestServices(
-                        property, key, $scope.selectedValues, $scope.services, $scope.enumerations)
+                        p, key, $scope.selectedValues, $scope.services, $scope.enumerations)
         $scope.filteredServices = ServiceMatching.updateFilteredServices(
             $scope.selectedValues,$scope.services, $scope.enumerations)
         $scope.updateShownProperties()
@@ -173,7 +173,7 @@ angular.module("frontendApp").controller "FilterController",
             value.selected = false
         property.selectedValue = ""
         for selectedValue in $scope.selectedValues
-            if (selectedValue.property == property.key)
+            if ((selectedValue) && (selectedValue.property == property.key))
                 i = $scope.selectedValues.indexOf(selectedValue)
                 $scope.selectedValues.splice(i, 1)
         for filterProperty in $scope.filterProperties

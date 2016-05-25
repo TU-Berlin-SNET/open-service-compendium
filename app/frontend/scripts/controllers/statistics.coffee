@@ -11,7 +11,7 @@ angular.module("frontendApp").controller "StatisticsController",
             " (" + $scope.enumerations[option].numOfServices + " services)"
         $scope.statisticsInfo = $scope.enumerations[option].statisticsInfo
 
-
+    # Event listener to the change of selection of the statistics options
     $scope.onChange = (value) ->
         if (value == "Enumerations")
             $scope.enumChecked = true
@@ -28,12 +28,14 @@ angular.module("frontendApp").controller "StatisticsController",
             $scope.chartObject.options.title = "Percentage of properties categories provided by the current services (" +
                 $scope.numOfServices + " services)*"
 
+    # Toggle side navbar left
     $scope.toggleLeft = () ->
         $mdSidenav("left").toggle()
     
     $scope.isOpenLeft = ->
         $mdSidenav("left").isOpen()
 
+    # Close side navbar 
     $scope.closeLeft = ->
         $mdSidenav("left").close()
 

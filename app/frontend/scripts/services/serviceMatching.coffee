@@ -26,13 +26,20 @@ angular.module('frontendApp').factory 'ServiceMatching',
                             break
                     else
                         if (!factory.isServiceMatching(service, selectedValue, enumerations))
-                            addService = false
-                        else
-                            addService = true
-                            break
+                            if (!factory.multiPropertyProvided(service, selectedValue, selectedValues, enumerations))
+                                addService = false
+                                break
             if (addService)
                 filteredServices.push(service)
         return filteredServices
+
+    factory.multiPropertyProvided = (service, selectedValue, selectedValues, enumerations) ->
+        selectedProperty = selectedValue.property
+        for sValue in selectedValues
+            if (sValue.property == selectedProperty)
+                if (factory.isServiceMatching(service, sValue, enumerations))
+                    return true
+        return false
 
     # When the selection of values for a question/filter property changes,
     # 1. If this question/filter property has unique selection option
@@ -102,26 +109,6 @@ angular.module('frontendApp').factory 'ServiceMatching',
         if (!enumerations[propertyKey])
             if (property == "storage_properties")
                 return factory.checkServiceMaxStorageCapacity(service, property, value)
-                # if (service[property] == undefined)
-                #     return false
-                # else
-                #     serviceValue = service[property].max_storage_capacity
-                #     if (serviceValue == undefined)
-                #         return false
-                #     else if ((value == "∞") && (String(serviceValue) != value))
-                #         return false
-                #     else
-                #         if (String(serviceValue) != "∞")
-                #             serviceMaxStorage = (String(serviceValue).split(" "))
-                #             iServiceMaxStorage = parseInt(serviceMaxStorage[0])
-                #             if (serviceMaxStorage[1] == "TB")
-                #                 iServiceMaxStorage = iServiceMaxStorage * 1000
-                #             selectedMaxStorage = value.split(" ")
-                #             iSelectedMaxStorage = parseInt(selectedMaxStorage[0])
-                #             if (selectedMaxStorage[1] == "TB")
-                #                 iSelectedMaxStorage = iSelectedMaxStorage * 1000
-                #             if (iSelectedMaxStorage < iSelectedMaxStorage)
-                #                 return false
             else
                 if (value == "Yes")
                     if (service[property])
@@ -217,7 +204,8 @@ angular.module('frontendApp').factory 'ServiceMatching',
     factory.getRestServices = (property, valueKey, selectedValues, services, enumerations) ->
         virtualSelectedValues = []
         for value in selectedValues
-            virtualSelectedValues.push(value)
+            if (property.key != value.property)
+                virtualSelectedValues.push(value)
         virtualSelectedValues.push({
             property: property.key
             value: valueKey

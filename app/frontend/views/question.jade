@@ -15,7 +15,7 @@ div(ng-if="question.uniqueAnswer && categoryChosen")
 
 div(ng-if="!question.uniqueAnswer && categoryChosen")
     md-checkbox(ng-repeat="(key, value) in question.values", ng-model="value.selected",
-        ng-change="updateSelection(questions, question, key)") {{ value.description }}
+        ng-change="updateSelection(questions, question, key)") {{ value.description }} ({{value.restServices}})
 
 div(ng-show="categoryChosen", style="width: 100%")  
     md-button(ng-hide="questions.indexOf(question) == 0", 
