@@ -9,7 +9,7 @@ div(ng-init="showFilter()")
                 md-radio-group(ng-model="property.selectedValue", layout="row", layout-wrap, flex="90")
                     md-radio-button(flex="25", style="margin: 0px;", ng-repeat="(key, value) in property.values", ng-value="value.description",
                         ng-click="updateSelection(filterProperties, property, key)") {{ value.description }} ({{ value.restServices }})
-                md-button.md-icon-button(ng-if="property.selectedValue != ''", ng-click="clearSelection(property)",
+                md-button.md-icon-button.md-primary(ng-if="property.selectedValue != ''", ng-click="clearSelection(property)",
                     flex="10", style="height: 18px; width: 18px;") 
                     i.material-icons(style="font-size: 18px;") clear
             td(ng-if="!property.uniqueAnswer", layout="row", layout-wrap)
@@ -17,8 +17,8 @@ div(ng-init="showFilter()")
                     ng-change="updateSelection(filterProperties, property, key)") {{ value.description }} ({{ value.restServices }})
         tr(style="text-align: center;")
             td(colspan="2")
-                md-button.md-icon-button(ng-click="toggleDropdown()")
-                    i.material-icons {{ dropdownIcon }}
+                md-button.md-fab.md-mini.md-primary(ng-click="toggleDropdown()")
+                    i.material-icons(style="line-height:inherit;") {{ dropdownIcon }}
 
     md-divider
 

@@ -118,7 +118,7 @@ angular.module('frontendApp').factory 'ServiceMatching',
                             return true
                     else
                         return false
-                else # selected answer is "No"
+                else # selected answer is "It doesn't matter"
                     if (!service[property])
                         return true
                     else

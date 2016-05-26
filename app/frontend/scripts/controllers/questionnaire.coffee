@@ -8,8 +8,9 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.selectedValues = []
     $scope.questions = []
     $scope.dynamicQuestions = []
-    $scope.dropdownIcon = "keyboard_arrow_down"
     $scope.currentQuestion = ""
+    $scope.nextButtonIcon = "keyboard_arrow_right"
+    $scope.backButtonIcon = "keyboard_arrow_left"
 
     # Dialog of info button in the main questionnaire view
     $scope.showInfo = () ->
@@ -18,7 +19,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
             title: "Info"
             content: "In a dynamic questionnnaire, questions are built dynamically based on the current status of services
             properties and on the user's answer of each question.\n
-            A static selection is a questionnaire with no dependency on the properties statistics."
+            Static questions have no dependency on the properties statistics, nor on the user's answers."
             ariaLabel: "Alert Dialog Demo"
             ok: "Got it!"
         }).parent(angular.element(document.querySelector("#questionnnaire")))
@@ -53,14 +54,14 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 key: "Service Categories"
                 q: "Choose service category"
                 uniqueAnswer: true
-                selectedValue: "I don't care"
+                selectedValue: "It doesn't matter"
                 values: {}
             },
             {
                 key: "Cloud Service Model"
                 q: "Choose the cloud service model"
                 uniqueAnswer: true
-                selectedValue: "I don't care"
+                selectedValue: "It doesn't matter"
                 values: {}
             },
             {
@@ -74,21 +75,21 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 key: "Can be used offline"
                 q: "Should the cloud service provide offline usage?"
                 uniqueAnswer: true
-                selectedValue: "I don't care"
+                selectedValue: "It doesn't matter"
                 values: {}
             },
             {
                 key: "Free Trial"
                 q: "Should the cloud service provide free trial?"
                 uniqueAnswer: true
-                selectedValue: "I don't care"
+                selectedValue: "It doesn't matter"
                 values: {}
             },
             {
                 key: "Storage Properties"
                 q: "What is the maximum storage capacity needed?"
                 uniqueAnswer: true
-                selectedValue: "I don't care"
+                selectedValue: "It doesn't matter"
                 values: {}
             }
         ]
@@ -130,7 +131,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
     # 1. If the question key (property) is an enumeration
     # 1.1. Values are stored with numerical keys
     # 1.2. Descriptions of values are stored in an object with numerical key
-    # 1.3. If question can have only unique value, add a value of "I don't care"
+    # 1.3. If question can have only unique value, add a value of "It doesn't matter"
     # 2. If question key is not an enumeration, but is "storage properties"
     # 2.1. The values of this question are the max storage capacity
     # 3. For any other question
@@ -148,7 +149,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 if (ServiceMatching.checkIfUniqueValue(question.key, $scope.rows.enumRows))
                     question.values["None"] = {
                         "selected": true,
-                        "description": "I don't care"
+                        "description": "It doesn't matter"
                     }
             else if (question.key == "Storage Properties")
                 question.values = {
@@ -178,7 +179,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
                     },
                     "None": {
                         "selected": true,
-                        "description": "I don't care"
+                        "description": "It doesn't matter"
                     }
                 }
             else
@@ -187,17 +188,13 @@ angular.module("frontendApp").controller "QuestionnaireController",
                         "selected": false,
                         "description": "Yes"
                     },
-                    "No": {
-                        "selected": false,
-                        "description": "No"
-                    },
                     "None": {
                         "selected": true,
-                        "description": "I don't care"
+                        "description": "It doesn't matter"
                     }
                 }
             if (question.values.None)
-                question.selectedValue = "I don't care"
+                question.selectedValue = "It doesn't matter"
             for key, value of question.values
                 if (key != "None")
                     restServices = ServiceMatching.getRestServices(
@@ -272,9 +269,10 @@ angular.module("frontendApp").controller "QuestionnaireController",
 
     # Navigate to the next question (or skip)
     $scope.showNext = (index) ->
+        if (index == 0)
+            $scope.categoryChosen = true
         if (($scope.dynamic) && (index == $scope.questions.length - 1))
             $scope.questions = $scope.updateDynamicQuestions()
-            console.log ($scope.questions)
         if ((index < $scope.questions.length - 1) && (index < 6))
             $scope.currentQuestion = $scope.questions[index + 1].key
 

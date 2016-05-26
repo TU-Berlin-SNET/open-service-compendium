@@ -10,12 +10,9 @@ center(ng-if="!(static || dynamic)")
         | &nbsp;
         a.btn.btn-lg.btn-primary(ng-click="showQuestionnaire('static')", style='width: 150px') Statically
 
-div(ng-if="static || dynamic")
+div.questionnnaire(ng-if="static || dynamic")
     h2(ng-if="static") Static Questionnaire
     h2(ng-if="dynamic") Dynamic Questionnaire
 
     div(ng-repeat="question in questions", ng-if="currentQuestion == question.key")
         div(ng-include="'question.html'")
-
-    div(layout="row", layout-align="center center", layout-wrap)
-        md-button.md-raised.md-primary(ui-sref="services.info.filter({questions: questions, selectedValues: selectedValues})") Show Services ({{ filteredServices.length }})

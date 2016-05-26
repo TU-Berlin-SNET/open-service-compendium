@@ -210,6 +210,15 @@ footer.footer {
   font-size: 18px;
 }
 
+.questionnnaire {
+  padding: 20px;
+}
+
+.questionnnaire > h2 {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
 .filterTable {
   width: 90%;
   border: none;
@@ -218,6 +227,7 @@ footer.footer {
 
 .filterTable tr {
   border-bottom: 1px solid rgba(0,0,0,0.12);
+  height: 36px;
 }
 
 .filterTable tr:last-child {
