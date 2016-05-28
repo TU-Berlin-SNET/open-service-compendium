@@ -9,6 +9,7 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.questions = []
     $scope.dynamicQuestions = []
     $scope.currentQuestion = ""
+    $scope.dynamicQuestionsDone = false
     $scope.nextButtonIcon = "keyboard_arrow_right"
     $scope.backButtonIcon = "keyboard_arrow_left"
 
@@ -30,7 +31,9 @@ angular.module("frontendApp").controller "QuestionnaireController",
     $scope.showQuestionnaire = (qType) ->
         if (qType == "dynamic")
             $scope.dynamic = true
-            $scope.questions = $scope.getDynamicQuestions()
+            $scope.getDynamicQuestions()
+            $scope.getQuestionsValues($scope.dynamicQuestions)
+            $scope.questions.push($scope.dynamicQuestions[0])
         else if (qType == "static")
             $scope.static = true
             $scope.questions = $scope.getStaticQuestions()
@@ -125,7 +128,6 @@ angular.module("frontendApp").controller "QuestionnaireController",
         # Sort the questions in descending order according to the rating value
         $scope.dynamicQuestions.sort((q1, q2) ->
             q2.rating - q1.rating)
-        return $scope.dynamicQuestions
 
     # Get the values of each question
     # 1. If the question key (property) is an enumeration
@@ -196,10 +198,9 @@ angular.module("frontendApp").controller "QuestionnaireController",
             if (question.values.None)
                 question.selectedValue = "It doesn't matter"
             for key, value of question.values
-                if (key != "None")
-                    restServices = ServiceMatching.getRestServices(
-                        question, key, $scope.selectedValues, $scope.services, $scope.enumerations)
-                    value["restServices"] = restServices
+                restServices = ServiceMatching.getRestServices(question,
+                    key, $scope.selectedValues, $scope.services, $scope.enumerations)
+                value["restServices"] = restServices
 
     # Update the list of questions to be shown based on values' selection
     # 1. If no values are selected, start with the first element in the linitialized array of dynamic questions
@@ -218,11 +219,11 @@ angular.module("frontendApp").controller "QuestionnaireController",
     # 6. Else, dismiss it and check the next
     $scope.updateDynamicQuestions = () ->
         questions = []
-        questionSelected = false
         qIndex = 0
         if ($scope.selectedValues.length == 0)
             return $scope.dynamicQuestions[0]
         for question in $scope.dynamicQuestions
+            questionSelected = false
             for selectedValue in $scope.selectedValues
                 if (question.key == selectedValue.property)
                     questionSelected = true
@@ -231,41 +232,72 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 questions.push(question)
                 questionSelected = false
                 qIndex++
+            else if ($scope.questions.indexOf(question) >= 0)
+                questions.push(question)
+                qIndex++
+            else if (questions.length < $scope.questions.length)
+                qIndex++
+                continue
             else
                 break
-        while ($scope.questions.indexOf($scope.dynamicQuestions[qIndex]) >= 0)
-            questions.push($scope.dynamicQuestions[qIndex])
-            qIndex++
         propertyProvided = false
         while ((qIndex < $scope.dynamicQuestions.length - 1) && (questions.length < 6) && (!propertyProvided))
             question = $scope.dynamicQuestions[qIndex]
             # convert question key string to service property format
             property = (question.key.replace(/ /g, "_")).toLowerCase()
+            valueProvided = null
             for service in $scope.filteredServices
-                if (service[property])
+                if (service[property] && !valueProvided)
+                    valueProvided = service[property]
+                    if (typeof valueProvided == "object")
+                        itemsNum = 0
+                        for key, item of valueProvided
+                            itemsNum++
+                        if (itemsNum > 1)
+                            questions.push(question)
+                            propertyProvided = true
+                            break
+                    continue
+                if (serviceProvidesDiffValue(valueProvided, service[property]))
                     questions.push(question)
                     propertyProvided = true
                     break
             qIndex++
+        if ($scope.questions.length == questions.length)
+            $scope.dynamicQuestionsDone = true
+        else
+            $scope.dynamicQuestionsDone = false
         return questions
+
+    # For the dynamic functionality, in a question two values should be at least provided
+    # check if the value already provided is different that a service value
+    serviceProvidesDiffValue = (value, serviceValue) ->
+        if (value && serviceValue)
+            if ((typeof value == "string") && (typeof serviceValue == "string") && (value != serviceValue))
+                return true
+            else if ((typeof value == "object") && (typeof serviceValue == "object"))
+                for serviceKey, serviceItem of serviceValue
+                    for valueKey, valueItem of value
+                        if (serviceItem != valueItem)
+                            return true
+        return false
 
     # When the selection of values for a question property changes,
     # 1. Get the updated array of selected values by calling service method
-    # 2. Update the number of filtered (rest) services for each value in each property
-    # 3. If dynmaic questionnaire, update the list of questions
-    # 4. Update filtered service according to selected values
+    # 2. If dynmaic questionnaire, update the list of questions
+    # 3. Update filtered service according to selected values
+    # 4. Update the number of filtered (rest) services for each value in each property
     $scope.updateSelection = (questions, question, valueKey) ->
         $scope.selectedValues = ServiceMatching.updateSelection(
             $scope.selectedValues, questions, question, valueKey)
+        $scope.filteredServices = ServiceMatching.updateFilteredServices(
+            $scope.selectedValues, $scope.services, $scope.enumerations)
         if ($scope.dynamic)
             $scope.questions = $scope.updateDynamicQuestions()
         for q in $scope.questions
             for key, value of q.values
-                if (key != "None")
-                    value.restServices = ServiceMatching.getRestServices(
-                        q, key, $scope.selectedValues, $scope.services, $scope.enumerations)
-        $scope.filteredServices = ServiceMatching.updateFilteredServices(
-            $scope.selectedValues, $scope.services, $scope.enumerations)
+                value.restServices = ServiceMatching.getRestServices(
+                    q, key, $scope.selectedValues, $scope.services, $scope.enumerations)
 
     # Navigate to the next question (or skip)
     $scope.showNext = (index) ->
@@ -273,6 +305,10 @@ angular.module("frontendApp").controller "QuestionnaireController",
             $scope.categoryChosen = true
         if (($scope.dynamic) && (index == $scope.questions.length - 1))
             $scope.questions = $scope.updateDynamicQuestions()
+            for q in $scope.questions
+                for key, value of q.values
+                    value.restServices = ServiceMatching.getRestServices(
+                        q, key, $scope.selectedValues, $scope.services, $scope.enumerations)
         if ((index < $scope.questions.length - 1) && (index < 6))
             $scope.currentQuestion = $scope.questions[index + 1].key
 
@@ -289,13 +325,14 @@ angular.module("frontendApp").controller "QuestionnaireController",
                 if ($scope.static)
                     for key, value of $scope.questions[index].values
                         value.selected = false
-                if ($scope.dynamic)
-                    $scope.questions.splice(index, 1)
             if (index == 1)
                 $scope.categoryChosen = false
             $scope.removeSelectedQuestion($scope.questions[index].key)
+            if ($scope.dynamic)
+                $scope.questions.splice(index, 1)
             $scope.filteredServices = ServiceMatching.updateFilteredServices(
                 $scope.selectedValues, $scope.services, $scope.enumerations)
+            $scope.dynamicQuestionsDone = false
 
     # For a given question key, remove all values selected of this question
     $scope.removeSelectedQuestion = (questionKey) ->

@@ -11,6 +11,7 @@ angular.module("frontendApp").controller "FilterController",
     $scope.dropdownIcon = "keyboard_arrow_down"
     $scope.currentQuestion = ""
 
+
     # Show filter with shown filter properties & filtered cloud services
     $scope.showFilter = () ->
         $scope.getFilterProperties()
@@ -37,10 +38,13 @@ angular.module("frontendApp").controller "FilterController",
 
     # Initialize the properties with their values of the filter
     # 1. Add all questions to the filter with their selected values
-    # 2. Loop over all enumeration properties
-    # 2.1. If enumeration is already a question, skip
-    # 2.2. If enumeration is "Established in", special case to create filter property
-    # 2.3. Else, create new filter property with unselected values
+    # 2. Loop over all properties
+    # 2.1. If property is enumeration
+    # 2.1.1. If enumeration is "Established in", special case to create filter property
+    # 2.1.2. If enumeration is already a question, skip
+    # 2.1.3. Else, create new filter property with unselected values
+    # 2.2. Else if property is either a string or a boolean
+    # 2.2.1 Create a new filter property with single "yes" option
     $scope.getFilterProperties = () ->
         $scope.filterProperties = []
         for question in $scope.questions
@@ -59,54 +63,80 @@ angular.module("frontendApp").controller "FilterController",
                 "selectedValue": selectedValue
                 "values": values
             })
-        propertyExists = false
-        for key, property of $scope.enumerations
-            if (key == "Established In")
-                values = {}
-                for column in property.columns
-                    restServices = ServiceMatching.getRestServices({
-                        "key": key
+        for key, property of $scope.propertiesDetails
+            titleKey = $scope.toTitleCase(key)
+            if ($scope.enumerations[titleKey])
+                enumProperty = $scope.enumerations[titleKey]
+                if (titleKey == "Established In")
+                    values = {}
+                    for column in enumProperty.columns
+                        restServices = ServiceMatching.getRestServices({
+                            "key": titleKey
+                            "uniqueAnswer": true
+                        }, column.title, $scope.selectedValues, $scope.services, $scope.enumerations)
+                        values[column.title] = {
+                            "description": column.title
+                            "selected": false
+                            "restServices": restServices
+                        }
+                    $scope.filterProperties.push({
+                        "key": titleKey
                         "uniqueAnswer": true
-                    }, column.title, $scope.selectedValues, $scope.services, $scope.enumerations)
-                    values[column.title] = {
-                        "description": column.title
-                        "selected": false
-                        "restServices": restServices
-                    }
-                $scope.filterProperties.push({
-                    "key": key
-                    "uniqueAnswer": true
-                    "selectedValue": ""
-                    "values": values
-                })
-                continue
-            for question in $scope.questions
-                if (key == question.key)
-                    propertyExists = true
-                    break
-            if (propertyExists)
-                propertyExists = false
-                continue
-            else
-                isUnique = ServiceMatching.checkIfUniqueValue(key, $scope.rows.enumRows)
-                values = {}
-                for i, value of property
-                    if (!isNaN(i))
-                        if (typeof value == "string")
-                            values[value] = { "selected": false }
-                        else if (typeof value == "object")
-                            for j, item of value.description
-                                values[j]["description"] = item
-                                values[j]["restServices"] = ServiceMatching.getRestServices({
-                                    key: key
-                                    uniqueAnswer: isUnique
-                                }, j, $scope.selectedValues, $scope.services, $scope.enumerations)
-                $scope.filterProperties.push({
-                    "key": key
-                    "uniqueAnswer": isUnique
-                    "selectedValue": ""
-                    "values": values
-                })
+                        "selectedValue": ""
+                        "values": values
+                    })
+                    continue
+                if (propertyIsQuestion(titleKey))
+                    continue
+                else
+                    isUnique = ServiceMatching.checkIfUniqueValue(titleKey, $scope.rows.enumRows)
+                    values = {}
+                    enumDefined = true
+                    for i, value of enumProperty
+                        if (!isNaN(i))
+                            if (typeof value == "string")
+                                values[value] = { "selected": false }
+                            else if (typeof value == "object")
+                                for j, item of value.description
+                                    if (item == "Translate")
+                                        values[j]["description"] = $scope.toTitleCase(j)
+                                    else
+                                        values[j]["description"] = item
+                                    values[j]["restServices"] = ServiceMatching.getRestServices({
+                                        "key": titleKey
+                                        "uniqueAnswer": isUnique
+                                    }, j, $scope.selectedValues, $scope.services, $scope.enumerations)
+                    if (enumDefined)
+                        $scope.filterProperties.push({
+                            "key": titleKey
+                            "uniqueAnswer": isUnique
+                            "selectedValue": ""
+                            "values": values
+                        })
+            else if (property.type && ((property.type == "string") || (property.type == "boolean")))
+                restServices = ServiceMatching.getRestServices({
+                        "key": titleKey
+                        "uniqueAnswer": true
+                    }, "Yes", $scope.selectedValues, $scope.services, $scope.enumerations)
+                if (restServices > 0)
+                    $scope.filterProperties.push({
+                        "key": titleKey
+                        "uniqueAnswer": true
+                        "selectedValue": ""
+                        values: {
+                            "Yes": {
+                                "selected": false
+                                "description": "Yes"
+                                "restServices": restServices
+                            }
+                        }
+                    })
+
+    propertyIsQuestion = (key) ->
+       for question in $scope.questions
+            if (key == question.key)
+                return true
+        return false
 
     # Check if property should be shown or hidden
     # If dropdown button is clicked, all properties should be shown

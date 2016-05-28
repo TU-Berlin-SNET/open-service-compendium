@@ -206,11 +206,12 @@ angular.module('frontendApp').factory 'ServiceMatching',
         for value in selectedValues
             if (property.key != value.property)
                 virtualSelectedValues.push(value)
-        virtualSelectedValues.push({
-            property: property.key
-            value: valueKey
-            uniqueAnswer: property.uniqueAnswer
-        })
+        if (valueKey != "None")
+            virtualSelectedValues.push({
+                property: property.key
+                value: valueKey
+                uniqueAnswer: property.uniqueAnswer
+            })
         virtualFilteredServices = factory.updateFilteredServices(virtualSelectedValues, services, enumerations)
         return virtualFilteredServices.length
 

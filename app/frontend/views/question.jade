@@ -9,9 +9,7 @@ div(ng-if="!categoryChosen", layout="row", layout-wrap="", style="padding: 0 cal
 div(ng-if="question.uniqueAnswer && categoryChosen")
     md-radio-group(ng-model="question.selectedValue")
         md-radio-button(ng-repeat="(key, value) in question.values", ng-value="value.description", 
-            ng-click="updateSelection(questions, question, key)") 
-            span(ng-if="key != 'None'") {{ value.description }} ({{ value.restServices }})
-            span(ng-if="key == 'None'") {{ value.description }} ({{ filteredServices.length }})
+            ng-click="updateSelection(questions, question, key)") {{ value.description }} ({{ value.restServices }})
 
 div(ng-if="!question.uniqueAnswer && categoryChosen")
     md-checkbox(ng-repeat="(key, value) in question.values", ng-model="value.selected",
@@ -22,6 +20,6 @@ div(layout="row", layout-align="center center", layout-wrap, style="width: 100%"
         ng-click="showPrev(questions.indexOf(question))", style="float:left;") 
         i.material-icons(style="line-height:inherit;") {{ backButtonIcon }}
     md-button.md-raised.md-primary(ui-sref="services.info.filter({questions: questions, selectedValues: selectedValues})") Show Services ({{ filteredServices.length }})
-    md-button.md-fab.md-mini.md-primary(ng-hide="questions.indexOf(question) == 5", 
+    md-button.md-fab.md-mini.md-primary(ng-hide="questions.indexOf(question) == 5 || dynamicQuestionsDone", 
         ng-click="showNext(questions.indexOf(question))", style="float:right;") 
         i.material-icons(style="line-height:inherit;") {{ nextButtonIcon }}

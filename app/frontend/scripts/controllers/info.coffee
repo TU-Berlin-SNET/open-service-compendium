@@ -4,7 +4,7 @@ angular.module("frontendApp").controller "InfoController",
 
     $scope.statisticsOptions = []
 
-    propertiesDetails = {}
+    $scope.propertiesDetails = {}
 
     propertiesCategories = {}
     servicesPerProperty = {} # number of services per each (detailed) property
@@ -24,12 +24,12 @@ angular.module("frontendApp").controller "InfoController",
     # Basically propertiesDetails is the schema with deleted properties
     $scope.$watch 'schema', (newValue, oldValue) ->
         if ((oldValue != newValue) || (!_.isEmpty(oldValue)))
-            propertiesDetails = newValue.properties
-            delete propertiesDetails.service_name
-            delete propertiesDetails.provider
+            $scope.propertiesDetails = newValue.properties
+            delete $scope.propertiesDetails.service_name
+            delete $scope.propertiesDetails.provider
             propertiesCategories = newValue.propertyCategories
             uncheckCategories()
-            setEnumerations(propertiesDetails)
+            setEnumerations($scope.propertiesDetails)
 
     $scope.$watch 'services', (newValue, oldValue) ->
         if ((oldValue != newValue) || (!_.isEmpty(oldValue)))
@@ -38,7 +38,7 @@ angular.module("frontendApp").controller "InfoController",
                 category.numOfServices = 0
                 # If description missing, use category name
                 if (!category.description)
-                    category.description = toTitleCase(key)
+                    category.description = $scope.toTitleCase(key)
 
             # Loop over all services
             for service in newValue
@@ -47,31 +47,30 @@ angular.module("frontendApp").controller "InfoController",
 
                 # Loop over all properties of the service
                 for property, value of service
+                    propertyName = $scope.toTitleCase(property)
                     addPropertyToCategory(property)
-                    if (propertiesDetails[property])
-                        propertyName = toTitleCase(property)
+                    if ($scope.propertiesDetails[property])
                         servicesPerProperty[propertyName]++
-                    if ($scope.enumerations[toTitleCase(property)])
-                        title = toTitleCase(property)
-                        $scope.enumerations[title].numOfServices++
+                    if ($scope.enumerations[propertyName])
+                        $scope.enumerations[propertyName].numOfServices++
                         if (!isNaN(value))
-                            $scope.enumerations[title].values.push(parseInt(value))
+                            $scope.enumerations[propertyName].values.push(parseInt(value))
                         else if (Array.isArray(value))
                             for subValue in value
-                                if (!$scope.enumerations[title][subValue])
-                                    $scope.enumerations[title][subValue] = 1
+                                if (!$scope.enumerations[propertyName][subValue])
+                                    $scope.enumerations[propertyName][subValue] = 1
                                 else
-                                    $scope.enumerations[title][subValue]++
+                                    $scope.enumerations[propertyName][subValue]++
                         else
-                            if (!$scope.enumerations[title][value])
-                                $scope.enumerations[title][value] = 1
+                            if (!$scope.enumerations[propertyName][value])
+                                $scope.enumerations[propertyName][value] = 1
                             else
-                                $scope.enumerations[title][value]++
+                                $scope.enumerations[propertyName][value]++
             createEnumCharts()
             createPropertiesCharts()
     
     # Converts string to title case
-    toTitleCase = (s) ->
+    $scope.toTitleCase = (s) ->
         temp = s.replace(/_/g, " ")
         title = temp.replace(/\w\S*/g, (txt) ->
             txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
@@ -103,29 +102,30 @@ angular.module("frontendApp").controller "InfoController",
         isEnum = false
         if (properties)
             for key, value of properties
-                servicesPerProperty[toTitleCase(key)] = 0
+                titleKey = $scope.toTitleCase(key)
+                servicesPerProperty[titleKey] = 0
                 # 1
                 if ((value.enum) || ((value.items) && (value.items.enum)))
                     isEnum = true
                     # 1.1
                     if (value.enum)
-                        $scope.enumerations[toTitleCase(key)] = value.enum
+                        $scope.enumerations[titleKey] = value.enum
                     else if ((value.items) && (value.items.enum))
-                        $scope.enumerations[toTitleCase(key)] = value.items.enum
+                        $scope.enumerations[titleKey] = value.items.enum
                 # 2
                 else if (value.type == "number")
                     isEnum = true
-                    $scope.enumerations[toTitleCase(key)] = {}
-                    $scope.enumerations[toTitleCase(key)].values = []
+                    $scope.enumerations[titleKey] = {}
+                    $scope.enumerations[titleKey].values = []
                 if (isEnum)
                     isEnum = false
                     # 3
-                    $scope.enumerations[toTitleCase(key)].numOfServices = 0
-                    $scope.enumerations[toTitleCase(key)].description = value.description
-                    $scope.enumerations[toTitleCase(key)].statisticsInfo = {}
+                    $scope.enumerations[titleKey].numOfServices = 0
+                    $scope.enumerations[titleKey].description = value.description
+                    $scope.enumerations[titleKey].statisticsInfo = {}
                     if (!$scope.statisticsOptions)
                         $scope.statisticsOptions = []
-                    $scope.statisticsOptions.push(toTitleCase(key))
+                    $scope.statisticsOptions.push(titleKey)
 
     # For properties with nummerical values, distribute the range into four quarters
     # In this case, this property can be considered as a property with four enumeration values
@@ -188,7 +188,7 @@ angular.module("frontendApp").controller "InfoController",
                     if ((!isNaN(key)) && (typeof value == "string"))
                         $scope.rows.enumRows[i].push({
                             c: [
-                                { v: toTitleCase(value) }
+                                { v: $scope.toTitleCase(value) }
                                 { v: if (isNaN(enumValue[value])) then 0
                                 else enumValue[value] * 100 / enumValue.numOfServices
                                 }
