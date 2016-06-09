@@ -1,0 +1,4 @@
+div.container(ng-if="!(services.$resolved && schema.$resolved)")
+    p Loading services and schema, please wait...
+
+div(ui-view='' ng-if="services.$resolved && schema.$resolved")

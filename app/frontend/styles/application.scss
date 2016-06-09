@@ -138,3 +138,107 @@ footer.footer {
     margin-top: 1em;
   }
 }
+
+.csModel-item {
+  width: 15%;
+  height: 100px;
+  float: left;
+  text-align: center;
+  margin: 50px calc(20% / 6) 1em;
+  padding: 0.5em;
+  cursor: pointer;
+  display: table;
+  border: 1px solid #DDD;
+  color: #FFF;
+  background-color: rgb(63,81,181);
+}
+
+.csModel-item:first-child {
+  margin-left: 10%;
+}
+
+.csModel-item:last-child {
+  margin-right: 10%;
+}
+
+.csModel-item > span {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.category-item {
+  width: 20%;
+  height: 100px;
+  float: left;
+  text-align: center;
+  padding: 0.5em;
+  cursor: pointer;
+  display: table;
+  border: 1px solid #DDD;
+  color: #FFF;
+  background-color: rgb(63,81,181);
+}
+
+.category-item:first-child {
+  margin: 50px 5% 1em 25%
+}
+
+.category-item:last-child {
+  margin: 50px 25% 1em 5%
+}
+
+.category-item > span {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.service-category {
+  width: 200px;
+  height: 100px;
+  border: 1px solid #DDD;
+  display: table;
+  text-align: center;
+  padding: 0.5em;
+  cursor: pointer;
+  margin: 50px;
+}
+
+.service-category > span {
+  display: table-cell;
+  vertical-align: middle;
+  color: #FFF;
+  font-size: 18px;
+}
+
+.questionnnaire {
+  padding: 20px;
+}
+
+.questionnnaire > h2 {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.filterTable {
+  width: 90%;
+  border: none;
+  margin: 20px 5%;
+}
+
+.filterTable tr {
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  height: 36px;
+}
+
+.filterTable tr:last-child {
+  border-bottom: none;
+}
+
+.filterTable tr th:first-child, .filterTable tr td:first-child {
+  width: 200px;
+  border-right: 1px solid rgba(0,0,0,0.12);
+}
+
+.filterTable tr th:last-child, .filterTable tr td:last-child {
+  padding-left: 5px;
+}

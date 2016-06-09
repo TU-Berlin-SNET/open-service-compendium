@@ -1,0 +1,14 @@
+md-dialog(ng-cloack="")
+    form
+        md-toolbar
+            .md-toolbar-tools
+                h2 {{ property }}
+                span(flex)
+                md-button(ng-click="cancel()")
+                    i.material-icons close
+        md-dialog-content(style="order:0;")
+            p Unifrom distribution ratio: {{ uniDistributionRatio }}
+            div.md-dialog-content(ng-repeat="item in propertyItems")
+                md-checkbox(ng-model="item.selected") {{ item.name }} : {{ item.value }}%
+        md-dialog-actions(layout="row")
+            md-button.md-primary(ng-click="confirmSelection()") Confirm

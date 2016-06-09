@@ -1,7 +1,13 @@
 center
-  .jumbotron
-      h1 Open Service Compendium
-      p.lead Get cloud service information
-      a.btn.btn-lg.btn-primary(ui-sref="services.list({filters: 'service_categories:vms'})") VMs
-      | &nbsp;
-      a.btn.btn-lg.btn-primary(ui-sref="services.list({category: 'service_categories:storage'})") Storage
+    .jumbotron
+        h1 Open Service Compendium
+        p.lead Get cloud service information
+        a.btn.btn-lg.btn-primary(ui-sref="services.list({filters: 'service_categories:vms'})") VMs
+        | &nbsp;
+        a.btn.btn-lg.btn-primary(ui-sref="services.list({category: 'service_categories:storage'})") Storage
+        | &nbsp;
+        a.btn.btn-lg.btn-primary(ui-sref="services.info.statistics") Statistics
+        | &nbsp;
+        a.btn.btn-lg.btn-primary(ui-sref="services.info.questionnaire") Questionnaire
+        | &nbsp;
+        a.btn.btn-lg.btn-primary(ui-sref="services.info.filter") Filter
