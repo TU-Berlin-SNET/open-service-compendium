@@ -10,12 +10,131 @@
  */
 @import 'bootstrap';
 
+$footer-height: 50px;
+
 body {
   font-family: 'Open Sans', 'Helvetica Neue', 'Helvetica', 'Arial', 'Liberation Sans', 'FreeSans', sans-serif;
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+
+  position: relative;
+
+  #wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto (-1 * $footer-height);
+  }
+}
+
+nav.navbar {
+  margin-bottom: 0;
 }
 
 table {
   max-width: 100%;
+}
+
+#push {
+  height: $footer-height;
+  margin-top: 15px;
+}
+
+footer.footer {
+  height: $footer-height;
+  position: relative;
+  text-align: center;
+  color: $navbar-default-link-color;
+  border-radius: 0;
+  margin-bottom: 0;
+
+  .container {
+    padding: 1em 0;
+  }
+
+  img {
+    max-width: 90% !important;
+    max-height: 5em !important;
+    margin-top: 0;
+  }
+}
+
+.filter-row {
+  margin-bottom: 1em;
+}
+
+.service-list {
+  .row {
+    margin-top: 1em;
+  }
+
+  .service-filters {
+    select {
+      font-size: 1.5em;
+    }
+
+    button {
+      width: 100%;
+      text-align: left;
+      @media (max-width: $screen-xs-max) {
+        text-align: center;
+      }
+    }
+
+    .filter-row .col-xs-10 {
+      padding: 0.5em 0 0 0;
+    }
+  }
+
+  span {
+    color: #FFF;
+  }
+
+  .matching {
+    .service-item {
+      background-color: $btn-success-bg;
+
+      &:hover {
+        background-color: darken($btn-success-bg, 25%)
+      }
+    }
+  }
+
+  .nonmatching {
+    span {
+      text-decoration: line-through;
+    }
+
+    .service-item {
+      background-color: $btn-danger-bg;
+
+      &:hover {
+        background-color: darken($btn-danger-bg, 25%)
+      }
+    }
+  }
+
+  .service-item {
+    height: 100px;
+    border: 1px solid #DDD;
+    display: table;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1em;
+    padding: 0.5em;
+    cursor: pointer;
+
+    span {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+}
+
+.service-detail {
+  .category-header {
+    font-weight: bold;
+    margin-top: 1em;
+  }
 }

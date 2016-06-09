@@ -1,21 +1,41 @@
-TRESOR Open Service Broker
-==========================
+Open Service Compendium
+=======================
 
-Requirements
-------------
+Installation
+============
 
-* Ruby 2.1
-* A recent version of MongoDB
+Prerequisites
+-------------
 
-Development environment
------------------------
+The Open Service Compendium requires the following components:
 
-The broker was developed using Ubuntu 12.04.4 LTS with Ruby 2.1 installed using [RVM](http://rvm.io/) and the [official MongoDB packages](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/).
+* Ruby >=2.1
+* NodeJS >= 0.12
+* MongoDB >= 3.0
+* Grunt >= 0.4
+* Bower >= 1.4.1
+* Bundler >= 1.10
+
+It should run under Windows, Linux and on a Mac.
+
+Installation procedure
+----------------------
+
+After installing the required components, check out the source:
+
+`git clone https://github.com/TU-Berlin-SNET/open-service-compendium --recursive`
+
+You then have to install required Ruby Gems, Node modules, and bower components:
+
+* `bundle install` installs all required Ruby Gems
+* `npm install` installs all required Node modules into `node_modules`
+* `bower install` installs all bower components (frontend assets) into `vendor/bower_components`
+* `grunt watch-dev` builds the frontend assets into `assets/scripts`
 
 DB Setup
 --------
 
-The rake task `tresor:reset_and_load_examples` resets the DB and loads the examples from the bundled SDL-NG.
+The rake task `tresor:reset_and_load_examples` resets the DB and loads the examples from the bundled SDL-NG. To run OSC, `bundle exec rake tresor:reset_and_load_examples`. This creates the database and the collection if they do not exist as well. `bundle exec ruby bin/rails server` starts the server.
 
 More
 ====

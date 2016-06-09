@@ -29,15 +29,10 @@ gem 'slim', github: 'slim-template/slim'
 
 # SDL-NG is included as a 'library' to support development class reloading
 # That means, that we need to require its gems for the broker
-gem 'nokogiri'
-gem 'verbs'
-gem 'linkeddata'
-gem 'uuid'
-gem 'money'
-gem 'monetize'
+gemspec path: 'lib/sdl-ng'
 
 # Rails config
-gem 'rails_config'
+gem 'config'
 
 gem 'radix', github: 'asalme/radix', branch: 'master'
 
@@ -47,7 +42,7 @@ gem 'mongoid', '~> 4.0'
 gem 'mongoid-enum', github: 'thetron/mongoid-enum'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.2'
+  gem 'rspec-rails', '~> 3.3'
   gem 'rspec-collection_matchers'
 end
 

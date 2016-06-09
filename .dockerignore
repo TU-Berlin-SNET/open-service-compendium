@@ -3,3 +3,4 @@ coverage
 log
 spec
 tmp
+vendor/bower_components

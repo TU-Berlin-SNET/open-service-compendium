@@ -8,4 +8,6 @@ html[ng-app="frontendApp"]
   link[href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css']
 
 body
-  = yield
+  #wrap
+    = yield
+  script[src="//#{request.host}:35729/livereload.js"]

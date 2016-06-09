@@ -22,11 +22,13 @@ module.exports = function(grunt) {
             '<%= paths.bower %>/angular/angular.js',
             '<%= paths.bower %>/angular-animate/angular-animate.js',
             '<%= paths.bower %>/angular-cookies/angular-cookies.js',
+            '<%= paths.bower %>/angular-filter/dist/angular-filter.js',
             '<%= paths.bower %>/angular-resource/angular-resource.js',
             '<%= paths.bower %>/angular-ui-router/release/angular-ui-router.js',
             '<%= paths.bower %>/angular-sanitize/angular-sanitize.js',
             '<%= paths.bower %>/angular-touch/angular-touch.js',
-	    '<%= paths.bower %>/checklist-model/checklist-model.js',
+            '<%= paths.bower %>/ng-lodash/build/ng-lodash.js',
+	        '<%= paths.bower %>/checklist-model/checklist-model.js',
 
             // Bootstrap components
             '<%= paths.bower %>/bootstrap-sass/assets/javascripts/bootstrap/{button,collapse,dropdown}.js',
@@ -254,8 +256,9 @@ module.exports = function(grunt) {
             fonts: {
                 files: [{
                     expand: true,
-                    src: ['<%= paths.bower %>/bootstrap-sass/assets/fonts/bootstrap/*'],
-                    dest: '<%= paths.dist %>/fonts'
+                    cwd: '<%= paths.bower %>/bootstrap-sass/assets',
+                    src: ['fonts/bootstrap/*'],
+                    dest: '<%= paths.dist %>'
                 }]
             }
         }
