@@ -1,0 +1,10 @@
+div.col-md-3 {{ filter.property.description }}
+div.col-md-9
+    fieldset
+        div(ng-repeat="enum in filter.property.enum")
+            div(ng-show="enum.description === undefined")
+                label(for="enum")
+
+                input(type="checkbox" ng-checked="filter.values.indexOf(enum) != -1" ng-click="filter.change(enum)")
+
+                | {{ filter.property.enum.slice(-1)[0].description[enum] }}

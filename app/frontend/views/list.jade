@@ -1,0 +1,41 @@
+.container.service-list
+    .service-filters
+        .row
+            .col-xs-12
+                h1 Filters&nbsp;
+
+        .row
+            form.form-inline
+                .col-xs-2
+                    button.btn.btn-success(data-ng-click='addFilter()')
+                        i.glyphicon.glyphicon-plus
+                        span.hidden-xs &nbsp;Add Filter
+                .col-xs-10
+                    select(ng-model="propertyToAdd")
+                        option(ng-repeat="serviceProperty in schema.serviceProperties" ng-value="serviceProperty.property")
+                            | {{ serviceProperty.description }}
+
+        .row(ng-repeat="filter in filters | orderBy : filter.property" ng-model="filter" class="filter-row")
+            .col-xs-2
+                button.btn.btn-danger(data-ng-click='filter.remove()')
+                    i.glyphicon.glyphicon-trash
+                    span.hidden-xs &nbsp;Remove
+
+            .col-xs-10
+                div(ng-include="filter.filterView")
+
+    .row
+        .col-xs-12
+            h1 Services
+
+    .service-list.row
+        div(ng-repeat='(filtered, services) in categorizedServices | orderBy: isFiltered | groupBy: isFiltered ' ng-if='filters')
+            //
+                .row
+                    h1(ng-if='filtered === "false"') Matching Services
+                    h1(ng-if='filtered === "true"') Incompatible Services
+
+            div(ng-class='{matching: filtered === "false", nonmatching: filtered === "true"}')
+                div.col-lg-2.col-md-3.col-sm-4.col-xs-6(ng-repeat='service in services | orderBy: service_name')
+                    .service-item(ui-sref='services.detail(service.uiRouterParams)')
+                        span {{ service.service_name }}

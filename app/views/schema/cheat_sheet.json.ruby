@@ -1,0 +1,1 @@
+SDL::Exporters::JSONSchemaExporter.new.export_schema
