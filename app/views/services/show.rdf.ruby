@@ -1,3 +1,3 @@
-exporter = SDL::Exporters::RDFExporter.new(@service.compendium)
+exporter = SDL::Exporters::RDFExporter.new()
 
 exporter.export_service(@service)
