@@ -1,4 +1,8 @@
+require 'socket'
+
 class OSBURIMapper
+  @@hostname = Socket.gethostbyname(Socket.gethostname).first
+
   def self.uri(object)
     case object
       when SDL::Base::Type::Service
@@ -14,5 +18,9 @@ class OSBURIMapper
       else
         raise "Cannot infer URI of object: #{object}"
     end
+  end
+
+  def self.base_url
+    "http://#{@hostname}"
   end
 end
