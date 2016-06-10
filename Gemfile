@@ -39,7 +39,7 @@ gem 'radix', github: 'asalme/radix', branch: 'master'
 gem 'thin'
 
 gem 'mongoid', '~> 4.0'
-gem 'mongoid-enum', github: 'thetron/mongoid-enum'
+gem 'mongoid-enum', github: 'thetron/mongoid-enum', ref: '2288e'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.3'

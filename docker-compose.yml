@@ -1,5 +1,6 @@
 mongodb:
   image: mongo:2.6
+  restart: always
   command: mongod --smallfiles
   volumes:
     - ./db:/data/db
@@ -8,6 +9,7 @@ mongodb:
 
 broker:
   build: .
+  restart: always
   links:
     - mongodb
   ports:

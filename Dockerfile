@@ -1,12 +1,12 @@
 FROM ubuntu:latest
 
-# Install Ruby 2.2 using rvm, install passenger, install nodejs and npm
+# Install Ruby 2.3 using rvm, install passenger, install nodejs and npm
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends curl ca-certificates git &&\
     gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3 &&\
-    curl -sSL https://get.rvm.io | bash -s stable --ruby=2.2 &&\
-    /bin/bash -c "source /usr/local/rvm/scripts/rvm && gem install passenger" &&\
-    curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash - &&\
+    curl -sSL https://get.rvm.io | bash -s stable --ruby=2.3 --gems=bundler,passenger &&\
+    /bin/bash -c "source /usr/local/rvm/scripts/rvm && gem update --system" &&\ 
+    curl -sL https://deb.nodesource.com/setup_4.x | bash - &&\
     apt-get install -y --no-install-recommends nodejs &&\
     npm install -g npm
 
@@ -19,7 +19,7 @@ COPY lib/sdl-ng/lib/sdl/version.rb /root/osc/lib/sdl-ng/lib/sdl/version.rb
 WORKDIR /root/osc
 
 # Install gems of osc
-RUN /bin/bash -c "source /usr/local/rvm/scripts/rvm && bundle install"
+RUN /bin/bash -c "source /usr/local/rvm/scripts/rvm && bundle update && bundle install"
 
 # Copy npm and bower files
 COPY package.json bower.json .bowerrc /root/osc/

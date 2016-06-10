@@ -4,3 +4,4 @@ log
 spec
 tmp
 vendor/bower_components
+lib/sdl-ng/.git
